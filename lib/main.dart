@@ -1,5 +1,7 @@
 import 'package:eco_sense/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'features/splash/OnboardingScreen.dart';
+import 'features/home/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,13 +16,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: OnboardingScreen(),
+      routes: {
+        '/home': (context) => HomePage(),
+      },
     );
-
   }
 }
 
