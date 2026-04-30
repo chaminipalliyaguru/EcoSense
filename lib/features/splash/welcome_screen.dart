@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
 import '../login_and_signup/signup_screen.dart';
+import '../app_details/app_details_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -90,7 +91,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to next screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AppDetailsScreen()),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2E7D32),
@@ -182,4 +186,3 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
-
