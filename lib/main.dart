@@ -1,6 +1,5 @@
-import 'package:eco_sense/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'features/splash/OnboardingScreen.dart';
+import 'features/splash/welcome_screen.dart';
 import 'features/home/home_page.dart';
 
 void main() {
@@ -14,17 +13,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: OnboardingScreen(),
+      home: const WelcomeScreen(),
       routes: {
-        '/home': (context) => HomePage(),
+        '/home': (context) => const HomePage(),
       },
     );
   }
 }
-
 
