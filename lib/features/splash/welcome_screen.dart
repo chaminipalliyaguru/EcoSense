@@ -135,7 +135,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             elevation: 3,
                           ),
                           child: const Text(
-                            "Sign in",
+                            "Sign up",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
