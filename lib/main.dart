@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'features/splash/welcome_screen.dart';
 import 'features/home/home_page.dart';
+// import './features/splash/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
       },
     );
   }
