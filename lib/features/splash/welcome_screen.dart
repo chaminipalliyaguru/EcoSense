@@ -52,8 +52,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top section with Welcome text
-                Padding(
-                  padding: const EdgeInsets.only(
+                const Padding(
+                  padding: EdgeInsets.only(
                     top: 200.0,
                     left: 15.0,
                     right: 20.0,
@@ -61,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Welcome to\nEcoSense",
                         style: TextStyle(
                           color: Colors.white,
