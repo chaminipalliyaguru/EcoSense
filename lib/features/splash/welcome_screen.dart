@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
 import '../login_and_signup/signup_screen.dart';
-import '../app_details/app_details_screen.dart';
+import '../app_details/guest_user_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const AppDetailsScreen()),
+                              MaterialPageRoute(builder: (context) => const GuestUserScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
