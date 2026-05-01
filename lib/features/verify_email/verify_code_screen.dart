@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
+import '../forgot_password/new_password_screen.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
-  const VerifyCodeScreen({super.key});
+  final bool isPasswordReset;
+  const VerifyCodeScreen({super.key, this.isPasswordReset = false});
 
   @override
   State<VerifyCodeScreen> createState() => _VerifyCodeScreenState();
@@ -116,44 +118,12 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Placeholder for the email illustration
-                Container(
-                  width: double.infinity,
+                // Email success image
+                Image.asset(
+                  'assets/images/email-ve-success.png',
                   height: 140,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF4E5D4), // Peachy color from screenshot
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Icon(
-                        Icons.email,
-                        size: 80,
-                        color: Colors.white.withOpacity(0.9),
-                      ),
-                      Positioned(
-                        right: 70,
-                        top: 25,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade400,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: const Text(
-                            "1",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  width: double.infinity,
+                  fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 30),
 
@@ -164,12 +134,20 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context); // Close dialog
-                      // Redirect to login page
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                        (route) => false,
-                      );
+                      
+                      if (widget.isPasswordReset) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const NewPasswordScreen()),
+                        );
+                      } else {
+                        // Redirect to login page
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _primaryGreen,
