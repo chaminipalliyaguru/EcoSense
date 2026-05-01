@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../verify_email/verify_email_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -101,7 +102,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Sign up action
+                    // Navigate to email verification process
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VerifyEmailScreen()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryGreen,
