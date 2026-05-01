@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_details_screen.dart';
 
 class GuestUserScreen extends StatelessWidget {
   const GuestUserScreen({super.key});
@@ -81,6 +82,10 @@ class GuestUserScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         // Action for View App Details
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AppDetailsScreen()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3D7A44), // Match the dark green button color
