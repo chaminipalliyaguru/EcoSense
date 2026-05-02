@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
-import '../home/home_page.dart';
+import '../home/home_screen_signup_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -169,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

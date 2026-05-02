@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'features/splash/welcome_screen.dart';
-import 'features/home/home_page.dart';
+import 'features/home/home_screen_signup_login.dart';
 // import './features/splash/splash_screen.dart';
 
 void main() {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        '/home': (context) => HomePage(),
+        '/home': (context) => const HomeScreenSignupLogin(),
       },
     );
   }
