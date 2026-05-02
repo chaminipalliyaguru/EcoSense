@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/top_app_bar.dart';
 import 'widgets/bottom_nav_bar.dart';
+import '../Scan_upload_Report/scan_report_screen.dart';
 
 class HomeScreenSignupLogin extends StatefulWidget {
   const HomeScreenSignupLogin({super.key});
@@ -132,7 +133,12 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
                               height: 34,
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  _navigateTo(1);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ScanReportScreen(),
+                                    ),
+                                  );
                                 },
                                 icon: const Icon(Icons.camera_alt, size: 16),
                                 label: const Text(
@@ -378,16 +384,25 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
   }
 
   void _navigateTo(int index) {
+    if (index == 1) {
+      // Navigate to Scan screen without changing the selected index
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ScanReportScreen()),
+      );
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
 
     switch (index) {
-      case 1:
-        break;
       case 2:
+        // TODO: Navigate to History screen
         break;
       case 3:
+        // TODO: Navigate to Profile screen
         break;
       default:
         break;
