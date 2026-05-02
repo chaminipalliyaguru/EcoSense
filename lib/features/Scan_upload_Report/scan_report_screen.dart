@@ -11,6 +11,7 @@ import 'widgets/scan_frame.dart';
 import 'widgets/scan_bottom_bar.dart';
 import 'widgets/scan_overlay.dart';
 import 'widgets/image_preview_overlay.dart';
+import '../Report_Analyzing/report_analyzing_screen.dart';
 
 class ScanReportScreen extends StatefulWidget {
   const ScanReportScreen({super.key});
@@ -259,9 +260,11 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                 scanAnimation: _scanLineAnimation,
                 onRetake: () => setState(() => _selectedImage = null),
                 onConfirm: () {
-                  // Placeholder for next step
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing report...')),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReportAnalyzingScreen(),
+                    ),
                   );
                 },
               ),
