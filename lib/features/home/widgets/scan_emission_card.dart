@@ -16,8 +16,15 @@ class ScanEmissionCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
         decoration: BoxDecoration(
-          color: primaryGreen,
-          borderRadius: BorderRadius.circular(16.r),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              primaryGreen,
+              const Color(0xFF66BB6A), // A lighter, vibrant green
+            ],
+          ),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: primaryGreen.withValues(alpha: 0.3),

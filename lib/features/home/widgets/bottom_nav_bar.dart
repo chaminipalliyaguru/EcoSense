@@ -32,7 +32,7 @@ class BottomNavBar extends StatelessWidget {
           label: "Home",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.camera_alt),
+          icon: Icon(Icons.camera_outlined),
           label: "Scan",
         ),
         BottomNavigationBarItem(
