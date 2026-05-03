@@ -44,7 +44,7 @@ class HomeHeroSection extends StatelessWidget {
                   const Text(
                     'Your Environment,',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 25,
                       fontWeight: FontWeight.w900,
                       color: primaryGreen,
                       letterSpacing: 0.2,
