@@ -14,14 +14,11 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: primaryGreen,
       elevation: 0,
       automaticallyImplyLeading: false,
-      title: const Text(
-        'Logo',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          letterSpacing: 1.2,
-        ),
+      centerTitle: false,
+      title: Image.asset(
+        'assets/logo.png',
+        height: 32,
+        fit: BoxFit.contain,
       ),
     );
   }
