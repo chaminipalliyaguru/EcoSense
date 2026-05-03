@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../home/widgets/top_app_bar.dart';
-import '../home/widgets/bottom_nav_bar.dart';
 import '../home/widgets/greeting_header.dart';
 import '../home/widgets/home_hero_section.dart';
 import '../home/widgets/scan_emission_card.dart';
-import '../home/widgets/feature_grid.dart';
 import '../home/widgets/quick_tips_section.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
+import 'guest_bottom_nav_bar.dart';
+import 'guest_feature_list.dart';
 
 class GuestUserHomePage extends StatefulWidget {
   const GuestUserHomePage({super.key});
@@ -23,24 +22,31 @@ class _GuestUserHomePageState extends State<GuestUserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       appBar: TopAppBar(primaryGreen: _primaryGreen),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const GreetingHeader(userName: 'Guest'), // Guest user
+            const GreetingHeader(
+              userName: '',
+              subtitle: 'Smart care for your vehicle',
+            ),
             const HomeHeroSection(),
+            const SizedBox(height: 12),
             ScanEmissionCard(primaryGreen: _primaryGreen),
-            SizedBox(height: 20.h),
-            const FeatureGrid(),
-            SizedBox(height: 24.h),
-            QuickTipsSection(primaryGreen: _primaryGreen),
-            SizedBox(height: 32.h),
+            const SizedBox(height: 24),
+            const GuestFeatureList(),
+            const SizedBox(height: 32),
+            QuickTipsSection(
+              primaryGreen: _primaryGreen,
+              isGuest: true,
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: GuestBottomNavBar(
         selectedIndex: _selectedIndex,
         onTap: _navigateTo,
         primaryGreen: _primaryGreen,

@@ -1,30 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuickTipsSection extends StatelessWidget {
   final Color primaryGreen;
+  final bool isGuest;
 
   const QuickTipsSection({
     super.key,
     required this.primaryGreen,
+    this.isGuest = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Quick Tips',
-            style: TextStyle(
-              fontSize: 20.sp, // Adjusted
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Quick Tips',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/tips',
+                    arguments: isGuest,
+                  );
+                },
+                child: Text(
+                  'See All',
+                  style: TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 18.h),
+          const SizedBox(height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -76,8 +98,8 @@ class _QuickTipItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 60.w,
-            height: 60.w,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -85,29 +107,29 @@ class _QuickTipItem extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 4.r,
-                  offset: Offset(0, 2.h),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
-            child: Icon(icon, color: primaryGreen, size: 30.sp), // Adjusted
+            child: Icon(icon, color: primaryGreen, size: 36),
           ),
-          SizedBox(height: 10.h),
+          const SizedBox(height: 10),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13.sp, // Adjusted
+            style: const TextStyle(
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          SizedBox(height: 4.h),
+          const SizedBox(height: 4),
           Text(
             detail,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11.sp, // Adjusted
+              fontSize: 14,
               color: Colors.grey.shade600,
               height: 1.4,
             ),

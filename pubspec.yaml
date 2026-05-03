@@ -76,6 +76,7 @@ flutter:
     - assets/images/appDetailed/
     - assets/images/home/
     - assets/images/home/home-your-vehical.png
+    - assets/images/tips/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
