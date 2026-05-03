@@ -6,6 +6,7 @@ class AppDetailsScreen extends StatelessWidget {
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
+
   Widget _buildFeatureListItem({
     required String title,
     required String description,
