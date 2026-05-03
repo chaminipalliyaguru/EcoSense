@@ -31,7 +31,7 @@ class GreetingHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hello, $userName!',
+                userName.isEmpty ? 'Hello!' : 'Hello, $userName!',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

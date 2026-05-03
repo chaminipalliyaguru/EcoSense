@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../guestuser/guest_user_home_page.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
@@ -208,7 +209,12 @@ class AppDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Add navigation or action here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const GuestUserHomePage(),
+                      ),
+                    );
                   },
                   child: const Text(
                     "Explore App",
