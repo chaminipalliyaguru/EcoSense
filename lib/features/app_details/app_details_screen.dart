@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../home/home_screen_signup_login.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
@@ -12,27 +14,27 @@ class AppDetailsScreen extends StatelessWidget {
     required Color bgColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: EdgeInsets.only(bottom: 24.0.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Icon Box
           Container(
-            width: 60,
-            height: 60,
+            width: 60.w,
+            height: 60.w,
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               child: Image.asset(
                 imagePath,
-                fit: BoxFit.contain, // match the screenshot icon fit
+                fit: BoxFit.contain,
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
           // Text Content
           Expanded(
             child: Column(
@@ -40,17 +42,17 @@ class AppDetailsScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6.h),
                 Text(
                   description,
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: TextStyle(
+                    fontSize: 13.sp,
                     color: Colors.black54,
                     height: 1.4,
                   ),
@@ -69,151 +71,139 @@ class AppDetailsScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Hello ! Username",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Text(
                 "App Overview",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: _primaryGreen,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 decoration: BoxDecoration(
-                  color:
-                      const Color(0xFFA1BBA4), // Sage green matching screenshot
-                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xFFA1BBA4),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: const Text(
+                child: Text(
                   "This application is for vehicle owners. After you have done emission testing, you can upload the report through camera. The app scans the report and gives the reason for failure (if failed) and also recommendations on how to fix it. It also provides recommendations to repair vehicle even for pass reports",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     height: 1.4,
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
 
               Text(
                 "Key Features",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                   color: _primaryGreen,
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               _buildFeatureListItem(
                 title: "Emission Prediction",
-                description:
-                    "Predicts emission levels based on the test report and vehicle data.",
+                description: "Predicts emission levels based on the test report and vehicle data.",
                 imagePath: "assets/images/appDetailed/emission prediction.png",
-                bgColor: const Color(0xFFF1F8EE), // Light green
+                bgColor: const Color(0xFFF1F8EE),
               ),
 
               _buildFeatureListItem(
                 title: "Data Input for Vehicle Details",
                 description: "Add and manage your vehicle information easily",
                 imagePath: "assets/images/appDetailed/data-input.png",
-                bgColor: const Color(0xFFE9F2FB), // Light blue
+                bgColor: const Color(0xFFE9F2FB),
               ),
 
               _buildFeatureListItem(
                 title: "Report Generation",
-                description:
-                    "Get clear insights and manage suggestions based in analysis",
+                description: "Get clear insights and manage suggestions based in analysis",
                 imagePath: "assets/images/appDetailed/repot_ge.png",
-                bgColor: const Color(0xFFF3E8FA), // Light purple
+                bgColor: const Color(0xFFF3E8FA),
               ),
 
               _buildFeatureListItem(
                 title: "Dashboard Visualization",
                 description: "View trends and history with easy dashboards",
                 imagePath: "assets/images/appDetailed/dashboard.png",
-                bgColor: const Color(0xFFFFF3E6), // Light orange
+                bgColor: const Color(0xFFFFF3E6),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
-              // How the System Works Section
               Text(
                 "How the System Works",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                   color: _primaryGreen,
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
 
-              // Step 1
               _buildSystemStepItem(
                 stepNumber: "1",
                 title: "User takes photo of emission testing reports",
                 description: "Capture the report using the in-app camera.",
               ),
 
-              // Step 2
               _buildSystemStepItem(
                 stepNumber: "2",
                 title: "System processes data",
-                description:
-                    "The system app scans and extracts the required information.",
+                description: "The system app scans and extracts the required information.",
               ),
 
-              // Step 3
               _buildSystemStepItem(
                 stepNumber: "3",
                 title: "Model predicts emission levels",
-                description:
-                    "Our intelligent model analyzes the data and predicts results.",
+                description: "Our intelligent model analyzes the data and predicts results.",
               ),
 
-              // Step 4
               _buildSystemStepItem(
                 stepNumber: "4",
                 title: "Results are displayed",
-                description:
-                    "You get results along with reasons and recommendations",
+                description: "You get results along with reasons and recommendations",
                 isLast: true,
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
-              // Explore App Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryGreen,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(30.r),
                     ),
                   ),
                   onPressed: () {
-                    // Add navigation or action here
+                    Navigator.pushNamed(context, '/home');
                   },
-                  child: const Text(
+                  child: Text(
                     "Explore App",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -221,7 +211,7 @@ class AppDetailsScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -236,16 +226,15 @@ class AppDetailsScreen extends StatelessWidget {
     bool isLast = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: EdgeInsets.only(bottom: 24.0.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Step Number Circle with Vertical Line
           Column(
             children: [
               Container(
-                width: 50,
-                height: 50,
+                width: 50.w,
+                height: 50.w,
                 decoration: BoxDecoration(
                   color: _primaryGreen,
                   shape: BoxShape.circle,
@@ -253,9 +242,9 @@ class AppDetailsScreen extends StatelessWidget {
                 child: Center(
                   child: Text(
                     stepNumber,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -263,32 +252,31 @@ class AppDetailsScreen extends StatelessWidget {
               ),
               if (!isLast)
                 Container(
-                  width: 2,
-                  height: 60,
+                  width: 2.w,
+                  height: 60.h,
                   color: _primaryGreen.withOpacity(0.3),
                 ),
             ],
           ),
-          const SizedBox(width: 20),
-          // Text Content
+          SizedBox(width: 20.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6.h),
                 Text(
                   description,
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: TextStyle(
+                    fontSize: 13.sp,
                     color: Colors.black54,
                     height: 1.4,
                   ),

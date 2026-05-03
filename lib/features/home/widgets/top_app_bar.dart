@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color primaryGreen;
@@ -17,7 +18,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       title: Image.asset(
         'assets/logo.png',
-        height: 32,
+        height: 32.h,
         fit: BoxFit.contain,
       ),
     );

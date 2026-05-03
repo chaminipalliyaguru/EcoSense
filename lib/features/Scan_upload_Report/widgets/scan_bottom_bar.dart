@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScanBottomBar extends StatelessWidget {
   final Color primaryGreen;
@@ -18,7 +19,7 @@ class ScanBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 20.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -32,23 +33,23 @@ class ScanBottomBar extends StatelessWidget {
           GestureDetector(
             onTap: onCaptureTap,
             child: Container(
-              width: 68,
-              height: 68,
+              width: 68.w,
+              height: 68.w,
               decoration: BoxDecoration(
                 color: primaryGreen,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
                     color: primaryGreen.withValues(alpha: 0.35),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    blurRadius: 12.r,
+                    offset: Offset(0, 4.h),
                   ),
                 ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.camera_alt_outlined,
                 color: Colors.white,
-                size: 30,
+                size: 30.sp,
               ),
             ),
           ),
@@ -78,13 +79,13 @@ class _ActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
+        width: 48.w,
+        height: 48.w,
         decoration: BoxDecoration(
           color: Colors.grey.shade100,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, size: 26, color: Colors.black87),
+        child: Icon(icon, size: 24.sp, color: Colors.black87), // Adjusted size
       ),
     );
   }

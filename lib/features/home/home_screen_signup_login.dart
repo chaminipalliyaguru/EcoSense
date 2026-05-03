@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'widgets/top_app_bar.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/greeting_header.dart';
@@ -31,11 +32,11 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
             const GreetingHeader(userName: 'Username'),
             const HomeHeroSection(),
             ScanEmissionCard(primaryGreen: _primaryGreen),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             const FeatureGrid(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             QuickTipsSection(primaryGreen: _primaryGreen),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.h),
           ],
         ),
       ),
@@ -62,10 +63,8 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
 
     switch (index) {
       case 2:
-        // TODO: Navigate to History screen
         break;
       case 3:
-        // TODO: Navigate to Profile screen
         break;
       default:
         break;

@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeHeroSection extends StatelessWidget {
   const HomeHeroSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryGreen = Color(0xFF1E6D2F); // A deep green matching the goal image
+    const Color primaryGreen = Color(0xFF1E6D2F);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 10.r,
+              offset: Offset(0, 4.h),
             ),
           ],
           border: Border.all(color: Colors.grey.shade100),
@@ -32,28 +33,28 @@ class HomeHeroSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'Your Vehicle,',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,
                       letterSpacing: 0.2,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'Your Environment,',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w900,
                       color: primaryGreen,
                       letterSpacing: 0.2,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'Our Future.',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,
                       letterSpacing: 0.2,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuickTipsSection extends StatelessWidget {
   final Color primaryGreen;
@@ -11,19 +12,19 @@ class QuickTipsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Quick Tips',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 20.sp, // Adjusted
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -75,8 +76,8 @@ class _QuickTipItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 60,
-            height: 60,
+            width: 60.w,
+            height: 60.w,
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -84,29 +85,29 @@ class _QuickTipItem extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  blurRadius: 4.r,
+                  offset: Offset(0, 2.h),
                 ),
               ],
             ),
-            child: Icon(icon, color: primaryGreen, size: 36),
+            child: Icon(icon, color: primaryGreen, size: 30.sp), // Adjusted
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: 13.sp, // Adjusted
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Text(
             detail,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 11.sp, // Adjusted
               color: Colors.grey.shade600,
               height: 1.4,
             ),

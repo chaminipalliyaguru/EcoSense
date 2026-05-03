@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReportAnalyzingScreen extends StatefulWidget {
   const ReportAnalyzingScreen({super.key});
@@ -21,17 +22,16 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
 
   void _startSimulatedAnalysis() {
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted) return;
       setState(() {
         if (_progress < 1.0) {
           _progress += 0.01;
           
-          // Update steps based on progress
           if (_progress > 0.4 && _step == 0) _step = 1;
           if (_progress > 0.7 && _step == 1) _step = 2;
           if (_progress >= 1.0 && _step == 2) _step = 3;
         } else {
           _timer?.cancel();
-          // TODO: Navigate to results screen after a short delay
         }
       });
     });
@@ -45,7 +45,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFF5A805E); // Green from the image
+    final primaryColor = const Color(0xFF5A805E);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
@@ -53,52 +53,49 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
         backgroundColor: primaryColor,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Report Analyzing',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 20.sp),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
         children: [
-          const SizedBox(height: 60),
+          SizedBox(height: 60.h),
           
-          // ── Progress Circle ──
           _buildProgressCircle(primaryColor),
           
-          const SizedBox(height: 40),
+          SizedBox(height: 40.h),
           
-          // ── Header Text ──
-          const Text(
+          Text(
             'Analyzing emission report...',
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 22.sp,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1E293B),
+              color: const Color(0xFF1E293B),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
             child: Text(
               'Verifying data against Sri Lanka environmental standards and vehicle specifications.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: Colors.black54,
                 height: 1.5,
               ),
             ),
           ),
           
-          const SizedBox(height: 40),
+          SizedBox(height: 40.h),
           
-          // ── Steps Checklist ──
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: Column(
                 children: [
                   _buildStepItem(
@@ -108,7 +105,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                     isActive: _step == 0,
                     showLine: true,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   _buildStepItem(
                     title: 'Verifying authenticity',
                     status: _step > 1 ? 'Completed' : (_step == 1 ? 'In progress' : 'Pending'),
@@ -116,7 +113,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                     isActive: _step == 1,
                     showLine: true,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   _buildStepItem(
                     title: 'Running AI diagnostics',
                     status: _step > 2 ? 'Completed' : (_step == 2 ? 'In progress' : 'Pending'),
@@ -134,25 +131,21 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
   }
 
   Widget _buildProgressCircle(Color color) {
-    // Ring is 240px diameter (radius = 120)
-    const double ringDiameter = 240.0;
-    const double ringRadius = ringDiameter / 2;
-    const double strokeWidth = 10.0;
-    const double iconSize = 42.0;
+    final double ringDiameter = 240.w;
+    final double ringRadius = ringDiameter / 2;
+    final double strokeWidth = 10.w;
+    final double iconSize = 42.w;
 
-    // Container is larger to give room for the icon outside the ring
-    const double containerSize = ringDiameter + iconSize + 16;
-    // Ring is centered in the container
-    const double ringOffset = (containerSize - ringDiameter) / 2;
+    final double containerSize = ringDiameter + iconSize + 16.w;
+    final double ringOffset = (containerSize - ringDiameter) / 2;
 
-    // Icon placed OUTSIDE the ring at 40° (1 o'clock) from top
-    // Distance from center = ring outer edge + gap + icon radius
-    const double dist = ringRadius + strokeWidth / 2 + 6 + iconSize / 2;
-    const double cx = containerSize / 2;
-    const double cy = containerSize / 2;
+    final double dist = ringRadius + strokeWidth / 2 + 6.w + iconSize / 2;
+    final double cx = containerSize / 2;
+    final double cy = containerSize / 2;
+    
     // sin(40°) = 0.6428, cos(40°) = 0.7660
-    const double iconCenterX = cx + dist * 0.6428;
-    const double iconCenterY = cy - dist * 0.7660;
+    final double iconCenterX = cx + dist * 0.6428;
+    final double iconCenterY = cy - dist * 0.7660;
 
     return Center(
       child: SizedBox(
@@ -160,7 +153,6 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
         height: containerSize,
         child: Stack(
           children: [
-            // ── Background track ring ──
             Positioned(
               left: ringOffset,
               top: ringOffset,
@@ -173,7 +165,6 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
               ),
             ),
 
-            // ── Animated progress arc ──
             Positioned(
               left: ringOffset,
               top: ringOffset,
@@ -188,7 +179,6 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
               ),
             ),
 
-            // ── Percentage & label text ──
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -196,15 +186,15 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                   Text(
                     '${(_progress * 100).toInt()}%',
                     style: TextStyle(
-                      fontSize: 46,
+                      fontSize: 46.sp,
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'PROCESSING',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
                       color: Colors.black38,
@@ -214,7 +204,6 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
               ),
             ),
 
-            // ── Icon badge OUTSIDE the ring at 1 o'clock ──
             Positioned(
               left: iconCenterX - iconSize / 2,
               top: iconCenterY - iconSize / 2,
@@ -224,19 +213,19 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: color.withOpacity(0.25), width: 1.5),
+                  border: Border.all(color: color.withOpacity(0.25), width: 1.5.w),
                   boxShadow: [
                     BoxShadow(
                       color: color.withOpacity(0.15),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 2.h),
                     ),
                   ],
                 ),
                 child: Icon(
                   Icons.show_chart,
                   color: color,
-                  size: 22,
+                  size: 22.sp,
                 ),
               ),
             ),
@@ -259,37 +248,35 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Timeline indicator
           Column(
             children: [
               Container(
-                width: 32,
-                height: 32,
+                width: 32.w,
+                height: 32.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isDone ? color : Colors.white,
                   border: Border.all(
                     color: isDone ? color : (isActive ? color : Colors.grey.shade300),
-                    width: 2,
+                    width: 2.w,
                   ),
                 ),
                 child: isDone
-                    ? const Icon(Icons.check, size: 18, color: Colors.white)
+                    ? Icon(Icons.check, size: 18.sp, color: Colors.white)
                     : (isActive 
-                        ? Center(child: SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(color))))
+                        ? Center(child: SizedBox(width: 12.w, height: 12.w, child: CircularProgressIndicator(strokeWidth: 2.w, valueColor: AlwaysStoppedAnimation(color))))
                         : null),
               ),
               if (showLine)
                 Expanded(
                   child: Container(
-                    width: 2,
+                    width: 2.w,
                     color: isDone ? color : Colors.grey.shade300,
                   ),
                 ),
             ],
           ),
-          const SizedBox(width: 20),
-          // Text Content
+          SizedBox(width: 20.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,20 +284,20 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: isActive || isDone ? const Color(0xFF1E293B) : Colors.grey.shade500,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Text(
                   status,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     color: isDone ? const Color(0xFF5A805E) : (isActive ? Colors.black45 : Colors.grey.shade400),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../verify_email/verify_email_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
 
-  final Color _primaryGreen = const Color(0xFF4A7B59); // Match image green color
+  final Color _primaryGreen = const Color(0xFF4A7B59);
 
   Widget _buildTextField({
     required String hintText,
@@ -23,17 +24,17 @@ class _SignupScreenState extends State<SignupScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: Colors.grey, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide(color: _primaryGreen, width: 1),
         ),
         suffixIcon: suffixIcon,
@@ -47,29 +48,29 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               // Sign Up Title
               Text(
                 "Sign Up",
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 32.sp,
                   fontWeight: FontWeight.bold,
                   color: _primaryGreen,
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // User Name Field
               _buildTextField(hintText: "User Name"),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Full Name Field
               _buildTextField(hintText: "Full Name"),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Password Field
               _buildTextField(
@@ -87,22 +88,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Re-enter Password Field
               _buildTextField(
                 hintText: "Re-enter Password",
-                obscureText: true, // Always obscure re-enter password
+                obscureText: true,
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // Sign up Button
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 50.h,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to email verification process
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const VerifyEmailScreen()),
@@ -111,35 +111,35 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryGreen,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
+                  child: Text(
                     "Sign up",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Login Button
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 50.h,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Go back to login
+                    Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: const Color(0xFFF2F2F2),
                     side: const BorderSide(color: Colors.grey, width: 0.5),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                     elevation: 0,
                   ),
@@ -147,13 +147,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     "Login",
                     style: TextStyle(
                       color: _primaryGreen,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // OR Divider
               Row(
@@ -161,11 +161,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   Expanded(
                     child: Divider(color: Colors.grey.shade300, thickness: 1),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0.w),
                     child: Text(
                       "Or",
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                     ),
                   ),
                   Expanded(
@@ -173,26 +173,26 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // Continue with Google Button
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 50.h,
                 child: OutlinedButton.icon(
                   onPressed: () {
                     // Google signup logic
                   },
-                  icon: const Icon(
-                    Icons.g_mobiledata, // Placeholder for Google G
-                    color: Color(0xFF4A7B59),
-                    size: 30,
+                  icon: Icon(
+                    Icons.g_mobiledata,
+                    color: const Color(0xFF4A7B59),
+                    size: 30.sp,
                   ),
                   label: Text(
                     "Continue with Google",
                     style: TextStyle(
                       color: _primaryGreen,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -200,36 +200,37 @@ class _SignupScreenState extends State<SignupScreen> {
                     backgroundColor: const Color(0xFFF2F2F2),
                     side: BorderSide(color: Colors.grey.shade300, width: 1),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                     elevation: 0,
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // Bottom Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Already have an account?",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // Go back to login
+                      Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      minimumSize: const Size(50, 30),
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      minimumSize: Size(50.w, 30.h),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text(
+                    child: Text(
                       "Login.",
                       style: TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
                       ),
                     ),
                   ),
