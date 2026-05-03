@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
 import '../login_and_signup/signup_screen.dart';
-import '../app_details/app_details_screen.dart';
+import '../app_details/guest_user_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -52,8 +52,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top section with Welcome text
-                Padding(
-                  padding: const EdgeInsets.only(
+                const Padding(
+                  padding: EdgeInsets.only(
                     top: 200.0,
                     left: 15.0,
                     right: 20.0,
@@ -61,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Welcome to\nEcoSense",
                         style: TextStyle(
                           color: Colors.white,
@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const AppDetailsScreen()),
+                              MaterialPageRoute(builder: (context) => const GuestUserScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(

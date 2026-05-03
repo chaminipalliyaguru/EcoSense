@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import '../forgot_password/forgot_password_screen.dart';
+import '../home/home_screen_signup_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +14,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = true;
   bool _obscurePassword = true;
 
-  final Color _primaryGreen = const Color(0xFF4A7B59); // Match image green color
+  final Color _primaryGreen =
+      const Color(0xFF4A7B59); // Match image green color
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +57,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   hintText: "Email/User name",
                   hintStyle: const TextStyle(color: Colors.grey),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(color: Colors.grey, width: 1),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                    borderSide:
+                        BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -77,14 +82,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   hintText: "Password",
                   hintStyle: const TextStyle(color: Colors.grey),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(color: Colors.grey, width: 1),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                    borderSide:
+                        BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -92,7 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -132,7 +141,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Spacer(),
                   TextButton(
                     onPressed: () {
-                      // Forgot password logic
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen()),
+                      );
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
@@ -154,7 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Login action
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryGreen,
@@ -183,7 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SignupScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignupScreen()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -235,7 +252,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Google login logic
                   },
                   icon: const Icon(
-                    Icons.g_mobiledata, // Placeholder for Google G, you might want to use a real asset later
+                    Icons
+                        .g_mobiledata, // Placeholder for Google G, you might want to use a real asset later
                     color: Color(0xFF4A7B59),
                     size: 30,
                   ),
@@ -272,7 +290,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignupScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const SignupScreen()),
                         );
                       },
                       style: TextButton.styleFrom(
