@@ -64,7 +64,7 @@ class HomeHeroSection extends StatelessWidget {
             ),
             // Right Side: Image
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Image.asset(
                 'assets/images/home/home-your-vehical.png',
                 fit: BoxFit.contain,
