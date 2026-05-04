@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../about/about_screen.dart';
 
 class GuestFeatureList extends StatelessWidget {
   const GuestFeatureList({super.key});
@@ -32,7 +33,12 @@ class GuestFeatureList extends StatelessWidget {
             title: 'About',
             subtitle: 'Learn more about the app and our mission',
             onTap: () {
-              // TODO: Navigate to About
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: 12),

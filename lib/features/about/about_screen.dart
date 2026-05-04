@@ -7,6 +7,8 @@ import '../../data/system_steps_data.dart';
 import '../../widgets/system_step_item.dart';
 import '../../data/benefits_ecosense.dart';
 import '../../widgets/benefits_list_item.dart';
+import '../../widgets/button.dart';
+import '../home/home_screen_signup_login.dart';
 
 class AboutScreen extends StatelessWidget{
   const AboutScreen({super.key});
@@ -151,7 +153,21 @@ class AboutScreen extends StatelessWidget{
                           bgColor: benefit.bgColor,
                         );
                       }).toList(),
-                    )
+                    ),
+
+                    //back to home button
+                    Button(
+                      text: "Back to Home",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreenSignupLogin(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
             )
