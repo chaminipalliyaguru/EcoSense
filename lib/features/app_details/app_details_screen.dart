@@ -4,6 +4,7 @@ import '../../widgets/feature_list_item.dart';
 import '../../data/key_features.dart';
 import '../../data/system_steps_data.dart';
 import '../../widgets/system_step_item.dart';
+import '../../widgets/button.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
@@ -167,33 +168,16 @@ class AppDetailsScreen extends StatelessWidget {
               const SizedBox(height: 40),
 
               // Explore App Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryGreen,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+              Button(
+                text: "Explore App",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const GuestUserHomePage(),
                     ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const GuestUserHomePage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Explore App",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
 
               const SizedBox(height: 20),

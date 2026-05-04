@@ -6,6 +6,8 @@ import 'widgets/tips_header.dart';
 import 'widgets/how_to_do_it.dart';
 import 'widgets/tips_for_better_results.dart';
 import 'widgets/keep_your_vehicle_eco_friendly.dart';
+import '../../widgets/button.dart';
+import '../home/home_screen_signup_login.dart';
 
 class TipsGuideScreen extends StatefulWidget {
   final bool isGuest;
@@ -30,7 +32,7 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
       appBar: TopAppBar(primaryGreen: _primaryGreen),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Tips Header
@@ -48,7 +50,23 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
             // 4. Keep your Vehicle Eco-Friendly
             KeepYourVehicleEcoFriendly(),
             SizedBox(height: 40),
+
+            //back to home button
+            Button(
+              text: "Back to Home",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HomeScreenSignupLogin(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
           ],
+
+
         ),
       ),
       bottomNavigationBar: effectiveIsGuest
