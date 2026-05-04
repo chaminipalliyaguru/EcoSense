@@ -74,6 +74,7 @@ flutter:
     - assets/images/
     - assets/logo.png
     - assets/images/appDetailed/
+    - assets/images/appBenefits/
     - assets/images/home/
     - assets/images/home/home-your-vehical.png
 

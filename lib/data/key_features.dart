@@ -20,7 +20,7 @@ final List<Feature> appFeatures = [
     description:
     "Predicts emission levels based on the test report and vehicle data.",
     imagePath: "assets/images/appDetailed/emission prediction.png",
-    bgColor: Color(0xFFF1F8EE),
+    bgColor: Color(0xFFF0F5E2),
   ),
   Feature(
     title: "Data Input for Vehicle Details",
