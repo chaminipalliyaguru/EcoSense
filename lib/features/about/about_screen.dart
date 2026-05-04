@@ -9,14 +9,25 @@ import '../../data/benefits_ecosense.dart';
 import '../../widgets/benefits_list_item.dart';
 import '../../widgets/button.dart';
 import '../home/home_screen_signup_login.dart';
+import '../../widgets/app_bottom_nav.dart';
 
-class AboutScreen extends StatelessWidget{
-  const AboutScreen({super.key});
+class AboutScreen extends StatefulWidget {
+  final bool isGuest;
 
+  const AboutScreen({super.key, this.isGuest = false});
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
   @override
   Widget build(BuildContext context) {
+    final bool effectiveIsGuest =
+        (ModalRoute.of(context)?.settings.arguments as bool?) ?? widget.isGuest;
     // TODO: implement build
     Widget sectionTitle(String text) {
       return Text(
@@ -174,6 +185,19 @@ class AboutScreen extends StatelessWidget{
           ],
         ),
       )),
+
+      // Logic to select guest user or login user to show the footer
+      bottomNavigationBar: AppBottomNav(
+        isGuest: effectiveIsGuest,
+        selectedIndex: _selectedIndex,
+        primaryGreen: _primaryGreen,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+          }
+          setState(() => _selectedIndex = index);
+        },
+      ),
     );
   }
 }
