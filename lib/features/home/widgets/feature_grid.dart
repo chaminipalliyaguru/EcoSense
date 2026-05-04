@@ -8,7 +8,7 @@ class FeatureGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           IntrinsicHeight(
@@ -27,7 +27,7 @@ class FeatureGrid extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(width: 12.w),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _FeatureCard(
                     icon: Icons.lightbulb_outline,
@@ -37,14 +37,14 @@ class FeatureGrid extends StatelessWidget {
                     subtitle:
                         'Helpful tips and guides\nto keep your vehicle in\ngood condition',
                     onTap: () {
-                      // TODO: Navigate to Tips
+                      Navigator.pushNamed(context, '/tips');
                     },
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 12.h),
+          const SizedBox(height: 12),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,7 +66,7 @@ class FeatureGrid extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(width: 12.w),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _FeatureCard(
                     icon: Icons.support_agent,
@@ -112,18 +112,18 @@ class _FeatureCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: EdgeInsets.all(16.w),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(color: Colors.grey.shade200),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 8.r,
-                offset: Offset(0, 4.h),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -131,28 +131,28 @@ class _FeatureCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 48.w,
-                height: 48.w,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   color: iconBg,
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: iconColor, size: 28.sp), // Adjusted icon size
+                child: Icon(icon, color: iconColor, size: 48),
               ),
-              SizedBox(height: 10.h),
+              const SizedBox(height: 10),
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 16.sp, // Adjusted font size
+                style: const TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 4.h),
+              const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 12.sp, // Adjusted font size
+                  fontSize: 16,
                   color: Colors.grey.shade600,
                   height: 1.4,
                 ),
