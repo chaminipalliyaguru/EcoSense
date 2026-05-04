@@ -8,6 +8,7 @@ import 'widgets/tips_for_better_results.dart';
 import 'widgets/keep_your_vehicle_eco_friendly.dart';
 import '../../widgets/button.dart';
 import '../home/home_screen_signup_login.dart';
+import '../../widgets/app_bottom_nav.dart';
 
 class TipsGuideScreen extends StatefulWidget {
   final bool isGuest;
@@ -69,27 +70,19 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
 
         ),
       ),
-      bottomNavigationBar: effectiveIsGuest
-          ? GuestBottomNavBar(
-              selectedIndex: _selectedIndex,
-              onTap: (index) {
-                if (index == 0) {
-                  Navigator.pop(context);
-                }
-                setState(() => _selectedIndex = index);
-              },
-              primaryGreen: _primaryGreen,
-            )
-          : BottomNavBar(
-              selectedIndex: _selectedIndex,
-              onTap: (index) {
-                if (index == 0) {
-                  Navigator.pop(context);
-                }
-                setState(() => _selectedIndex = index);
-              },
-              primaryGreen: _primaryGreen,
-            ),
+
+      // Logic to select guest user or login user to show the footer
+      bottomNavigationBar: AppBottomNav(
+        isGuest: effectiveIsGuest,
+        selectedIndex: _selectedIndex,
+        primaryGreen: _primaryGreen,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+          }
+          setState(() => _selectedIndex = index);
+        },
+      ),
     );
   }
 }

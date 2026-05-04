@@ -36,7 +36,7 @@ class GuestFeatureList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AboutScreen(),
+                  builder: (context) => const AboutScreen(isGuest: true),
                 ),
               );
             },
