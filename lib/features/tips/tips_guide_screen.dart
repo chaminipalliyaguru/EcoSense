@@ -47,7 +47,7 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
       backgroundColor: Colors.white,
       appBar: TopAppBar(primaryGreen: _primaryGreen),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,7 +65,6 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
 
             // 4. Keep your Vehicle Eco-Friendly
             KeepYourVehicleEcoFriendly(),
-            SizedBox(height: 40),
           ],
         ),
       ),

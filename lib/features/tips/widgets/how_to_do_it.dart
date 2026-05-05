@@ -126,7 +126,7 @@ class _TipStepItem extends StatelessWidget {
               Text(
                 description,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: Colors.grey.shade700,
                   height: 1.4,
                 ),
