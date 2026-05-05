@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../about/about_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});
@@ -35,7 +37,7 @@ class FeatureGrid extends StatelessWidget {
                     subtitle:
                         'Helpful tips and guides\nto keep your vehicle in\ngood condition',
                     onTap: () {
-                      // TODO: Navigate to Tips
+                      Navigator.pushNamed(context, '/tips');
                     },
                   ),
                 ),
@@ -55,7 +57,12 @@ class FeatureGrid extends StatelessWidget {
                     title: 'About',
                     subtitle: 'Learn more about\nthe app and our\nmission',
                     onTap: () {
-                      // TODO: Navigate to About
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutScreen(),
+                        ),
+                      );
                     },
                   ),
                 ),

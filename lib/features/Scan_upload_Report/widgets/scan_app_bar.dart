@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScanAppBar extends StatelessWidget {
   final Color backgroundColor;
@@ -18,28 +19,28 @@ class ScanAppBar extends StatelessWidget {
       color: backgroundColor,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
-        left: 8,
-        right: 16,
-        bottom: 12,
+        left: 8.w,
+        right: 16.w,
+        bottom: 12.h,
       ),
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.chevron_left, color: Colors.white, size: 28),
+            icon: Icon(Icons.chevron_left, color: Colors.white, size: 28.sp),
             onPressed: onBack,
           ),
           Expanded(
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(width: 48), // Spacer to balance back button
+          SizedBox(width: 48.w),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_details_screen.dart';
 
 class GuestUserScreen extends StatelessWidget {
@@ -31,9 +32,9 @@ class GuestUserScreen extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 stops: [0.0, 0.4, 1.0],
                 colors: [
-                  Color(0x88289C3B), // dark green with opacity
-                  Color(0x66289C3B), // medium green
-                  Color(0x00FFFFFF), // transparent
+                  Color(0x88289C3B),
+                  Color(0x66289C3B),
+                  Color(0x00FFFFFF),
                 ],
               ),
             ),
@@ -42,63 +43,60 @@ class GuestUserScreen extends StatelessWidget {
           // Content
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Flexible spacer to push text down a bit (approx 1/4th of screen)
                   const Spacer(flex: 2),
 
                   // Title Text
-                  const Text(
+                  Text(
                     "Start Your Emission\nCheck Now",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 38,
+                      fontSize: 34.sp, // Adjusted
                       fontWeight: FontWeight.bold,
                       height: 1.1,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // Description Text
-                  const Text(
+                  Text(
                     "Explore the app to quickly upload your emission test report and view basic analysis results without creating an account. You can experience the main features before deciding to register for full access.",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 15.sp, // Adjusted
                       fontWeight: FontWeight.w500,
                       height: 1.5,
                     ),
                   ),
 
-                  // Spacer to push button to the bottom
                   const Spacer(flex: 5),
 
                   // View App Details Button
                   SizedBox(
                     width: double.infinity,
-                    height: 55,
+                    height: 55.h,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Action for View App Details
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const AppDetailsScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3D7A44), // Match the dark green button color
+                        backgroundColor: const Color(0xFF3D7A44),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
+                          borderRadius: BorderRadius.circular(28.r),
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
+                      child: Text(
                         "View App Details",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

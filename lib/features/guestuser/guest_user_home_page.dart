@@ -38,7 +38,10 @@ class _GuestUserHomePageState extends State<GuestUserHomePage> {
             const SizedBox(height: 24),
             const GuestFeatureList(),
             const SizedBox(height: 32),
-            QuickTipsSection(primaryGreen: _primaryGreen),
+            QuickTipsSection(
+              primaryGreen: _primaryGreen,
+              isGuest: true,
+            ),
             const SizedBox(height: 40),
           ],
         ),

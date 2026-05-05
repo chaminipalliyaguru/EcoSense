@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Scan_upload_Report/scan_report_screen.dart';
 
 class ScanEmissionCard extends StatelessWidget {
@@ -12,7 +13,7 @@ class ScanEmissionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -27,55 +28,55 @@ class ScanEmissionCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: primaryGreen.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 10.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.w),
           child: Row(
             children: [
               // Camera icon box
               Container(
-                width: 68,
-                height: 68,
+                width: 68.w,
+                height: 68.w,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12.w),
                 child: Image.asset(
                   'assets/images/home/start-new-scaner.png',
                   color: Colors.white,
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Scan Emission Report',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 22.sp, // Slightly reduced for smaller screens
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Text(
                       'Upload or take a photo of your emission\ntest report to get started',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14.sp,
                         color: Colors.white.withValues(alpha: 0.85),
                         height: 1.4,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     SizedBox(
-                      height: 34,
+                      height: 36.h,
                       child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
@@ -85,18 +86,18 @@ class ScanEmissionCard extends StatelessWidget {
                             ),
                           );
                         },
-                        icon: const Icon(Icons.camera_alt, size: 16),
-                        label: const Text(
+                        icon: Icon(Icons.camera_alt, size: 16.sp),
+                        label: Text(
                           'Scan now',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 15.sp),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: primaryGreen,
                           elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          padding: EdgeInsets.symmetric(horizontal: 14.w),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                       ),

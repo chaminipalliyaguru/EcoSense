@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class QuickTipsSection extends StatelessWidget {
   final Color primaryGreen;
+  final bool isGuest;
 
   const QuickTipsSection({
     super.key,
     required this.primaryGreen,
+    this.isGuest = false,
   });
 
   @override
@@ -15,13 +17,34 @@ class QuickTipsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Quick Tips',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Quick Tips',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/tips',
+                    arguments: isGuest,
+                  );
+                },
+                child: Text(
+                  'See All',
+                  style: TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 18),
           Row(

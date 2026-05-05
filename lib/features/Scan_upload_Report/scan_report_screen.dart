@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Extracted Widgets
 import 'widgets/scan_app_bar.dart';
@@ -79,7 +80,6 @@ class _ScanReportScreenState extends State<ScanReportScreen>
         return;
       }
       
-      // Default to back camera if available
       int backCameraIndex = _cameras.indexWhere(
           (cam) => cam.lensDirection == CameraLensDirection.back);
       _currentCameraIndex = backCameraIndex != -1 ? backCameraIndex : 0;
@@ -92,7 +92,6 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   }
 
   Future<void> _startCamera(CameraDescription camera) async {
-    // Dispose previous controller before creating a new one
     await _cameraController?.dispose();
 
     final controller = CameraController(
@@ -130,28 +129,23 @@ class _ScanReportScreenState extends State<ScanReportScreen>
       return;
     }
 
-    // Determine target direction (toggle back <-> front)
     final currentDir = _cameras[_currentCameraIndex].lensDirection;
     final targetDir = currentDir == CameraLensDirection.back
         ? CameraLensDirection.front
         : CameraLensDirection.back;
 
-    // Find the first camera with the target direction
     int targetIndex = _cameras.indexWhere((cam) => cam.lensDirection == targetDir);
 
-    // If no camera with target direction found, just cycle to the next one
     if (targetIndex == -1) {
       targetIndex = (_currentCameraIndex + 1) % _cameras.length;
     }
 
     _currentCameraIndex = targetIndex;
-    _selectedImage = null; // Reset selection when switching to camera
+    _selectedImage = null;
 
-    
     if (mounted) setState(() => _isCameraReady = false);
     await _startCamera(_cameras[_currentCameraIndex]);
   }
-
 
   Future<void> _capturePhoto() async {
     if (_cameraController == null || !_cameraController!.value.isInitialized) return;
@@ -225,22 +219,14 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   Widget _buildViewfinderStack() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Camera frame is BIG (95%)
         final frameW = constraints.maxWidth * 0.95; 
         final frameH = constraints.maxHeight * 0.94; 
 
         return Stack(
           children: [
-            // ── Camera Preview ──
             _buildContentLayer(),
-
-            // ── Darkened Overlay ──
             ScanOverlay(frameWidth: frameW, frameHeight: frameH),
-
-            // ── Instruction Badge ──
             _buildInstructionBadge(),
-
-            // ── Scan Frame (Corners + Animated Line) ──
             Center(
               child: ScanFrame(
                 width: frameW,
@@ -248,11 +234,9 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                 scanAnimation: _scanLineAnimation,
                 cornerColor: _primaryGreen,
                 hintText: 'Align the report within the frame',
-                showScanLine: false, // Disabled for camera view
+                showScanLine: false,
               ),
             ),
-
-            // ── Full Screen Image Preview Overlay ──
             if (_selectedImage != null)
               ImagePreviewOverlay(
                 imageFile: _selectedImage!,
@@ -294,24 +278,23 @@ class _ScanReportScreenState extends State<ScanReportScreen>
     );
   }
 
-
   Widget _buildInstructionBadge() {
     return Positioned(
-      top: 20, left: 0, right: 0,
+      top: 20.h, left: 0, right: 0,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.72),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
           ),
           child: Text(
             _selectedImage != null
                 ? 'Image selected for analysis'
                 : 'Align the report within the frame',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -320,24 +303,22 @@ class _ScanReportScreenState extends State<ScanReportScreen>
     );
   }
 
-
-
   Widget _buildPermissionDeniedUI() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.camera_alt_outlined, size: 64, color: Colors.white.withValues(alpha: 0.4)),
-          const SizedBox(height: 16),
-          const Text('Camera permission required', style: TextStyle(color: Colors.white, fontSize: 16)),
-          const SizedBox(height: 12),
+          Icon(Icons.camera_alt_outlined, size: 64.sp, color: Colors.white.withValues(alpha: 0.4)),
+          SizedBox(height: 16.h),
+          Text('Camera permission required', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+          SizedBox(height: 12.h),
           ElevatedButton(
             onPressed: () => openAppSettings(),
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryGreen,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
             ),
-            child: const Text('Open Settings', style: TextStyle(color: Colors.white)),
+            child: Text('Open Settings', style: TextStyle(color: Colors.white, fontSize: 14.sp)),
           ),
         ],
       ),

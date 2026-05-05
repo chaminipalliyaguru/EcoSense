@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login_and_signup/login_screen.dart';
 import '../login_and_signup/signup_screen.dart';
 import '../app_details/guest_user_screen.dart';
@@ -38,9 +39,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 end: Alignment.bottomCenter,
                 stops: [0.0, 0.4, 1.0],
                 colors: [
-                  Color(0x88289C3B), // dark green with opacity
-                  Color(0x66289C3B), // medium green
-                  Color(0x00FFFFFF), // transparent
+                  Color(0x88289C3B),
+                  Color(0x66289C3B),
+                  Color(0x00FFFFFF),
                 ],
               ),
             ),
@@ -52,11 +53,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top section with Welcome text
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(
-                    top: 200.0,
-                    left: 15.0,
-                    right: 20.0,
+                    top: 200.0.h,
+                    left: 15.0.w,
+                    right: 20.0.w,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +66,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         "Welcome to\nEcoSense",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 56,
+                          fontSize: 50.sp, // Adjusted
                           fontWeight: FontWeight.bold,
                           height: 1.2,
                         ),
@@ -74,21 +75,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
 
-                // Spacer to push buttons to bottom
                 const Spacer(),
 
                 // Buttons section
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 40.0,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.0.w,
+                    vertical: 40.0.h,
                   ),
                   child: Column(
                     children: [
                       // Get Started Button
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 50.h,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -99,27 +99,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2E7D32),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(25.r),
                             ),
                             elevation: 3,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Get Started",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
-                      // Sign in Button
+                      // Sign up Button
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 50.h,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -130,27 +130,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2E7D32),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(25.r),
                             ),
                             elevation: 3,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Sign up",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
                       // Login Button
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 50.h,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -161,15 +161,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2E7D32),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(25.r),
                             ),
                             elevation: 3,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Login",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
