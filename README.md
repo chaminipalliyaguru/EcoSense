@@ -17,3 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Installed packages:
 - flutter_launcher_icons
+- flutter pub add flutter_screenutil
