@@ -94,45 +94,73 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
           ],
           border: Border.all(color: Colors.grey.shade100),
         ),
-        child: PageView.builder(
-          controller: _pageController,
-          onPageChanged: (index) {
-            _realIndex = index;
-          },
-          // No itemCount for "infinite" scroll
-          itemBuilder: (context, index) {
-            final slide = _slides[index % _slides.length];
-            return Row(
-              children: [
-                // Left Side: Text
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _buildSlideContent(slide, primaryGreen),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _realIndex = index;
+                });
+              },
+              // No itemCount for "infinite" scroll
+              itemBuilder: (context, index) {
+                final slide = _slides[index % _slides.length];
+                return Row(
+                  children: [
+                    // Left Side: Text
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _buildSlideContent(slide, primaryGreen),
+                      ),
+                    ),
+                    // Right Side: Image or Icon
+                    Expanded(
+                      flex: 2,
+                      child: slide['type'] == 'hero'
+                          ? Image.asset(
+                              slide['image'],
+                              fit: BoxFit.contain,
+                            )
+                          : Container(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                slide['icon'],
+                                size: 80.sp,
+                                color: primaryGreen.withValues(alpha: 0.15),
+                              ),
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            // Indicators
+            Padding(
+              padding: EdgeInsets.only(bottom: 0.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  _slides.length,
+                  (index) => Container(
+                    margin: EdgeInsets.symmetric(horizontal: 3.w),
+                    width: (_realIndex % _slides.length) == index ? 24.w : 8.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2.r),
+                      color: (_realIndex % _slides.length) == index
+                          ? primaryGreen
+                          : primaryGreen.withValues(alpha: 0.2),
+                    ),
                   ),
                 ),
-                // Right Side: Image or Icon
-                Expanded(
-                  flex: 2,
-                  child: slide['type'] == 'hero'
-                      ? Image.asset(
-                          slide['image'],
-                          fit: BoxFit.contain,
-                        )
-                      : Container(
-                          alignment: Alignment.centerRight,
-                          child: Icon(
-                            slide['icon'],
-                            size: 80.sp,
-                            color: primaryGreen.withValues(alpha: 0.15),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );
