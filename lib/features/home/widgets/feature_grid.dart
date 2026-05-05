@@ -131,19 +131,19 @@ class _FeatureCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: iconBg,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: iconColor, size: 48),
+                child: Icon(icon, color: iconColor, size: 30),
               ),
               const SizedBox(height: 10),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -152,7 +152,7 @@ class _FeatureCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey.shade600,
                   height: 1.4,
                 ),
