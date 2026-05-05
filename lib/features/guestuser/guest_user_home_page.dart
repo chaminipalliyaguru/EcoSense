@@ -3,7 +3,6 @@ import '../home/widgets/top_app_bar.dart';
 import '../home/widgets/greeting_header.dart';
 import '../home/widgets/home_hero_section.dart';
 import '../home/widgets/scan_emission_card.dart';
-import '../home/widgets/quick_tips_section.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
 import 'guest_bottom_nav_bar.dart';
 import 'guest_feature_list.dart';
@@ -30,19 +29,12 @@ class _GuestUserHomePageState extends State<GuestUserHomePage> {
           children: [
             const GreetingHeader(
               userName: '',
-              subtitle: 'Smart care for your vehicle',
             ),
             const HomeHeroSection(),
             const SizedBox(height: 12),
             ScanEmissionCard(primaryGreen: _primaryGreen),
             const SizedBox(height: 24),
             const GuestFeatureList(),
-            const SizedBox(height: 32),
-            QuickTipsSection(
-              primaryGreen: _primaryGreen,
-              isGuest: true,
-            ),
-            const SizedBox(height: 40),
           ],
         ),
       ),
