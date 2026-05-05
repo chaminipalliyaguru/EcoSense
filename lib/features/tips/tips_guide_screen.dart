@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../home/widgets/bottom_nav_bar.dart';
 import '../home/widgets/top_app_bar.dart';
 import '../guestuser/guest_bottom_nav_bar.dart';
+import '../Scan_upload_Report/scan_report_screen.dart';
 import 'widgets/tips_header.dart';
 import 'widgets/how_to_do_it.dart';
 import 'widgets/tips_for_better_results.dart';
@@ -19,6 +20,23 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
   int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
+  void _onNavTap(int index) {
+    if (index == 0) {
+      Navigator.pop(context);
+      return;
+    }
+
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ScanReportScreen()),
+      );
+      return;
+    }
+
+    setState(() => _selectedIndex = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Read isGuest from route arguments if provided
@@ -29,7 +47,7 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
       backgroundColor: Colors.white,
       appBar: TopAppBar(primaryGreen: _primaryGreen),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,29 +65,18 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
 
             // 4. Keep your Vehicle Eco-Friendly
             KeepYourVehicleEcoFriendly(),
-            SizedBox(height: 40),
           ],
         ),
       ),
       bottomNavigationBar: effectiveIsGuest
           ? GuestBottomNavBar(
               selectedIndex: _selectedIndex,
-              onTap: (index) {
-                if (index == 0) {
-                  Navigator.pop(context);
-                }
-                setState(() => _selectedIndex = index);
-              },
+              onTap: _onNavTap,
               primaryGreen: _primaryGreen,
             )
           : BottomNavBar(
               selectedIndex: _selectedIndex,
-              onTap: (index) {
-                if (index == 0) {
-                  Navigator.pop(context);
-                }
-                setState(() => _selectedIndex = index);
-              },
+              onTap: _onNavTap,
               primaryGreen: _primaryGreen,
             ),
     );
