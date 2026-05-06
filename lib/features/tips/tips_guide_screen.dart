@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../home/widgets/bottom_nav_bar.dart';
 import '../home/widgets/top_app_bar.dart';
 import '../guestuser/guest_bottom_nav_bar.dart';
+import '../Scan_upload_Report/scan_report_screen.dart';
 import 'widgets/tips_header.dart';
 import 'widgets/how_to_do_it.dart';
 import 'widgets/tips_for_better_results.dart';
@@ -21,6 +22,23 @@ class TipsGuideScreen extends StatefulWidget {
 class _TipsGuideScreenState extends State<TipsGuideScreen> {
   int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF4A7B59);
+
+  void _onNavTap(int index) {
+    if (index == 0) {
+      Navigator.pop(context);
+      return;
+    }
+
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ScanReportScreen()),
+      );
+      return;
+    }
+
+    setState(() => _selectedIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {

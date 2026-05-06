@@ -17,12 +17,12 @@ class KeepYourVehicleEcoFriendly extends StatelessWidget {
             letterSpacing: 0.2,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 30),
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
-          mainAxisSpacing: 24,
+          mainAxisSpacing: 20,
           crossAxisSpacing: 16,
           childAspectRatio: 1.8,
           children: const [
@@ -71,8 +71,8 @@ class _EcoFriendlyCard extends StatelessWidget {
       children: [
         // Image Container
         Container(
-          width: 64,
-          height: 64,
+          width: 70,
+          height: 70,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: const Color(0xFFF1F8EE),
@@ -89,7 +89,7 @@ class _EcoFriendlyCard extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                   height: 1.1,
@@ -99,7 +99,7 @@ class _EcoFriendlyCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: Colors.grey.shade600,
                   height: 1.2,
                 ),

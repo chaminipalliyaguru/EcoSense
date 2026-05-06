@@ -6,7 +6,6 @@ import 'widgets/greeting_header.dart';
 import 'widgets/home_hero_section.dart';
 import 'widgets/scan_emission_card.dart';
 import 'widgets/feature_grid.dart';
-import 'widgets/quick_tips_section.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
 
 class HomeScreenSignupLogin extends StatefulWidget {
@@ -34,8 +33,6 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
             ScanEmissionCard(primaryGreen: _primaryGreen),
             SizedBox(height: 20.h),
             const FeatureGrid(),
-            SizedBox(height: 24.h),
-            QuickTipsSection(primaryGreen: _primaryGreen),
             SizedBox(height: 32.h),
           ],
         ),

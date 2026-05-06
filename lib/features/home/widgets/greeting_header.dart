@@ -8,8 +8,21 @@ class GreetingHeader extends StatelessWidget {
   const GreetingHeader({
     super.key,
     required this.userName,
-    this.subtitle = 'Smart care for your vehicle',
+    this.subtitle = "Let's keep your vehicle eco-friendly",
   });
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good Afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Good Evening';
+    } else {
+      return 'Good Night';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +45,9 @@ class GreetingHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userName.isEmpty ? 'Hello!' : 'Hello, $userName!',
+                userName.isEmpty
+                    ? '${_getGreeting()}!'
+                    : '${_getGreeting()}, $userName!',
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
