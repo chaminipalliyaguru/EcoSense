@@ -7,6 +7,9 @@ import 'widgets/tips_header.dart';
 import 'widgets/how_to_do_it.dart';
 import 'widgets/tips_for_better_results.dart';
 import 'widgets/keep_your_vehicle_eco_friendly.dart';
+import '../../widgets/button.dart';
+import '../home/home_screen_signup_login.dart';
+import '../../widgets/app_bottom_nav.dart';
 
 class TipsGuideScreen extends StatefulWidget {
   final bool isGuest;
@@ -47,8 +50,8 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
       backgroundColor: Colors.white,
       appBar: TopAppBar(primaryGreen: _primaryGreen),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
-        child: const Column(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Tips Header
@@ -65,20 +68,39 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
 
             // 4. Keep your Vehicle Eco-Friendly
             KeepYourVehicleEcoFriendly(),
+            SizedBox(height: 40),
+
+            //back to home button
+            Button(
+              text: "Back to Home",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HomeScreenSignupLogin(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
           ],
+
+
         ),
       ),
-      bottomNavigationBar: effectiveIsGuest
-          ? GuestBottomNavBar(
-              selectedIndex: _selectedIndex,
-              onTap: _onNavTap,
-              primaryGreen: _primaryGreen,
-            )
-          : BottomNavBar(
-              selectedIndex: _selectedIndex,
-              onTap: _onNavTap,
-              primaryGreen: _primaryGreen,
-            ),
+
+      // Logic to select guest user or login user to show the footer
+      bottomNavigationBar: AppBottomNav(
+        isGuest: effectiveIsGuest,
+        selectedIndex: _selectedIndex,
+        primaryGreen: _primaryGreen,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+          }
+          setState(() => _selectedIndex = index);
+        },
+      ),
     );
   }
 }
