@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../data_verification/data_verification_screen.dart';
 
 // Extracted Widgets
 import 'widgets/scan_app_bar.dart';
@@ -79,11 +80,11 @@ class _ScanReportScreenState extends State<ScanReportScreen>
         if (mounted) setState(() => _permissionDenied = true);
         return;
       }
-      
-      int backCameraIndex = _cameras.indexWhere(
-          (cam) => cam.lensDirection == CameraLensDirection.back);
+
+      int backCameraIndex = _cameras
+          .indexWhere((cam) => cam.lensDirection == CameraLensDirection.back);
       _currentCameraIndex = backCameraIndex != -1 ? backCameraIndex : 0;
-      
+
       await _startCamera(_cameras[_currentCameraIndex]);
     } catch (e) {
       debugPrint('Camera initialization error: $e');
@@ -105,7 +106,7 @@ class _ScanReportScreenState extends State<ScanReportScreen>
       await controller.initialize();
       await controller.setFlashMode(FlashMode.off);
       if (!mounted) return;
-      
+
       setState(() {
         _cameraController = controller;
         _isCameraReady = true;
@@ -134,7 +135,8 @@ class _ScanReportScreenState extends State<ScanReportScreen>
         ? CameraLensDirection.front
         : CameraLensDirection.back;
 
-    int targetIndex = _cameras.indexWhere((cam) => cam.lensDirection == targetDir);
+    int targetIndex =
+        _cameras.indexWhere((cam) => cam.lensDirection == targetDir);
 
     if (targetIndex == -1) {
       targetIndex = (_currentCameraIndex + 1) % _cameras.length;
@@ -148,12 +150,13 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   }
 
   Future<void> _capturePhoto() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
-    
+    if (_cameraController == null || !_cameraController!.value.isInitialized)
+      return;
+
     try {
       final XFile photo = await _cameraController!.takePicture();
       if (!mounted) return;
-      
+
       setState(() {
         _selectedImage = File(photo.path);
       });
@@ -219,8 +222,8 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   Widget _buildViewfinderStack() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final frameW = constraints.maxWidth * 0.95; 
-        final frameH = constraints.maxHeight * 0.94; 
+        final frameW = constraints.maxWidth * 0.95;
+        final frameH = constraints.maxHeight * 0.94;
 
         return Stack(
           children: [
@@ -238,11 +241,14 @@ class _ScanReportScreenState extends State<ScanReportScreen>
               ),
             ),
             if (_selectedImage != null)
-              ImagePreviewOverlay(
-                imageFile: _selectedImage!,
-                primaryColor: _primaryGreen,
-                scanAnimation: _scanLineAnimation,
-                onRetake: () => setState(() => _selectedImage = null),
+              DataVerificationScreen(
+                imageFile: _selectedImage,
+                onRetake: () {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
                 onConfirm: () {
                   Navigator.push(
                     context,
@@ -274,13 +280,16 @@ class _ScanReportScreenState extends State<ScanReportScreen>
 
     return Container(
       color: const Color(0xFF1A1A1A),
-      child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      child:
+          const Center(child: CircularProgressIndicator(color: Colors.white)),
     );
   }
 
   Widget _buildInstructionBadge() {
     return Positioned(
-      top: 20.h, left: 0, right: 0,
+      top: 20.h,
+      left: 0,
+      right: 0,
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -308,17 +317,21 @@ class _ScanReportScreenState extends State<ScanReportScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.camera_alt_outlined, size: 64.sp, color: Colors.white.withValues(alpha: 0.4)),
+          Icon(Icons.camera_alt_outlined,
+              size: 64.sp, color: Colors.white.withValues(alpha: 0.4)),
           SizedBox(height: 16.h),
-          Text('Camera permission required', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+          Text('Camera permission required',
+              style: TextStyle(color: Colors.white, fontSize: 16.sp)),
           SizedBox(height: 12.h),
           ElevatedButton(
             onPressed: () => openAppSettings(),
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryGreen,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r)),
             ),
-            child: Text('Open Settings', style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+            child: Text('Open Settings',
+                style: TextStyle(color: Colors.white, fontSize: 14.sp)),
           ),
         ],
       ),
