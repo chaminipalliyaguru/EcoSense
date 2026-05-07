@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
-import 'widgets/auth_widgets.dart';
-import 'utils/validators.dart';
+import '../home/home_screen_signup_login.dart';
+import '../../data/user_session.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   bool _rememberMe = true;
   bool _obscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -66,8 +67,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 30.h),
 
-                // Email Field
-                AuthTextField(
+              // Subtitle
+              Text(
+                "Please Sign in to continue.",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: _primaryGreen,
+                ),
+              ),
+              SizedBox(height: 30.h),
+
+              // Email Field
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
                   hintText: "Email/User name",
                   controller: _emailController,
                   validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username' : null,
@@ -121,24 +135,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Remember Me",
                       style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                     ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordScreen()),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size(50.w, 30.h),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        "Forgot Password",
-                        style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 40.h),
+
+              // Login Button
+              SizedBox(
+                width: double.infinity,
+                height: 50.h,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await UserSession.saveUser(username: _emailController.text);
+                    Navigator.pushReplacementNamed(context, '/login_home');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primaryGreen,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                   ],
                 ),

@@ -62,6 +62,7 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
       case 2:
         break;
       case 3:
+        Navigator.pushNamed(context, '/profile');
         break;
       default:
         break;
