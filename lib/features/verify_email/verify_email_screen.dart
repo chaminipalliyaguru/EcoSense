@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'verify_code_screen.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
-  const VerifyEmailScreen({super.key});
+  final bool isPasswordReset;
+  const VerifyEmailScreen({super.key, this.isPasswordReset = false});
 
   @override
   State<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -78,7 +79,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     // Continue to enter verification code
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => VerifyCodeScreen(
+                          isPasswordReset: widget.isPasswordReset,
+                        ),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(

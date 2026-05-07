@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
 import '../home/home_screen_signup_login.dart';
+import '../../data/user_session.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = true;
   bool _obscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -54,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Email Field
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: "Email/User name",
                   hintStyle: const TextStyle(color: Colors.grey),
@@ -162,7 +165,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 50.h,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await UserSession.saveUser(username: _emailController.text);
                     Navigator.pushReplacementNamed(context, '/login_home');
                   },
                   style: ElevatedButton.styleFrom(
