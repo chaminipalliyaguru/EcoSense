@@ -78,6 +78,7 @@ flutter:
     - assets/images/home/
     - assets/images/home/home-your-vehical.png
     - assets/images/tips/
+    - assets/onboarding_screen/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
