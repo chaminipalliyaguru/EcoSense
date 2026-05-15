@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../about/about_screen.dart';
+import '../../history/history_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});
@@ -24,6 +24,12 @@ class FeatureGrid extends StatelessWidget {
                     subtitle: 'View your past scan\nreport and results',
                     onTap: () {
                       // TODO: Navigate to History
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryScreen()
+                        )
+                      );
                     },
                   ),
                 ),
