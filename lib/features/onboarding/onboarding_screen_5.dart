@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import '../splash/welcome_screen.dart';
 
 // Reusable common widgets
 import 'widgets/skip_button.dart';
 import 'widgets/page_indicator.dart';
 import 'widgets/onboarding_button.dart';
-import '../home/home_screen_signup_login.dart';
 
 class OnboardingScreen5 extends StatelessWidget {
   const OnboardingScreen5({super.key});
@@ -104,7 +104,7 @@ class OnboardingScreen5 extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
+                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
                 );
               },
             ),

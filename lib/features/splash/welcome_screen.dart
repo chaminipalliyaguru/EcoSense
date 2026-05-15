@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login_and_signup/login_screen.dart';
 import '../login_and_signup/signup_screen.dart';
-import '../app_details/guest_user_screen.dart';
+import '../guestuser/guest_user_home_page.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const GuestUserScreen()),
+                              MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -104,7 +104,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             elevation: 3,
                           ),
                           child: Text(
-                            "Get Started",
+                            "Explore as Guest",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.sp,
