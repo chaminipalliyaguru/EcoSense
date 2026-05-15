@@ -99,6 +99,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),

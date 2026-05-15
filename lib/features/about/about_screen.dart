@@ -7,8 +7,6 @@ import '../../data/system_steps_data.dart';
 import '../../widgets/system_step_item.dart';
 import '../../data/benefits_ecosense.dart';
 import '../../widgets/benefits_list_item.dart';
-import '../../widgets/button.dart';
-import '../home/home_screen_signup_login.dart';
 import '../../widgets/app_bottom_nav.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -56,7 +54,10 @@ class _AboutScreenState extends State<AboutScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: TopAppBar(primaryGreen: _primaryGreen),
+      appBar: TopAppBar(
+        primaryGreen: _primaryGreen,
+        showBackButton: true,
+      ),
       body: SafeArea(child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,20 +166,6 @@ class _AboutScreenState extends State<AboutScreen> {
                         );
                       }).toList(),
                     ),
-
-                    //back to home button
-                    Button(
-                      text: "Back to Home",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const HomeScreenSignupLogin(),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
                   ],
                 ),
             )

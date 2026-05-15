@@ -4,6 +4,7 @@ import 'features/splash/welcome_screen.dart';
 import 'features/home/home_screen_signup_login.dart';
 import 'features/guestuser/guest_user_home_page.dart';
 import 'features/tips/tips_guide_screen.dart';
+import 'features/splash/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
                 ColorScheme.fromSeed(seedColor: const Color(0xFF3A7D44)),
             useMaterial3: true,
           ),
-          home: const WelcomeScreen(),
+          home: const SplashScreen(),
           routes: {
             '/home': (context) => const GuestUserHomePage(),
             '/login_home': (context) => const HomeScreenSignupLogin(),
