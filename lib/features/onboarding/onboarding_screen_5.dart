@@ -36,8 +36,8 @@ class OnboardingScreen5 extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     // Screen 5 title: "View Results & Recommendations"
                     Text.rich(
                       TextSpan(
@@ -67,7 +67,7 @@ class OnboardingScreen5 extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
 
-                    SizedBox(height: titleImageGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 5 illustration
                     Image.asset(
@@ -76,7 +76,7 @@ class OnboardingScreen5 extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
 
-                    SizedBox(height: imageDescGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 5 description
                     SizedBox(
@@ -93,6 +93,7 @@ class OnboardingScreen5 extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),

@@ -34,7 +34,7 @@ class SkipButton extends StatelessWidget {
               vertical: verticalPad,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFFC1FFB3),
+              color: const Color(0xFFD9FFD1),
               borderRadius: BorderRadius.circular(29),
             ),
             child: Text(

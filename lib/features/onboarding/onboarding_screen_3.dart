@@ -33,8 +33,8 @@ class OnboardingScreen3 extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     // Screen 3 title: "System Processes Data"
                     Text.rich(
                       TextSpan(
@@ -64,7 +64,7 @@ class OnboardingScreen3 extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
 
-                    SizedBox(height: titleImageGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 3 illustration
                     Image.asset(
@@ -73,7 +73,7 @@ class OnboardingScreen3 extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
 
-                    SizedBox(height: imageDescGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 3 description
                     SizedBox(
@@ -90,6 +90,7 @@ class OnboardingScreen3 extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),
