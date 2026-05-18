@@ -25,7 +25,10 @@ class OnboardingScreen5 extends StatelessWidget {
           children: [
             // Common Widget: Skip button (top-right green pill)
             SkipButton(onTap: () {
-              // TODO: Navigate to main app / login
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+              );
             }),
 
             // Page-specific content area
