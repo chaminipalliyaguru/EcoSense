@@ -23,7 +23,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             height: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/splash-screen.png"),
+                image: AssetImage("assets/images/wellcome-screen.png"),
                 fit: BoxFit.cover,
               ),
             ),
