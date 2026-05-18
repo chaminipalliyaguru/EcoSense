@@ -12,7 +12,7 @@ class OnboardingScreen5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final titleFontSize = (size.width * 0.07).clamp(22.0, 32.0);
+    final titleFontSize = (size.width * 0.09).clamp(28.0, 38.0);
     final descFontSize = (size.width * 0.04).clamp(13.0, 18.0);
     final imageHeight = size.height * 0.23;
     final titleImageGap = size.height * 0.027;
@@ -24,12 +24,7 @@ class OnboardingScreen5 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-              );
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(

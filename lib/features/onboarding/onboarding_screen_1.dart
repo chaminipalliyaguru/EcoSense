@@ -24,9 +24,7 @@ class OnboardingScreen1 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              // TODO: Navigate to main app / login
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(
@@ -62,7 +60,7 @@ class OnboardingScreen1 extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: 'Now',
+                              text: 'Now🍃',
                               style: TextStyle(
                                 color: const Color(0xFF343232),
                                 fontSize: titleFontSize,
