@@ -39,7 +39,7 @@ class OnboardingScreen2 extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Upload Your\n',
+                            text: 'Take Photo of\n Emission\n',
                             style: TextStyle(
                                 color: const Color(0xFF343232),
                                 fontSize: titleFontSize,
@@ -49,7 +49,7 @@ class OnboardingScreen2 extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: 'Report',
+                            text: ' Testing Reports',
                             style: TextStyle(
                                 color: const Color(0xFF527D5B),
                                 fontSize: titleFontSize,
