@@ -12,11 +12,12 @@ class OnboardingScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final titleFontSize = (size.width * 0.07).clamp(22.0, 32.0);
+    final titleFontSize = (size.width * 0.09).clamp(28.0, 38.0);
     final descFontSize = (size.width * 0.04).clamp(13.0, 18.0);
     final imageHeight = size.height * 0.23;
-    final titleImageGap = size.height * 0.027;
-    final imageDescGap = size.height * 0.046;
+    final titleImageGap = size.height * 0.022;
+    final imageDescGap = size.height * 0.30;    
+    
 
     return Scaffold(
       backgroundColor: const Color(0xFFFBFBFB),
@@ -24,17 +25,15 @@ class OnboardingScreen2 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              // TODO: Navigate to main app / login
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     // Screen 2 title: "Upload Your Report"
                     Text.rich(
                       TextSpan(
@@ -42,21 +41,21 @@ class OnboardingScreen2 extends StatelessWidget {
                           TextSpan(
                             text: 'Upload Your\n',
                             style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: titleFontSize,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF343232),
-                              height: 1.25,
+                                color: const Color(0xFF343232),
+                                fontSize: titleFontSize,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w700,
+                                height: 1.25,
                             ),
                           ),
                           TextSpan(
                             text: 'Report',
                             style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: titleFontSize,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF527D5B),
-                              height: 1.25,
+                                color: const Color(0xFF527D5B),
+                                fontSize: titleFontSize,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w700,
+                                height: 1.25,
                             ),
                           ),
                         ],
@@ -64,7 +63,7 @@ class OnboardingScreen2 extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
 
-                    SizedBox(height: titleImageGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 2 illustration
                     Image.asset(
@@ -73,7 +72,7 @@ class OnboardingScreen2 extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
 
-                    SizedBox(height: imageDescGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 2 description
                     SizedBox(
@@ -90,6 +89,7 @@ class OnboardingScreen2 extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),

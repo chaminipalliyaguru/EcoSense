@@ -16,7 +16,7 @@ class OnboardingScreen1 extends StatelessWidget {
     final descFontSize = (size.width * 0.04).clamp(13.0, 18.0);
     final titleWidth = size.width * 0.76; // ~305 on 402-wide
     final descWidth = size.width * 0.78; // ~314 on 402-wide
-    final titleDescGap = size.height * 0.092;
+    final titleDescGap = size.height * 0.33;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFBFBFB),
@@ -24,9 +24,7 @@ class OnboardingScreen1 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              // TODO: Navigate to main app / login
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(
@@ -62,7 +60,7 @@ class OnboardingScreen1 extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: 'Now',
+                              text: 'Now🍃',
                               style: TextStyle(
                                 color: const Color(0xFF343232),
                                 fontSize: titleFontSize,
@@ -78,6 +76,7 @@ class OnboardingScreen1 extends StatelessWidget {
                     ),
 
                     SizedBox(height: titleDescGap),
+
 
                     // Screen 1 description
                     SizedBox(

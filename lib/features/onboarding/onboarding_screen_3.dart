@@ -12,7 +12,7 @@ class OnboardingScreen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final titleFontSize = (size.width * 0.07).clamp(22.0, 32.0);
+    final titleFontSize = (size.width * 0.09).clamp(28.0, 38.0);
     final descFontSize = (size.width * 0.04).clamp(13.0, 18.0);
     final imageHeight = size.height * 0.23;
     final titleImageGap = size.height * 0.027;
@@ -24,17 +24,15 @@ class OnboardingScreen3 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              // TODO: Navigate to main app / login
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     // Screen 3 title: "System Processes Data"
                     Text.rich(
                       TextSpan(
@@ -64,7 +62,7 @@ class OnboardingScreen3 extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
 
-                    SizedBox(height: titleImageGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 3 illustration
                     Image.asset(
@@ -73,7 +71,7 @@ class OnboardingScreen3 extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
 
-                    SizedBox(height: imageDescGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 3 description
                     SizedBox(
@@ -90,6 +88,7 @@ class OnboardingScreen3 extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),

@@ -12,7 +12,7 @@ class OnboardingScreen5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final titleFontSize = (size.width * 0.07).clamp(22.0, 32.0);
+    final titleFontSize = (size.width * 0.09).clamp(28.0, 38.0);
     final descFontSize = (size.width * 0.04).clamp(13.0, 18.0);
     final imageHeight = size.height * 0.23;
     final titleImageGap = size.height * 0.027;
@@ -24,20 +24,15 @@ class OnboardingScreen5 extends StatelessWidget {
         child: Column(
           children: [
             // Common Widget: Skip button (top-right green pill)
-            SkipButton(onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-              );
-            }),
+            const SkipButton(),
 
             // Page-specific content area
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     // Screen 5 title: "View Results & Recommendations"
                     Text.rich(
                       TextSpan(
@@ -67,7 +62,7 @@ class OnboardingScreen5 extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
 
-                    SizedBox(height: titleImageGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 5 illustration
                     Image.asset(
@@ -76,7 +71,7 @@ class OnboardingScreen5 extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
 
-                    SizedBox(height: imageDescGap),
+                    SizedBox(height: size.height * 0.10),
 
                     // Screen 5 description
                     SizedBox(
@@ -93,6 +88,7 @@ class OnboardingScreen5 extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),
