@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import '../guestuser/guest_user_home_page.dart';
+import '../../widgets/feature_list_item.dart';
+import '../../data/key_features.dart';
+import '../../data/system_steps_data.dart';
+import '../../widgets/system_step_item.dart';
+import '../../widgets/button.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
+
 
   Widget _buildFeatureListItem({
     required String title,
@@ -96,7 +102,7 @@ class AppDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color:
-                      const Color(0xFFA1BBA4), // Sage green matching screenshot
+                  const Color(0xFFA1BBA4), // Sage green matching screenshot
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
@@ -120,34 +126,15 @@ class AppDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              _buildFeatureListItem(
-                title: "Emission Prediction",
-                description:
-                    "Predicts emission levels based on the test report and vehicle data.",
-                imagePath: "assets/images/appDetailed/emission prediction.png",
-                bgColor: const Color(0xFFF1F8EE), // Light green
-              ),
-
-              _buildFeatureListItem(
-                title: "Data Input for Vehicle Details",
-                description: "Add and manage your vehicle information easily",
-                imagePath: "assets/images/appDetailed/data-input.png",
-                bgColor: const Color(0xFFE9F2FB), // Light blue
-              ),
-
-              _buildFeatureListItem(
-                title: "Report Generation",
-                description:
-                    "Get clear insights and manage suggestions based in analysis",
-                imagePath: "assets/images/appDetailed/repot_ge.png",
-                bgColor: const Color(0xFFF3E8FA), // Light purple
-              ),
-
-              _buildFeatureListItem(
-                title: "Dashboard Visualization",
-                description: "View trends and history with easy dashboards",
-                imagePath: "assets/images/appDetailed/dashboard.png",
-                bgColor: const Color(0xFFFFF3E6), // Light orange
+              Column(
+                children: appFeatures.map((feature) {
+                  return FeatureListItem(
+                    title: feature.title,
+                    description: feature.description,
+                    imagePath: feature.imagePath,
+                    bgColor: feature.bgColor,
+                  );
+                }).toList(),
               ),
 
               const SizedBox(height: 40),
@@ -164,67 +151,33 @@ class AppDetailsScreen extends StatelessWidget {
               const SizedBox(height: 30),
 
               // Step 1
-              _buildSystemStepItem(
-                stepNumber: "1",
-                title: "User takes photo of emission testing reports",
-                description: "Capture the report using the in-app camera.",
-              ),
+              Column(
+                children: List.generate(systemSteps.length, (index) {
+                  final step = systemSteps[index];
 
-              // Step 2
-              _buildSystemStepItem(
-                stepNumber: "2",
-                title: "System processes data",
-                description:
-                    "The system app scans and extracts the required information.",
-              ),
-
-              // Step 3
-              _buildSystemStepItem(
-                stepNumber: "3",
-                title: "Model predicts emission levels",
-                description:
-                    "Our intelligent model analyzes the data and predicts results.",
-              ),
-
-              // Step 4
-              _buildSystemStepItem(
-                stepNumber: "4",
-                title: "Results are displayed",
-                description:
-                    "You get results along with reasons and recommendations",
-                isLast: true,
+                  return SystemStepItem(
+                    stepNumber: step.stepNumber,
+                    title: step.title,
+                    description: step.description,
+                    primaryGreen: _primaryGreen,
+                    isLast: index == systemSteps.length - 1,
+                  );
+                }),
               ),
 
               const SizedBox(height: 40),
 
               // Explore App Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryGreen,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+              Button(
+                text: "Explore App",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const GuestUserHomePage(),
                     ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const GuestUserHomePage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Explore App",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
 
               const SizedBox(height: 20),

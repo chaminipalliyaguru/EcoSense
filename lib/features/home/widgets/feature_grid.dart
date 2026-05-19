@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../about/about_screen.dart';
+import '../../history/history_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});
@@ -22,6 +24,12 @@ class FeatureGrid extends StatelessWidget {
                     subtitle: 'View your past scan\nreport and results',
                     onTap: () {
                       // TODO: Navigate to History
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryScreen()
+                        )
+                      );
                     },
                   ),
                 ),
@@ -35,7 +43,7 @@ class FeatureGrid extends StatelessWidget {
                     subtitle:
                         'Helpful tips and guides\nto keep your vehicle in\ngood condition',
                     onTap: () {
-                      // TODO: Navigate to Tips
+                      Navigator.pushNamed(context, '/tips');
                     },
                   ),
                 ),
@@ -55,7 +63,12 @@ class FeatureGrid extends StatelessWidget {
                     title: 'About',
                     subtitle: 'Learn more about\nthe app and our\nmission',
                     onTap: () {
-                      // TODO: Navigate to About
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutScreen(),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -124,19 +137,19 @@ class _FeatureCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: iconBg,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: iconColor, size: 48),
+                child: Icon(icon, color: iconColor, size: 30),
               ),
               const SizedBox(height: 10),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -145,7 +158,7 @@ class _FeatureCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey.shade600,
                   height: 1.4,
                 ),

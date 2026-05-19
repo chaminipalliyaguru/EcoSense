@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../about/about_screen.dart';
 
 class GuestFeatureList extends StatelessWidget {
   const GuestFeatureList({super.key});
@@ -14,8 +15,15 @@ class GuestFeatureList extends StatelessWidget {
             iconColor: Colors.orange,
             iconBg: Colors.orange.shade50,
             title: 'Tips & How To',
-            subtitle: 'Helpful tips and guides to keep your vehicle in\ngood condition',
-            imagePath: 'assets/images/home/tips_icon.png', // Assuming user might have icons
+            subtitle:
+                'Helpful tips and guides to keep your vehicle in\ngood condition',
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/tips',
+                arguments: true,
+              );
+            },
           ),
           const SizedBox(height: 12),
           _FullWidthFeatureCard(
@@ -24,6 +32,14 @@ class GuestFeatureList extends StatelessWidget {
             iconBg: Colors.blue.shade50,
             title: 'About',
             subtitle: 'Learn more about the app and our mission',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutScreen(isGuest: true),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 12),
           _FullWidthFeatureCard(
@@ -32,6 +48,9 @@ class GuestFeatureList extends StatelessWidget {
             iconBg: Colors.purple.shade50,
             title: 'Help and Support',
             subtitle: 'Need help? Contact our support team',
+            onTap: () {
+              // TODO: Navigate to Support
+            },
           ),
         ],
       ),
@@ -45,7 +64,7 @@ class _FullWidthFeatureCard extends StatelessWidget {
   final Color iconBg;
   final String title;
   final String subtitle;
-  final String? imagePath;
+  final VoidCallback onTap;
 
   const _FullWidthFeatureCard({
     required this.icon,
@@ -53,55 +72,59 @@ class _FullWidthFeatureCard extends StatelessWidget {
     required this.iconBg,
     required this.title,
     required this.subtitle,
-    this.imagePath,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: iconBg,
-              borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: iconBg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: iconColor, size: 32),
             ),
-            child: Icon(icon, color: iconColor, size: 32),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                    height: 1.3,
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                      height: 1.3,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
