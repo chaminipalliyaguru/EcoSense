@@ -7,18 +7,27 @@ class AuthTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final Widget? suffixIcon;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const AuthTextField({
     super.key,
     required this.hintText,
     this.obscureText = false,
     this.suffixIcon,
+    this.controller,
+    this.validator,
+    this.keyboardType,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      controller: controller,
       obscureText: obscureText,
+      validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
@@ -34,6 +43,14 @@ class AuthTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: const BorderSide(color: primaryGreen, width: 1),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
         ),
         suffixIcon: suffixIcon,
       ),
