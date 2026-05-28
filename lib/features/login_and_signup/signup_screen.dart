@@ -142,9 +142,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
                           );
                         } else {
-                          final message = response["detail"]?.toString() ?? "Sign Up Failed.";
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(message)),
+                            SnackBar(content: Text(response["message"] ?? "Signup failed")),
                           );
                         }
                       }
