@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../api.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
 import '../home/home_screen_signup_login.dart';
@@ -153,12 +154,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Login Button
                 AuthPrimaryButton(
                   text: "Login",
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await UserSession.saveUser(username: _emailController.text);
-                      Navigator.pushReplacementNamed(context, '/login_home');
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final response = await ApiService.login(
+                          identifier: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                        );
+
+                        if (response["status"] != "error") {
+                          // Login success
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Login successful")),
+                          );
+
+                          Navigator.pushReplacementNamed(context, '/login_home');
+                        } else {
+                          // Login failed
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(response["message"])),
+                          );
+                        }
+                      }
                     }
-                  },
+
                 ),
                 SizedBox(height: 16.h),
 

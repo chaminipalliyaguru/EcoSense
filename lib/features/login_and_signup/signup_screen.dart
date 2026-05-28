@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../api.dart';
 import '../verify_email/verify_code_screen.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
@@ -122,14 +123,31 @@ class _SignupScreenState extends State<SignupScreen> {
                 // Sign up Button
                 AuthPrimaryButton(
                   text: "Sign up",
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
-                      );
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final response = await ApiService.signup(
+                          name: _fullNameController.text.trim(),
+                          username: _usernameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                        );
+
+                        if (response["status"] == "success") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Signup successful")),
+                          );
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(response["message"] ?? "Signup failed")),
+                          );
+                        }
+                      }
                     }
-                  },
                 ),
                 SizedBox(height: 16.h),
 
