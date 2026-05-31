@@ -80,79 +80,163 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 60.h),
-          
-          _buildProgressCircle(primaryColor),
-          
-          SizedBox(height: 40.h),
-          
-          Text(
-            'Analyzing emission report...',
-            style: TextStyle(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E293B),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
-            child: Text(
-              'Verifying data against Sri Lanka environmental standards and vehicle specifications.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.black54,
-                height: 1.5,
-              ),
-            ),
-          ),
-          
-          SizedBox(height: 40.h),
-          
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
-              child: Column(
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isPortrait = orientation == Orientation.portrait;
+          if (isPortrait) {
+            return Column(
+              children: [
+                SizedBox(height: 60.h),
+                
+                _buildProgressCircle(primaryColor),
+                
+                SizedBox(height: 40.h),
+                
+                Text(
+                  'Analyzing emission report...',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
+                  child: Text(
+                    'Verifying data against Sri Lanka environmental standards and vehicle specifications.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.black54,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+                
+                SizedBox(height: 40.h),
+                
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 40.w),
+                    child: Column(
+                      children: [
+                        _buildStepItem(
+                          title: 'Extracting data',
+                          status: _step > 0 ? 'Completed' : 'In progress',
+                          isDone: _step > 0,
+                          isActive: _step == 0,
+                          showLine: true,
+                        ),
+                        SizedBox(height: 12.h),
+                        _buildStepItem(
+                          title: 'Verifying authenticity',
+                          status: _step > 1 ? 'Completed' : (_step == 1 ? 'In progress' : 'Pending'),
+                          isDone: _step > 1,
+                          isActive: _step == 1,
+                          showLine: true,
+                        ),
+                        SizedBox(height: 12.h),
+                        _buildStepItem(
+                          title: 'Running AI diagnostics',
+                          status: _step > 2 ? 'Completed' : (_step == 2 ? 'In progress' : 'Pending'),
+                          isDone: _step > 2,
+                          isActive: _step == 2,
+                          showLine: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            // Side-by-side Landscape Dashboard Layout
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStepItem(
-                    title: 'Extracting data',
-                    status: _step > 0 ? 'Completed' : 'In progress',
-                    isDone: _step > 0,
-                    isActive: _step == 0,
-                    showLine: true,
+                  // Left side: Progress circle & descriptive text
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildProgressCircle(primaryColor),
+                        SizedBox(height: 16.h),
+                        Text(
+                          'Analyzing emission report...',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF1E293B),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                          child: Text(
+                            'Verifying data against Sri Lanka environmental standards and vehicle specifications.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 12.h),
-                  _buildStepItem(
-                    title: 'Verifying authenticity',
-                    status: _step > 1 ? 'Completed' : (_step == 1 ? 'In progress' : 'Pending'),
-                    isDone: _step > 1,
-                    isActive: _step == 1,
-                    showLine: true,
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildStepItem(
-                    title: 'Running AI diagnostics',
-                    status: _step > 2 ? 'Completed' : (_step == 2 ? 'In progress' : 'Pending'),
-                    isDone: _step > 2,
-                    isActive: _step == 2,
-                    showLine: false,
+                  SizedBox(width: 24.w),
+                  // Right side: Steps Checklist
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 12.h),
+                        _buildStepItem(
+                          title: 'Extracting data',
+                          status: _step > 0 ? 'Completed' : 'In progress',
+                          isDone: _step > 0,
+                          isActive: _step == 0,
+                          showLine: true,
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildStepItem(
+                          title: 'Verifying authenticity',
+                          status: _step > 1 ? 'Completed' : (_step == 1 ? 'In progress' : 'Pending'),
+                          isDone: _step > 1,
+                          isActive: _step == 1,
+                          showLine: true,
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildStepItem(
+                          title: 'Running AI diagnostics',
+                          status: _step > 2 ? 'Completed' : (_step == 2 ? 'In progress' : 'Pending'),
+                          isDone: _step > 2,
+                          isActive: _step == 2,
+                          showLine: false,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }
 
   Widget _buildProgressCircle(Color color) {
-    final double ringDiameter = 240.w;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final double ringDiameter = isPortrait ? 240.w : 160.w;
     final double ringRadius = ringDiameter / 2;
-    final double strokeWidth = 10.w;
-    final double iconSize = 42.w;
+    final double strokeWidth = isPortrait ? 10.w : 8.w;
+    final double iconSize = isPortrait ? 42.w : 32.w;
 
     final double containerSize = ringDiameter + iconSize + 16.w;
     final double ringOffset = (containerSize - ringDiameter) / 2;
@@ -204,7 +288,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                   Text(
                     '${(_progress * 100).toInt()}%',
                     style: TextStyle(
-                      fontSize: 46.sp,
+                      fontSize: isPortrait ? 46.sp : 32.sp,
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),
@@ -212,7 +296,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                   Text(
                     'PROCESSING',
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: isPortrait ? 13.sp : 11.sp,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
                       color: Colors.black38,
@@ -243,7 +327,7 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
                 child: Icon(
                   Icons.show_chart,
                   color: color,
-                  size: 22.sp,
+                  size: isPortrait ? 22.sp : 16.sp,
                 ),
               ),
             ),

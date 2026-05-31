@@ -116,14 +116,16 @@ class SnapDataTable extends StatelessWidget {
                   ),
                 ),
                 // Edit button
-                GestureDetector(
-                  onTap: onEditToggle,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 4.w, right: 4.w),
-                    child: Icon(
-                      isEditing ? Icons.close : Icons.edit,
-                      size: 16.sp,
-                      color: isEditing ? Colors.red : primaryGreen,
+                SizedBox(
+                  width: 24.w,
+                  child: GestureDetector(
+                    onTap: onEditToggle,
+                    child: Center(
+                      child: Icon(
+                        isEditing ? Icons.close : Icons.edit,
+                        size: 16.sp,
+                        color: isEditing ? Colors.red : primaryGreen,
+                      ),
                     ),
                   ),
                 ),
@@ -245,7 +247,7 @@ class SnapDataTable extends StatelessWidget {
     required String hint,
   }) {
     return Container(
-      height: 34.h,
+      height: 34.h.clamp(30.0, 50.0),
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: TextFormField(
         controller: controller,
@@ -261,6 +263,7 @@ class SnapDataTable extends StatelessWidget {
           hintText: hint,
           filled: true,
           fillColor: Colors.grey.shade50,
+          errorStyle: const TextStyle(fontSize: 0, height: 0),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: primaryGreen, width: 1.w),
             borderRadius: BorderRadius.circular(6.r),

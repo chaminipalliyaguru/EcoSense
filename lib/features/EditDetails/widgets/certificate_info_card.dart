@@ -13,9 +13,11 @@ class CertificateInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: isPortrait ? 20.h : 14.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -28,46 +30,105 @@ class CertificateInfoCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Certificate No.',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: Colors.grey.shade500,
-              fontWeight: FontWeight.w500,
+      child: isPortrait
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Certificate No.',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey.shade500,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  certificateNo,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: const Color(0xFF1E293B),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'Date of Issue',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey.shade500,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  dateOfIssue,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: const Color(0xFF1E293B),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Certificate No.',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        certificateNo,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF1E293B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 1.w,
+                  height: 30.h,
+                  color: Colors.grey.shade200,
+                  margin: EdgeInsets.symmetric(horizontal: 16.w),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Date of Issue',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        dateOfIssue,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF1E293B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            certificateNo,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: const Color(0xFF1E293B),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            'Date of Issue',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: Colors.grey.shade500,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            dateOfIssue,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: const Color(0xFF1E293B),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

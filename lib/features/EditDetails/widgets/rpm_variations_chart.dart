@@ -11,10 +11,14 @@ class RpmVariationsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Container(
       width: double.infinity,
-      height: 150.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      height: isPortrait 
+          ? 150.h.clamp(130.0, 250.0)
+          : 110.h.clamp(95.0, 160.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: isPortrait ? 14.h : 8.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
