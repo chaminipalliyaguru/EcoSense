@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../report_results/pass_report_screen.dart';
-import '../report_results/fail_report_screen.dart';
-import 'dart:math';
+import '../EditDetails/edit_details_screen.dart';
 
 class ReportAnalyzingScreen extends StatefulWidget {
   const ReportAnalyzingScreen({super.key});
@@ -35,7 +33,6 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
           if (_progress >= 1.0 && _step == 2) _step = 3;
         } else {
           _timer?.cancel();
-          // Navigate to results screen after analysis is complete
           Future.delayed(const Duration(milliseconds: 500), () {
             if (!mounted) return;
             
@@ -43,15 +40,13 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
             // To force a specific screen, comment out the Random line below 
             // and manually set isPass to true (for Pass) or false (for Fail).
             
-             final isPass = true; // UNCOMMENT THIS TO FORCE PASS SCREEN
+            final isPass = true; // UNCOMMENT THIS TO FORCE PASS SCREEN
             // final isPass = false; // UNCOMMENT THIS TO FORCE FAIL SCREEN
             
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => isPass 
-                    ? const PassReportScreen() 
-                    : const FailReportScreen(),
+                builder: (context) => EditDetailsScreen(isPass: isPass),
               ),
             );
           });

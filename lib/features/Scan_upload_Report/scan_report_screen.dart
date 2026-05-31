@@ -240,24 +240,26 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                 showScanLine: false,
               ),
             ),
-            // if (_selectedImage != null)
-            //   DataVerificationScreen(
-            //     imageFile: _selectedImage,
-            //     onRetake: () {
-            //       if (!mounted) return;
-            //       setState(() {
-            //         _selectedImage = null;
-            //       });
-            //     },
-            //     onConfirm: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => const ReportAnalyzingScreen(),
-            //         ),
-            //       );
-            //     },
-            //   ),
+            if (_selectedImage != null)
+              ImagePreviewOverlay(
+                imageFile: _selectedImage!,
+                scanAnimation: _scanLineAnimation,
+                primaryColor: _primaryGreen,
+                onRetake: () {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+                onConfirm: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReportAnalyzingScreen(),
+                    ),
+                  );
+                },
+              ),
           ],
         );
       },
