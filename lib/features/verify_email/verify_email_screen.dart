@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'verify_code_screen.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
-  const VerifyEmailScreen({super.key});
+  final bool isPasswordReset;
+  const VerifyEmailScreen({super.key, this.isPasswordReset = false});
 
   @override
   State<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -76,36 +77,40 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       ),
                       const SizedBox(height: 30),
 
-                      // Continue Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Continue to enter verification code
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _primaryGreen,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: const Text(
-                            "Continue",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+              // Continue Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Continue to enter verification code
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VerifyCodeScreen(
+                          isPasswordReset: widget.isPasswordReset,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primaryGreen,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
 
                       // Return to sign up Button
                       TextButton(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
+import '../home/home_screen_signup_login.dart';
+import '../../data/user_session.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
 
@@ -99,45 +101,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Remember Me & Forgot Password
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.w,
-                      child: Checkbox(
-                        value: _rememberMe,
-                        activeColor: _primaryGreen,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value ?? true;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.r),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 24.w,
+                          height: 24.w,
+                          child: Checkbox(
+                            value: _rememberMe,
+                            activeColor: _primaryGreen,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value ?? true;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          "Remember Me",
+                          style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      "Remember Me",
-                      style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-                    ),
-                    const Spacer(),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordScreen()),
+                            builder: (context) => const ForgotPasswordScreen(),
+                          ),
                         );
                       },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size(50.w, 30.h),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
                       child: Text(
-                        "Forgot Password",
-                        style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: _primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ],
@@ -147,8 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Login Button
                 AuthPrimaryButton(
                   text: "Login",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      await UserSession.saveUser(username: _emailController.text);
                       Navigator.pushReplacementNamed(context, '/login_home');
                     }
                   },
@@ -162,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),
@@ -190,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),
