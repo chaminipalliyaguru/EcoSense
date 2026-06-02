@@ -135,14 +135,22 @@ class AuthSecondaryButton extends StatelessWidget {
 
 class AuthSocialButton extends StatelessWidget {
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final Widget? logo;
   final VoidCallback onPressed;
+  final Color? textColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
 
   const AuthSocialButton({
     super.key,
     required this.text,
-    required this.icon,
+    this.icon,
+    this.logo,
     required this.onPressed,
+    this.textColor,
+    this.backgroundColor,
+    this.borderColor,
   });
 
   @override
@@ -150,30 +158,57 @@ class AuthSocialButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 50.h,
-      child: OutlinedButton.icon(
+      child: OutlinedButton(
         onPressed: onPressed,
-        icon: Icon(
-          icon,
-          color: primaryGreen,
-          size: 30.sp,
-        ),
-        label: Text(
-          text,
-          style: TextStyle(
-            color: primaryGreen,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
         style: OutlinedButton.styleFrom(
-          backgroundColor: const Color(0xFFF2F2F2),
-          side: BorderSide(color: Colors.grey.shade300, width: 1),
+          backgroundColor: backgroundColor ?? const Color(0xFFF2F2F2),
+          side: BorderSide(color: borderColor ?? Colors.grey.shade300, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
           elevation: 0,
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (logo != null) ...[
+              logo!,
+              SizedBox(width: 12.w),
+            ] else if (icon != null) ...[
+              Icon(
+                icon,
+                color: textColor ?? primaryGreen,
+                size: 30.sp,
+              ),
+              SizedBox(width: 12.w),
+            ],
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor ?? primaryGreen,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class GoogleLogoWidget extends StatelessWidget {
+  final double size;
+
+  const GoogleLogoWidget({super.key, this.size = 24.0});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/google.jpg',
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
     );
   }
 }
