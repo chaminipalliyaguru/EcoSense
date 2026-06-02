@@ -31,7 +31,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {
       _username = userData['username']!;
       final fullName = userData['full_name']!;
-      if (fullName != 'Not set' && fullName.contains(' ')) {
+      if (fullName.contains(' ')) {
         final names = fullName.split(' ');
         _firstNameController.text = names[0];
         _lastNameController.text = names.sublist(1).join(' ');

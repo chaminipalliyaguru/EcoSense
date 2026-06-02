@@ -6,6 +6,9 @@ import 'widgets/info_section_header.dart';
 import 'widgets/user_info_text_field.dart';
 import 'widgets/account_setting_tile.dart';
 import '../../data/user_session.dart';
+import '../login_and_signup/login_screen.dart';
+import 'widgets/logout_button.dart';
+import '../splash/welcome_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -21,7 +24,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final TextEditingController _licenseController = TextEditingController();
 
   String _username = 'Guest';
-  String _email = 'Not set';
+  String _email = '';
 
   final Color primaryGreen = const Color(0xFF4A7B59);
 
@@ -64,111 +67,123 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               username: _username,
               email: _email,
               onEditPressed: () async {
-                final result = await Navigator.pushNamed(context, '/edit_profile');
-                if (result == true) {
-                  _loadUserData();
+                if (_username == 'Guest') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                } else {
+                  final result = await Navigator.pushNamed(context, '/edit_profile');
+                  if (result == true) {
+                    _loadUserData();
+                  }
                 }
               },
             ),
             SizedBox(height: 30.h),
 
-            // User Information Section
-            InfoSectionHeader(
-              icon: Icons.account_circle_outlined,
-              title: 'User Information',
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            UserInfoTextField(
-              hint: 'Full Name',
-              controller: _fullNameController,
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            UserInfoTextField(
-              hint: 'Email Addresses',
-              controller: _emailController,
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            UserInfoTextField(
-              hint: 'Contact',
-              controller: _contactController,
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            UserInfoTextField(
-              hint: 'Diving licenses Number',
-              controller: _licenseController,
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 30.h),
-
-            // Account Settings Section
-            InfoSectionHeader(
-              icon: Icons.lock_outline,
-              title: 'Account Settings',
-              primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            AccountSettingTile(
-              icon: Icons.lock_outline,
-              title: 'Change Password',
-              subtitle: 'Update your account password',
-              primaryGreen: primaryGreen,
-              onTap: () {
-                Navigator.pushNamed(context, '/verify_email', arguments: true);
-              },
-            ),
-            SizedBox(height: 40.h),
-
-            // Back to Home Button
-            _buildBackToHomeButton(context),
-            SizedBox(height: 20.h),
-          ],
-        ),
-      ),
-      bottomNavigationBar: AppBottomNav(
-        isGuest: false,
-        selectedIndex: 3,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/login_home');
-          }
-        },
-        primaryGreen: primaryGreen,
-      ),
-    );
-  }
-
-  Widget _buildBackToHomeButton(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 200.w,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primaryGreen,
-            padding: EdgeInsets.symmetric(vertical: 12.h),
-            shape: const StadiumBorder(),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.home, color: Colors.white),
-              SizedBox(width: 8.w),
-              Text(
-                'Back to Home',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+            if (_username == 'Guest') ...[
+              SizedBox(height: 40.h),
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "Please sign in to access your profile settings.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50.h,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          );
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ] else ...[
+              // User Information Section
+              InfoSectionHeader(
+                icon: Icons.account_circle_outlined,
+                title: 'User Information',
+                primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 15.h),
+              UserInfoTextField(
+                hint: 'Full Name',
+                controller: _fullNameController,
+                primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 15.h),
+              UserInfoTextField(
+                hint: 'Email Addresses',
+                controller: _emailController,
+                primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 15.h),
+              UserInfoTextField(
+                hint: 'Contact',
+                controller: _contactController,
+                primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 30.h),
+              
+              // Account Settings Section
+              InfoSectionHeader(
+                icon: Icons.lock_outline,
+                title: 'Account Settings',
+                primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 15.h),
+              AccountSettingTile(
+                icon: Icons.lock_outline,
+                title: 'Change Password',
+                subtitle: 'Update your account password',
+                primaryGreen: primaryGreen,
+                onTap: () {
+                  Navigator.pushNamed(context, '/verify_email', arguments: true);
+                },
+              ),
+              SizedBox(height: 40.h),
+              
+              LogoutButton(
+                onPressed: () async {
+                  await UserSession.clear();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+              SizedBox(height: 20.h),
             ],
-          ),
+          ],
         ),
       ),
     );

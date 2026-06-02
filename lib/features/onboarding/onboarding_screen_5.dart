@@ -167,9 +167,10 @@ class OnboardingScreen5 extends StatelessWidget {
             OnboardingButton(
               label: 'Get Started',
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                  (route) => false,
                 );
               },
             ),

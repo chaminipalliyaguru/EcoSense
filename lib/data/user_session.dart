@@ -23,9 +23,9 @@ class UserSession {
     final prefs = await SharedPreferences.getInstance();
     return {
       'username': prefs.getString(_keyUsername) ?? 'Guest',
-      'email': prefs.getString(_keyEmail) ?? 'Not set',
-      'full_name': prefs.getString(_keyFullName) ?? 'Not set',
-      'contact': prefs.getString(_keyContact) ?? 'Not set',
+      'email': prefs.getString(_keyEmail) ?? '',
+      'full_name': prefs.getString(_keyFullName) ?? '',
+      'contact': prefs.getString(_keyContact) ?? '',
     };
   }
 

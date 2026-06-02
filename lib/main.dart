@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
                 ColorScheme.fromSeed(seedColor: const Color(0xFF3A7D44)),
             useMaterial3: true,
           ),
-          home: const WelcomeScreen(),
+          home: const OnboardingScreen1(),
           routes: {
             '/home': (context) => const GuestUserHomePage(),
             '/login_home': (context) => const HomeScreenSignupLogin(),
