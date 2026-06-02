@@ -4,6 +4,8 @@ import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
 import '../home/home_screen_signup_login.dart';
 import '../../data/user_session.dart';
+import 'widgets/auth_widgets.dart';
+import 'utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   
   bool _rememberMe = true;
   bool _obscurePassword = true;
-  final TextEditingController _emailController = TextEditingController();
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -67,21 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 30.h),
 
-              // Subtitle
-              Text(
-                "Please Sign in to continue.",
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: _primaryGreen,
-                ),
-              ),
-              SizedBox(height: 30.h),
-
-              // Email Field
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
+                // Email Field
+                AuthTextField(
                   hintText: "Email/User name",
                   controller: _emailController,
                   validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username' : null,
@@ -113,46 +101,50 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Remember Me & Forgot Password
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.w,
-                      child: Checkbox(
-                        value: _rememberMe,
-                        activeColor: _primaryGreen,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value ?? true;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.r),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 24.w,
+                          height: 24.w,
+                          child: Checkbox(
+                            value: _rememberMe,
+                            activeColor: _primaryGreen,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value ?? true;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          "Remember Me",
+                          style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: _primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      "Remember Me",
-                      style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40.h),
-
-              // Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 50.h,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await UserSession.saveUser(username: _emailController.text);
-                    Navigator.pushReplacementNamed(context, '/login_home');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryGreen,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.r),
                     ),
                   ],
                 ),
@@ -161,8 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Login Button
                 AuthPrimaryButton(
                   text: "Login",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      await UserSession.saveUser(username: _emailController.text);
                       Navigator.pushReplacementNamed(context, '/login_home');
                     }
                   },
@@ -176,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),
@@ -204,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),
