@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
-import '../home/home_screen_signup_login.dart';
 import '../../data/user_session.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
+import 'utils/google_auth_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -70,9 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Email Field
                 AuthTextField(
-                  hintText: "Email/User name",
+                  hintText: "Email",
                   controller: _emailController,
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username' : null,
+                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email.' : null,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 20.h),
@@ -156,24 +156,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       await UserSession.saveUser(username: _emailController.text);
-                      Navigator.pushReplacementNamed(context, '/login_home');
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(context, '/login_home');
+                      }
                     }
                   },
                 ),
                 SizedBox(height: 16.h),
 
-                // Sign up Button
-                AuthSecondaryButton(
-                  text: "Sign up",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ),
-                    );
-                  },
-                ),
                 SizedBox(height: 40.h),
 
                 // OR Divider
@@ -183,9 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Continue with Google Button
                 AuthSocialButton(
                   text: "Continue with Google",
-                  icon: Icons.g_mobiledata,
+                  logo: const GoogleLogoWidget(size: 34),
+                  backgroundColor: Colors.white,
+                  borderColor: Colors.grey.shade300,
+                  textColor: const Color(0xFF1F1F1F),
                   onPressed: () {
-                    // Google login logic
+                    GoogleAuthHelper.performGoogleSignIn(context);
                   },
                 ),
                 SizedBox(height: 40.h),
