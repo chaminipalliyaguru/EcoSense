@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'scan_frame.dart';
-import 'scan_overlay.dart';
 
-class ImagePreviewOverlay extends StatelessWidget {
+class ImagePreviewOverlay extends StatefulWidget {
   final File imageFile;
   final VoidCallback onConfirm;
   final VoidCallback onRetake;
@@ -21,126 +18,99 @@ class ImagePreviewOverlay extends StatelessWidget {
   });
 
   @override
+  State<ImagePreviewOverlay> createState() => _ImagePreviewOverlayState();
+}
+
+class _ImagePreviewOverlayState extends State<ImagePreviewOverlay> {
+  int _rotationTurns = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Preview frame is SMALL (75% width / 65% height)
-        final frameW = constraints.maxWidth * 0.75;
-        final frameH = constraints.maxHeight * 0.65;
-
-        return Container(
-          color: Colors.black,
-          child: Stack(
-            children: [
-              // ── 1. Blurred Background ──
-              Positioned.fill(
-                child: Stack(
-                  children: [
-                    Image.file(
-                      imageFile,
-                      fit: BoxFit.cover,
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        color: Colors.black.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // ── 2. The Photo (Centered and sized to fit exactly in frame) ──
-              Center(
-                child: Container(
-                  width: frameW,
-                  height: frameH,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        blurRadius: 20,
-                      )
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        children: [
+          // ── 1. The Photo (Full screen with padding, fit contain) ──
+          Positioned.fill(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 60, bottom: 100),
+                child: Center(
+                  child: RotatedBox(
+                    quarterTurns: _rotationTurns,
                     child: Image.file(
-                      imageFile,
-                      fit: BoxFit.cover, // Ensures the photo fills the frame area
+                      widget.imageFile,
+                      fit: BoxFit.contain, // Ensures the full image is visible without cropping
                     ),
                   ),
                 ),
               ),
-
-              // ── 3. Darkened Overlay (with hole for the image) ──
-              ScanOverlay(frameWidth: frameW, frameHeight: frameH),
-
-              // ── 4. Animated Scan Frame (The brackets and scan line) ──
-              Center(
-                child: ScanFrame(
-                  width: frameW,
-                  height: frameH,
-                  scanAnimation: scanAnimation,
-                  cornerColor: primaryColor,
-                  hintText: 'Verifying report quality...',
-                  showScanLine: true,
-                ),
-              ),
-
-              // ── Top Title ──
-              Positioned(
-                top: 40,
-                left: 0,
-                right: 0,
-                child: const Center(
-                  child: Text(
-                    'Verify Report Quality',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              // ── Bottom Action Buttons ──
-              Positioned(
-                bottom: 40,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Row(
-                    children: [
-                      // Retake Button
-                      Expanded(
-                        child: _buildButton(
-                          label: 'Retake',
-                          onPressed: onRetake,
-                          isOutlined: true,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      // OK Button
-                      Expanded(
-                        child: _buildButton(
-                          label: 'OK',
-                          onPressed: onConfirm,
-                          isOutlined: false,
-                          color: primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        );
-      },
+
+          // ── 2. Top Title and Rotate Button ──
+          Positioned(
+            top: 40,
+            left: 16,
+            right: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 48), // Balance for centering title
+                const Text(
+                  'Verify Report Quality',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    shadows: [Shadow(color: Colors.black, blurRadius: 10)],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.rotate_90_degrees_cw, color: Colors.white, size: 28),
+                  onPressed: () {
+                    setState(() {
+                      _rotationTurns = (_rotationTurns + 1) % 4;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // ── 3. Bottom Action Buttons ──
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                children: [
+                  // Retake Button
+                  Expanded(
+                    child: _buildButton(
+                      label: 'Retake',
+                      onPressed: widget.onRetake,
+                      isOutlined: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // OK Button
+                  Expanded(
+                    child: _buildButton(
+                      label: 'OK',
+                      onPressed: widget.onConfirm,
+                      isOutlined: false,
+                      color: widget.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
