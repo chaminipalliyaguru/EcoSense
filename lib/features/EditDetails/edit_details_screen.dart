@@ -10,11 +10,13 @@ import 'widgets/rpm_variations_chart.dart';
 class EditDetailsScreen extends StatefulWidget {
   final bool isPass;
   final bool isFromResults;
+  final Map<String, dynamic>? apiData;
 
   const EditDetailsScreen({
     super.key,
     this.isPass = true,
     this.isFromResults = false,
+    this.apiData,
   });
 
   @override
@@ -29,12 +31,12 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Data state
-  final String _certificateNo = "CL24-1319765";
-  final String _dateOfIssue = "27-05-2025";
-  
-  final List<double> _smokeDensities = [0.41, 0.44, 0.45];
-  final List<int> _rpms = [3200, 3418, 3315];
-  final List<double> _accelerationTimes = [0.84, 0.72, 0.78];
+  late String _certificateNo;
+  late String _dateOfIssue;
+
+  late List<double> _smokeDensities;
+  late List<int> _rpms;
+  late List<double> _accelerationTimes;
 
   // Controllers for editing
   late List<TextEditingController> _smokeControllers;
@@ -44,18 +46,41 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
   @override
   void initState() {
     super.initState();
+
+    _certificateNo = widget.apiData?["reg_no"] ?? "N/A";
+    _dateOfIssue = widget.apiData?["date_of_issue"] ?? "N/A";
+
+    final snap = widget.apiData?["snap_data"] ?? [];
+
+    _smokeDensities = snap
+        .map<double>((e) => double.tryParse(e["smoke_density"] ?? "0") ?? 0)
+        .toList();
+
+    _rpms = snap
+        .map<int>((e) => int.tryParse(e["measured_rpm"] ?? "0") ?? 0)
+        .toList();
+
+    _accelerationTimes = snap
+        .map<double>((e) => double.tryParse(e["acceleration_time"] ?? "0") ?? 0)
+        .toList();
+
     _initControllers();
   }
 
   void _initControllers() {
     _smokeControllers = List.generate(
-      3, (i) => TextEditingController(text: _smokeDensities[i].toStringAsFixed(2))
+      _smokeDensities.length,
+          (i) => TextEditingController(text: _smokeDensities[i].toStringAsFixed(2)),
     );
+
     _rpmControllers = List.generate(
-      3, (i) => TextEditingController(text: _rpms[i].toString())
+      _rpms.length,
+          (i) => TextEditingController(text: _rpms[i].toString()),
     );
+
     _accControllers = List.generate(
-      3, (i) => TextEditingController(text: _accelerationTimes[i].toStringAsFixed(2))
+      _accelerationTimes.length,
+          (i) => TextEditingController(text: _accelerationTimes[i].toStringAsFixed(2)),
     );
   }
 
