@@ -43,6 +43,11 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
   late List<TextEditingController> _rpmControllers;
   late List<TextEditingController> _accControllers;
 
+  // Backup state for cancellation
+  late List<double> _originalSmokeDensities;
+  late List<int> _originalRpms;
+  late List<double> _originalAccelerationTimes;
+
   @override
   void initState() {
     super.initState();
@@ -50,38 +55,68 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
     _certificateNo = widget.apiData?["reg_no"] ?? "N/A";
     _dateOfIssue = widget.apiData?["date_of_issue"] ?? "N/A";
 
-    final snap = widget.apiData?["snap_data"] ?? [];
+    final snap = widget.apiData?["snap_data"] as List<dynamic>? ?? [];
 
-    _smokeDensities = snap
-        .map<double>((e) => double.tryParse(e["smoke_density"] ?? "0") ?? 0)
-        .toList();
+    _smokeDensities = List.generate(3, (i) {
+      if (i < snap.length) {
+        return double.tryParse(snap[i]["smoke_density"]?.toString() ?? "0") ?? 0.0;
+      }
+      return 0.0;
+    });
 
-    _rpms = snap
-        .map<int>((e) => int.tryParse(e["measured_rpm"] ?? "0") ?? 0)
-        .toList();
+    _rpms = List.generate(3, (i) {
+      if (i < snap.length) {
+        return int.tryParse(snap[i]["measured_rpm"]?.toString() ?? "0") ?? 0;
+      }
+      return 0;
+    });
 
-    _accelerationTimes = snap
-        .map<double>((e) => double.tryParse(e["acceleration_time"] ?? "0") ?? 0)
-        .toList();
+    _accelerationTimes = List.generate(3, (i) {
+      if (i < snap.length) {
+        return double.tryParse(snap[i]["acceleration_time"]?.toString() ?? "0") ?? 0.0;
+      }
+      return 0.0;
+    });
 
     _initControllers();
   }
 
   void _initControllers() {
-    _smokeControllers = List.generate(
-      _smokeDensities.length,
-          (i) => TextEditingController(text: _smokeDensities[i].toStringAsFixed(2)),
-    );
+    _smokeControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _smokeDensities[i].toStringAsFixed(2));
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _smokeDensities[i] = double.tryParse(c.text) ?? _smokeDensities[i];
+          });
+        }
+      });
+      return c;
+    });
 
-    _rpmControllers = List.generate(
-      _rpms.length,
-          (i) => TextEditingController(text: _rpms[i].toString()),
-    );
+    _rpmControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _rpms[i].toString());
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _rpms[i] = int.tryParse(c.text) ?? _rpms[i];
+          });
+        }
+      });
+      return c;
+    });
 
-    _accControllers = List.generate(
-      _accelerationTimes.length,
-          (i) => TextEditingController(text: _accelerationTimes[i].toStringAsFixed(2)),
-    );
+    _accControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _accelerationTimes[i].toStringAsFixed(2));
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _accelerationTimes[i] = double.tryParse(c.text) ?? _accelerationTimes[i];
+          });
+        }
+      });
+      return c;
+    });
   }
 
   @override
@@ -125,6 +160,9 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
 
   void _cancelChanges() {
     setState(() {
+      _smokeDensities = List.from(_originalSmokeDensities);
+      _rpms = List.from(_originalRpms);
+      _accelerationTimes = List.from(_originalAccelerationTimes);
       _initControllers();
       _isEditing = false;
     });
@@ -192,6 +230,9 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                       if (_isEditing) {
                         _cancelChanges();
                       } else {
+                        _originalSmokeDensities = List.from(_smokeDensities);
+                        _originalRpms = List.from(_rpms);
+                        _originalAccelerationTimes = List.from(_accelerationTimes);
                         _isEditing = true;
                       }
                     });
