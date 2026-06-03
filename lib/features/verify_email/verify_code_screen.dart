@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
 import '../forgot_password/new_password_screen.dart';
@@ -13,6 +14,47 @@ class VerifyCodeScreen extends StatefulWidget {
 class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   final Color _primaryGreen = const Color(0xFF4A7B59); // Match image green color
   String _code = "";
+  Timer? _timer;
+  int _start = 240; // 4 minutes
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    setState(() {
+      _start = 240;
+    });
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get timerText {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
 
   void _onKeyPress(String value) {
     if (_code.length < 4) {
@@ -275,25 +317,31 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                     SizedBox(height: isPortrait ? 24 : 12),
 
                     // Resend text
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: const TextSpan(
-                        text: "Didn't receive the Code?\n",
-                        style: TextStyle(
-                          color: Colors.grey, 
-                          fontSize: 14, 
-                          height: 1.5
+                    Column(
+                      children: [
+                        const Text(
+                          "Didn't receive the Code?",
+                          style: TextStyle(
+                            color: Colors.grey, 
+                            fontSize: 14, 
+                          ),
                         ),
-                        children: [
-                          TextSpan(
-                            text: "Resend.",
+                        const SizedBox(height: 4),
+                        GestureDetector(
+                          onTap: _start == 0 ? () {
+                            startTimer();
+                            // TODO: Add resend API call
+                          } : null,
+                          child: Text(
+                            _start == 0 ? "Resend." : "Resend in $timerText",
                             style: TextStyle(
-                              color: Color(0xFF555555),
+                              color: _start == 0 ? _primaryGreen : const Color(0xFF555555),
                               fontWeight: FontWeight.w500,
+                              fontSize: 14,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
