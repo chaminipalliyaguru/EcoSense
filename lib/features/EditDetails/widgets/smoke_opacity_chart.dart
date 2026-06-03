@@ -90,11 +90,11 @@ class SmokeOpacityChartPainter extends CustomPainter {
       ..color = Colors.grey.shade200
       ..strokeWidth = 1.0;
     
-    final gridLevels = [0.0, 0.25, 0.5, 0.75, 1.0];
+    final gridLevels = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]; //chenge
     final textPainter = TextPainter(textDirection: TextDirection.ltr);
 
     for (var level in gridLevels) {
-      final y = graphHeight * (1.0 - level);
+      final y = graphHeight * (1.0 - (level / 7.0)); //chenge
       canvas.drawLine(Offset(20.0, y), Offset(w, y), gridPaint);
       
       // Draw grid text label
@@ -115,12 +115,12 @@ class SmokeOpacityChartPainter extends CustomPainter {
     ];
 
     for (int i = 0; i < smokeDensities.length; i++) {
-      // Clamp value to 0..1 range for rendering inside graph
+      // Clamp value to 0..7 range for rendering inside graph
       double smokeVal = smokeDensities[i];
       if (smokeVal < 0.0) smokeVal = 0.0;
-      if (smokeVal > 1.0) smokeVal = 1.0;
+      if (smokeVal > 7.0) smokeVal = 7.0;
 
-      final y = graphHeight * (1.0 - smokeVal);
+      final y = graphHeight * (1.0 - (smokeVal / 7.0));
       points.add(Offset(xPositions[i], y));
       
       // Draw snap label below x-axis

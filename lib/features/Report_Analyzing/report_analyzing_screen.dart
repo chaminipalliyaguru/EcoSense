@@ -1,64 +1,120 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../EditDetails/edit_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../EditDetails/edit_details_screen.dart';
 
 class ReportAnalyzingScreen extends StatefulWidget {
-  const ReportAnalyzingScreen({super.key});
+  final File imageFile;
+
+  const ReportAnalyzingScreen({
+    super.key,
+    required this.imageFile,
+  });
 
   @override
   State<ReportAnalyzingScreen> createState() => _ReportAnalyzingScreenState();
 }
+
+
 
 class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
   double _progress = 0.0;
   int _step = 0; // 0: Extracting, 1: Verifying, 2: Diagnostics, 3: Done
   Timer? _timer;
 
+  Future<Map<String, dynamic>> _uploadImage(File image) async {
+    var request = http.MultipartRequest(
+      "POST",
+        Uri.parse("http://172.17.68.236:8000/extract")
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath("file", image.path),
+    );
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+
+    return jsonDecode(responseBody);
+  }
+
+  Future<void> _startAnalysis() async {
+    try {
+      if (!mounted) return;
+
+      // =========================
+      // STEP 1: Show start state
+      // =========================
+      setState(() {
+        _step = 0; // Extracting data
+        _progress = 0.2;
+      });
+
+      // Small delay for UX (optional but makes UI smooth)
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // =========================
+      // STEP 2: Upload + Analyze
+      // =========================
+      setState(() {
+        _step = 1; // Verifying authenticity
+        _progress = 0.5;
+      });
+
+      final result = await _uploadImage(widget.imageFile);
+
+      // =========================
+      // STEP 3: Processing result
+      // =========================
+      setState(() {
+        _step = 2; // AI diagnostics done
+        _progress = 0.9;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      // Final step
+      setState(() {
+        _step = 3;
+        _progress = 1.0;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 400));
+
+      if (!mounted) return;
+
+      // =========================
+      // NAVIGATE TO NEXT SCREEN
+      // =========================
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditDetailsScreen(
+            isPass: result["overall_result"] == "PASS",
+            apiData: result,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Analysis failed: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _startSimulatedAnalysis();
-  }
-
-  void _startSimulatedAnalysis() {
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (!mounted) return;
-      setState(() {
-        if (_progress < 1.0) {
-          _progress += 0.01;
-          
-          if (_progress > 0.4 && _step == 0) _step = 1;
-          if (_progress > 0.7 && _step == 1) _step = 2;
-          if (_progress >= 1.0 && _step == 2) _step = 3;
-        } else {
-          _timer?.cancel();
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (!mounted) return;
-            
-            // --- HOW TO TEST ---
-            // To force a specific screen, comment out the Random line below 
-            // and manually set isPass to true (for Pass) or false (for Fail).
-            
-            final isPass = true; // UNCOMMENT THIS TO FORCE PASS SCREEN
-            // final isPass = false; // UNCOMMENT THIS TO FORCE FAIL SCREEN
-            
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditDetailsScreen(isPass: isPass),
-              ),
-            );
-          });
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+    _startAnalysis();
   }
 
   @override
