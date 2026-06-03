@@ -14,6 +14,7 @@ import 'widgets/scan_bottom_bar.dart';
 import 'widgets/scan_overlay.dart';
 import 'widgets/image_preview_overlay.dart';
 import '../Report_Analyzing/report_analyzing_screen.dart';
+import '../../main.dart';
 
 class ScanReportScreen extends StatefulWidget {
   const ScanReportScreen({super.key});
@@ -23,7 +24,7 @@ class ScanReportScreen extends StatefulWidget {
 }
 
 class _ScanReportScreenState extends State<ScanReportScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   final Color _primaryGreen = const Color(0xFF3A7D44);
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -44,6 +45,10 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     _setupSystemUI();
     _initAnimations();
     _initCamera();
@@ -185,7 +190,28 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
   void dispose() {
+    routeObserver.unsubscribe(this);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _scanLineController.dispose();
     _cameraController?.dispose();
     super.dispose();
@@ -240,24 +266,32 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                 showScanLine: false,
               ),
             ),
-            // if (_selectedImage != null)
-            //   DataVerificationScreen(
-            //     imageFile: _selectedImage,
-            //     onRetake: () {
-            //       if (!mounted) return;
-            //       setState(() {
-            //         _selectedImage = null;
-            //       });
-            //     },
-            //     onConfirm: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => const ReportAnalyzingScreen(),
-            //         ),
-            //       );
-            //     },
-            //   ),
+            if (_selectedImage != null)
+              ImagePreviewOverlay(
+                imageFile: _selectedImage!,
+                scanAnimation: _scanLineAnimation,
+                primaryColor: _primaryGreen,
+                onRetake: () {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+                onConfirm: () {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
+                  ]);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReportAnalyzingScreen(),
+                    ),
+                  );
+                },
+              ),
           ],
         );
       },

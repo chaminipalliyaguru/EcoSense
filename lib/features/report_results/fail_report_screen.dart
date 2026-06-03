@@ -3,6 +3,7 @@ import '../home/widgets/bottom_nav_bar.dart';
 import 'widgets/result_status_indicator.dart';
 import 'widgets/result_info_card.dart';
 import 'widgets/view_details_button.dart';
+import '../EditDetails/edit_details_screen.dart';
 
 class FailReportScreen extends StatefulWidget {
   const FailReportScreen({super.key});
@@ -41,7 +42,17 @@ class _FailReportScreenState extends State<FailReportScreen> {
             ),
             const SizedBox(height: 40),
             ViewDetailsButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditDetailsScreen(
+                      isFromResults: true,
+                      isPass: false,
+                    ),
+                  ),
+                );
+              },
               backgroundColor: _primaryGreen,
             ),
           ],

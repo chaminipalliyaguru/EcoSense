@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
+import '../../data/user_session.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
+import 'utils/google_auth_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -68,9 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Email Field
                 AuthTextField(
-                  hintText: "Email/User name",
+                  hintText: "Email",
                   controller: _emailController,
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username' : null,
+                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email.' : null,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 20.h),
@@ -99,45 +101,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Remember Me & Forgot Password
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.w,
-                      child: Checkbox(
-                        value: _rememberMe,
-                        activeColor: _primaryGreen,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value ?? true;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.r),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 24.w,
+                          height: 24.w,
+                          child: Checkbox(
+                            value: _rememberMe,
+                            activeColor: _primaryGreen,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value ?? true;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          "Remember Me",
+                          style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      "Remember Me",
-                      style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-                    ),
-                    const Spacer(),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordScreen()),
+                            builder: (context) => const ForgotPasswordScreen(),
+                          ),
                         );
                       },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size(50.w, 30.h),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
                       child: Text(
-                        "Forgot Password",
-                        style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: _primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ],
@@ -147,25 +153,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Login Button
                 AuthPrimaryButton(
                   text: "Login",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(context, '/login_home');
+                      await UserSession.saveUser(username: _emailController.text);
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(context, '/login_home');
+                      }
                     }
                   },
                 ),
                 SizedBox(height: 16.h),
 
-                // Sign up Button
-                AuthSecondaryButton(
-                  text: "Sign up",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
-                    );
-                  },
-                ),
                 SizedBox(height: 40.h),
 
                 // OR Divider
@@ -175,9 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Continue with Google Button
                 AuthSocialButton(
                   text: "Continue with Google",
-                  icon: Icons.g_mobiledata,
+                  logo: const GoogleLogoWidget(size: 34),
+                  backgroundColor: Colors.white,
+                  borderColor: Colors.grey.shade300,
+                  textColor: const Color(0xFF1F1F1F),
                   onPressed: () {
-                    // Google login logic
+                    GoogleAuthHelper.performGoogleSignIn(context);
                   },
                 ),
                 SizedBox(height: 40.h),
@@ -190,7 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignupScreen()),
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),

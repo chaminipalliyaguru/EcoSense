@@ -29,9 +29,10 @@ class SkipButton extends StatelessWidget {
         padding: EdgeInsets.only(top: topPad, right: rightPad),
         child: GestureDetector(
           onTap: onTap ?? () {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+              (route) => false,
             );
           },
           child: Container(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../login_and_signup/login_screen.dart';
 import '../forgot_password/new_password_screen.dart';
@@ -13,6 +14,47 @@ class VerifyCodeScreen extends StatefulWidget {
 class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   final Color _primaryGreen = const Color(0xFF4A7B59); // Match image green color
   String _code = "";
+  Timer? _timer;
+  int _start = 240; // 4 minutes
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    setState(() {
+      _start = 240;
+    });
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get timerText {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
 
   void _onKeyPress(String value) {
     if (_code.length < 4) {
@@ -31,12 +73,13 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   Widget _buildKeypadButton(String text) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Expanded(
       child: GestureDetector(
         onTap: () => _onKeyPress(text),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          height: 60,
+          margin: EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
+          height: isPortrait ? 60 : 35,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -52,8 +95,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 22,
+              style: TextStyle(
+                fontSize: isPortrait ? 22 : 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -65,26 +108,27 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   Widget _buildBackspaceButton() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Expanded(
       child: GestureDetector(
         onTap: _onBackspace,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          height: 60,
+          margin: EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
+          height: isPortrait ? 60 : 35,
           decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
           child: Center(
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(isPortrait ? 12 : 6),
               decoration: BoxDecoration(
                 border: Border.all(color: _primaryGreen, width: 1.5),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(isPortrait ? 16 : 8),
               ),
               child: Icon(
                 Icons.backspace_outlined,
                 color: _primaryGreen,
-                size: 24,
+                size: isPortrait ? 24 : 16,
               ),
             ),
           ),
@@ -178,6 +222,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -185,22 +230,22 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: isPortrait ? 40.0 : 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20),
+                    SizedBox(height: isPortrait ? 20 : 10),
                     
                     // Title
                     Text(
                       "Enter verification code",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: isPortrait ? 28 : 22,
                         fontWeight: FontWeight.bold,
                         color: _primaryGreen,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: isPortrait ? 16 : 8),
 
                     // Subtitle
                     const Text(
@@ -212,15 +257,15 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         color: Colors.grey,
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: isPortrait ? 40 : 16),
 
                     // Code Boxes
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(4, (index) {
                         return Container(
-                          width: 65,
-                          height: 65,
+                          width: isPortrait ? 65 : 45,
+                          height: isPortrait ? 65 : 45,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
@@ -232,8 +277,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                           child: Center(
                             child: Text(
                               _code.length > index ? _code[index] : "",
-                              style: const TextStyle(
-                                fontSize: 24, 
+                              style: TextStyle(
+                                fontSize: isPortrait ? 24 : 18, 
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -241,12 +286,12 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         );
                       }),
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: isPortrait ? 40 : 20),
 
                     // Verify Button
                     SizedBox(
                       width: double.infinity,
-                      height: 55,
+                      height: isPortrait ? 55 : 45,
                       child: ElevatedButton(
                         onPressed: () {
                           // Show dialog when verify is clicked
@@ -259,38 +304,44 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                           ),
                           elevation: 0,
                         ),
-                        child: const Text(
+                        child: Text(
                           "Verify",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: isPortrait ? 18 : 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: isPortrait ? 24 : 12),
 
                     // Resend text
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: const TextSpan(
-                        text: "Didn't receive the Code?\n",
-                        style: TextStyle(
-                          color: Colors.grey, 
-                          fontSize: 14, 
-                          height: 1.5
+                    Column(
+                      children: [
+                        const Text(
+                          "Didn't receive the Code?",
+                          style: TextStyle(
+                            color: Colors.grey, 
+                            fontSize: 14, 
+                          ),
                         ),
-                        children: [
-                          TextSpan(
-                            text: "Resend.",
+                        const SizedBox(height: 4),
+                        GestureDetector(
+                          onTap: _start == 0 ? () {
+                            startTimer();
+                            // TODO: Add resend API call
+                          } : null,
+                          child: Text(
+                            _start == 0 ? "Resend." : "Resend in $timerText",
                             style: TextStyle(
-                              color: Color(0xFF555555),
+                              color: _start == 0 ? _primaryGreen : const Color(0xFF555555),
                               fontWeight: FontWeight.w500,
+                              fontSize: 14,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -299,7 +350,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
             // Custom Keypad
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+              padding: EdgeInsets.fromLTRB(16, isPortrait ? 24 : 6, 16, isPortrait ? 24 : 6),
               decoration: const BoxDecoration(
                 color: Color(0xFFEEEEEE),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),

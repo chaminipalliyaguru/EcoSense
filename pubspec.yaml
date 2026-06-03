@@ -42,6 +42,7 @@ dependencies:
   firebase_core: ^4.9.0
   #firebase_app_distribution: ^1.2.5
   flutter_screenutil: ^5.9.3
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
   assets:
     - assets/images/
     - assets/logo.png
+    - assets/google.jpg
     - assets/images/appDetailed/
     - assets/images/appBenefits/
     - assets/images/home/

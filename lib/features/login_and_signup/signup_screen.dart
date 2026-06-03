@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../verify_email/verify_code_screen.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
+import 'utils/google_auth_helper.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -20,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _repasswordController = TextEditingController();
   
   bool _obscurePassword = true;
+  bool _obscureRePassword = true;
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -57,19 +59,22 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: 40.h),
 
-                // User Name Field
-                AuthTextField(
-                  hintText: "User Name",
-                  controller: _usernameController,
-                  validator: Validators.validateUserName,
-                ),
-                SizedBox(height: 20.h),
+                
 
                 // Full Name Field
                 AuthTextField(
                   hintText: "Full Name",
                   controller: _fullNameController,
                   validator: Validators.validateName,
+                ),
+                SizedBox(height: 20.h),
+
+                
+                // User Name Field
+                AuthTextField(
+                  hintText: "User Name",
+                  controller: _usernameController,
+                  validator: Validators.validateUserName,
                 ),
                 SizedBox(height: 20.h),
 
@@ -106,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 AuthTextField(
                   hintText: "Re-enter Password",
                   controller: _repasswordController,
-                  obscureText: true,
+                  obscureText: _obscureRePassword,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please re-enter your password';
@@ -116,6 +121,17 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                     return null;
                   },
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureRePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureRePassword = !_obscureRePassword;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: 40.h),
 
@@ -133,13 +149,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Login Button
-                AuthSecondaryButton(
-                  text: "Login",
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
                 SizedBox(height: 40.h),
 
                 // OR Divider
@@ -149,9 +158,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 // Continue with Google Button
                 AuthSocialButton(
                   text: "Continue with Google",
-                  icon: Icons.g_mobiledata,
+                  logo: const GoogleLogoWidget(size: 34),
+                  backgroundColor: Colors.white,
+                  borderColor: Colors.grey.shade300,
+                  textColor: const Color(0xFF1F1F1F),
                   onPressed: () {
-                    // Google signup logic
+                    GoogleAuthHelper.performGoogleSignIn(context);
                   },
                 ),
                 SizedBox(height: 40.h),
