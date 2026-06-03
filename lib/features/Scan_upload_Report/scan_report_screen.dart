@@ -287,7 +287,9 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ReportAnalyzingScreen(),
+                      builder: (context) => ReportAnalyzingScreen(
+                        imageFile: _selectedImage!,
+                      ),
                     ),
                   );
                 },

@@ -117,13 +117,13 @@ class SnapDataTable extends StatelessWidget {
                 ),
                 // Edit button
                 SizedBox(
-                  width: 24.w,
+                  width: 36.w,
                   child: GestureDetector(
                     onTap: onEditToggle,
                     child: Center(
                       child: Icon(
                         isEditing ? Icons.close : Icons.edit,
-                        size: 16.sp,
+                        size: 24.sp,
                         color: isEditing ? Colors.red : primaryGreen,
                       ),
                     ),
@@ -232,7 +232,7 @@ class SnapDataTable extends StatelessWidget {
                 ),
               ),
               // Dummy space for alignment matching header Edit icon width
-              SizedBox(width: 24.w),
+              SizedBox(width: 36.w),
             ],
           ),
         ),
@@ -362,7 +362,7 @@ class SnapDataTable extends StatelessWidget {
           ),
           
           // Spacer matching the edit icon size
-          SizedBox(width: 24.w),
+          SizedBox(width: 36.w),
         ],
       ),
     );
