@@ -1,18 +1,26 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../services/api_service.dart';
 import '../login_and_signup/login_screen.dart';
 import '../forgot_password/new_password_screen.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
   final bool isPasswordReset;
-  const VerifyCodeScreen({super.key, this.isPasswordReset = false});
+  final String email;
+
+  const VerifyCodeScreen({
+    super.key,
+    required this.email,
+    this.isPasswordReset = false,
+  });
 
   @override
   State<VerifyCodeScreen> createState() => _VerifyCodeScreenState();
 }
 
 class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
-  final Color _primaryGreen = const Color(0xFF4A7B59); // Match image green color
+  final Color _primaryGreen =
+      const Color(0xFF4A7B59); // Match image green color
   String _code = "";
   Timer? _timer;
   int _start = 240; // 4 minutes
@@ -73,12 +81,14 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   Widget _buildKeypadButton(String text) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Expanded(
       child: GestureDetector(
         onTap: () => _onKeyPress(text),
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
+          margin:
+              EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
           height: isPortrait ? 60 : 35,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -108,12 +118,14 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   Widget _buildBackspaceButton() {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Expanded(
       child: GestureDetector(
         onTap: _onBackspace,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
+          margin:
+              EdgeInsets.symmetric(horizontal: 8, vertical: isPortrait ? 8 : 4),
           height: isPortrait ? 60 : 35,
           decoration: const BoxDecoration(
             color: Colors.transparent,
@@ -162,7 +174,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Email success image
                 Image.asset(
                   'assets/images/email-ve-success.png',
@@ -179,17 +191,21 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context); // Close dialog
-                      
+
                       if (widget.isPasswordReset) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const NewPasswordScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => NewPasswordScreen(
+                                email: widget.email,
+                              )),
                         );
                       } else {
                         // Redirect to login page
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
                           (route) => false,
                         );
                       }
@@ -222,7 +238,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -230,12 +247,13 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: isPortrait ? 40.0 : 16.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: isPortrait ? 40.0 : 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: isPortrait ? 20 : 10),
-                    
+
                     // Title
                     Text(
                       "Enter verification code",
@@ -269,16 +287,14 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.grey.shade300, 
-                              width: 1
-                            ),
+                                color: Colors.grey.shade300, width: 1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Center(
                             child: Text(
                               _code.length > index ? _code[index] : "",
                               style: TextStyle(
-                                fontSize: isPortrait ? 24 : 18, 
+                                fontSize: isPortrait ? 24 : 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -293,9 +309,23 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                       width: double.infinity,
                       height: isPortrait ? 55 : 45,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final response = await ApiService.verifyOTP(
+                            email: widget.email,
+                            otp: _code,
+                          );
                           // Show dialog when verify is clicked
-                          _showSuccessDialog();
+                          if (response["status"] == "success") {
+                            _showSuccessDialog();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  response["message"] ?? "Invalid OTP",
+                                ),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _primaryGreen,
@@ -322,20 +352,24 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         const Text(
                           "Didn't receive the Code?",
                           style: TextStyle(
-                            color: Colors.grey, 
-                            fontSize: 14, 
+                            color: Colors.grey,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 4),
                         GestureDetector(
-                          onTap: _start == 0 ? () {
-                            startTimer();
-                            // TODO: Add resend API call
-                          } : null,
+                          onTap: _start == 0
+                              ? () {
+                                  startTimer();
+                                  // TODO: Add resend API call
+                                }
+                              : null,
                           child: Text(
                             _start == 0 ? "Resend." : "Resend in $timerText",
                             style: TextStyle(
-                              color: _start == 0 ? _primaryGreen : const Color(0xFF555555),
+                              color: _start == 0
+                                  ? _primaryGreen
+                                  : const Color(0xFF555555),
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
                             ),
@@ -350,7 +384,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
             // Custom Keypad
             Container(
-              padding: EdgeInsets.fromLTRB(16, isPortrait ? 24 : 6, 16, isPortrait ? 24 : 6),
+              padding: EdgeInsets.fromLTRB(
+                  16, isPortrait ? 24 : 6, 16, isPortrait ? 24 : 6),
               decoration: const BoxDecoration(
                 color: Color(0xFFEEEEEE),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -381,7 +416,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   ),
                   Row(
                     children: [
-                      const Expanded(child: SizedBox()), // Empty space for bottom left
+                      const Expanded(
+                          child: SizedBox()), // Empty space for bottom left
                       _buildKeypadButton("0"),
                       _buildBackspaceButton(),
                     ],
