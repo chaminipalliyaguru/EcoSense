@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../services/api_service.dart';
 import '../verify_email/verify_code_screen.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
@@ -19,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repasswordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _obscureRePassword = true;
 
@@ -59,8 +60,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: 40.h),
 
-                
-
                 // Full Name Field
                 AuthTextField(
                   hintText: "Full Name",
@@ -69,7 +68,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: 20.h),
 
-                
                 // User Name Field
                 AuthTextField(
                   hintText: "User Name",
@@ -95,7 +93,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: Validators.validatePassword,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -123,7 +123,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureRePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscureRePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -137,16 +139,37 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 // Sign up Button
                 AuthPrimaryButton(
-                  text: "Sign up",
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VerifyCodeScreen()),
-                      );
-                    }
-                  },
-                ),
+                    text: "Sign up",
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final response = await ApiService.signup(
+                          name: _fullNameController.text.trim(),
+                          username: _usernameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                        );
+
+                        if (response["status"] == "success") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Signup successful")),
+                          );
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VerifyCodeScreen(
+                                  email: _emailController.text.trim(),
+                                )),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    response["message"] ?? "Signup failed")),
+                          );
+                        }
+                      }
+                    }),
                 SizedBox(height: 16.h),
 
                 SizedBox(height: 40.h),

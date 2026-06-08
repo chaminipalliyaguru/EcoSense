@@ -40,10 +40,10 @@ class MyApp extends StatelessWidget {
             '/tips': (context) => const TipsGuideScreen(),
             '/profile': (context) => const UserInfoScreen(),
             '/edit_profile': (context) => const EditProfileScreen(),
-            '/verify_email': (context) {
-              final args = ModalRoute.of(context)?.settings.arguments as bool?;
-              return VerifyEmailScreen(isPasswordReset: args ?? false);
-            },
+            // '/verify_email': (context) {
+            //   final args = ModalRoute.of(context)?.settings.arguments as bool?;
+            //   return VerifyEmailScreen(isPasswordReset: args ?? false);
+            // },
           },
         );
       },

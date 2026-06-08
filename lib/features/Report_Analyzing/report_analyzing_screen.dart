@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import '../../services/api_service.dart';
 import '../EditDetails/edit_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../EditDetails/edit_details_screen.dart';
 
 class ReportAnalyzingScreen extends StatefulWidget {
   final File imageFile;
@@ -19,28 +17,11 @@ class ReportAnalyzingScreen extends StatefulWidget {
   State<ReportAnalyzingScreen> createState() => _ReportAnalyzingScreenState();
 }
 
-
-
 class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
   double _progress = 0.0;
   int _step = 0; // 0: Extracting, 1: Verifying, 2: Diagnostics, 3: Done
   Timer? _timer;
 
-  Future<Map<String, dynamic>> _uploadImage(File image) async {
-    var request = http.MultipartRequest(
-      "POST",
-        Uri.parse("http://172.17.68.236:8000/extract")
-    );
-
-    request.files.add(
-      await http.MultipartFile.fromPath("file", image.path),
-    );
-
-    var response = await request.send();
-    var responseBody = await response.stream.bytesToString();
-
-    return jsonDecode(responseBody);
-  }
 
   Future<void> _startAnalysis() async {
     try {
@@ -65,7 +46,9 @@ class _ReportAnalyzingScreenState extends State<ReportAnalyzingScreen> {
         _progress = 0.5;
       });
 
-      final result = await _uploadImage(widget.imageFile);
+      final result = await ApiService.uploadReport(
+        widget.imageFile,
+      );
 
       // =========================
       // STEP 3: Processing result

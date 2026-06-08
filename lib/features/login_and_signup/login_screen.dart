@@ -6,6 +6,7 @@ import '../../data/user_session.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
 import 'utils/google_auth_helper.dart';
+import '../../services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _rememberMe = true;
   bool _obscurePassword = true;
 
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordScreen(),
+                            builder: (context) => ForgotPasswordScreen(),
                           ),
                         );
                       },
@@ -155,12 +156,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: "Login",
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await UserSession.saveUser(username: _emailController.text);
-                      if (context.mounted) {
+                      final response = await ApiService.login(
+                        identifier: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+
+                      if (response["status"] != "error") {
+                        // Login success
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Login successful")),
+                        );
+
                         Navigator.pushReplacementNamed(context, '/login_home');
+                      } else {
+                        // Login failed
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(response["message"])),
+                        );
                       }
                     }
-                  },
+                  }
                 ),
                 SizedBox(height: 16.h),
 
