@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String OCRbaseUrl = "https://ocr.synro.dev/docs";
-  static const String baseUrl =
-      "http://10.28.177.46:8000"; //IPv4 Address of Wireless LAN adapter Wi-Fi
+  static const String baseUrl = "https://api.synro.dev";
+  static const String ocrBaseUrl = "https://ocr.synro.dev";
 
-  static Future<http.StreamedResponse> uploadReport(File image) async {
+  static Future<Map<String, dynamic>> uploadReport(File image) async {
     var request = http.MultipartRequest(
       "POST",
-      Uri.parse("$OCRbaseUrl/extract"),
+      Uri.parse("$ocrBaseUrl/extract"),
     );
 
     request.files.add(
@@ -20,7 +19,14 @@ class ApiService {
       ),
     );
 
-    return await request.send();
+    final response = await request.send();
+
+    final responseBody = await response.stream.bytesToString();
+
+    print("OCR Status: ${response.statusCode}");
+    print("OCR Response: $responseBody");
+
+    return jsonDecode(responseBody);
   }
 
   //Login API
