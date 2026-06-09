@@ -8,6 +8,7 @@ import 'features/userinfo/user_info_screen.dart';
 import 'features/userinfo/edit_profile_screen.dart';
 import 'features/verify_email/verify_email_screen.dart';
 import 'features/splash/welcome_screen.dart';
+import 'features/splash/splash_screen.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
                 ColorScheme.fromSeed(seedColor: const Color(0xFF3A7D44)),
             useMaterial3: true,
           ),
-          home: const OnboardingScreen1(),
+          home: const SplashScreen(),
           routes: {
             '/home': (context) => const GuestUserHomePage(),
             '/login_home': (context) => const HomeScreenSignupLogin(),

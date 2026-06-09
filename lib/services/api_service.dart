@@ -77,7 +77,14 @@ class ApiService {
         }),
       );
 
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          "status": "error",
+          "message": jsonDecode(response.body)["detail"] ?? "Signup failed"
+        };
+      }
     } catch (e) {
       return {
         "status": "error",
@@ -86,7 +93,6 @@ class ApiService {
     }
   }
 
-  //Verify OTP
   static Future<Map<String, dynamic>> verifyOTP({
     required String otp,
     required String email,
@@ -100,7 +106,14 @@ class ApiService {
           "otp": otp,
         }),
       );
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          "status": "error",
+          "message": jsonDecode(response.body)["detail"] ?? "Verification failed"
+        };
+      }
     } catch (e) {
       return {
         "status": "error",
@@ -109,28 +122,34 @@ class ApiService {
     }
   }
 
-  //Reset Password
-  // static Future<Map<String, dynamic>> resetPassword({
-  //   required String password,
-  //   required String email,
-  // }) async {
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse('$baseUrl/auth/verify-signup-otp'),
-  //       headers: {"Content-Type": "application/json"},
-  //       body: jsonEncode({
-  //         "email": email,
-  //         "new_password": password,
-  //       }),
-  //     );
-  //     return jsonDecode(response.body);
-  //   } catch (e) {
-  //     return {
-  //       "status": "error",
-  //       "message": "Unable to connect to server",
-  //     };
-  //   }
-  // }
+  static Future<Map<String, dynamic>> verifyResetOTP({
+    required String otp,
+    required String email,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/verify-reset-otp'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": email,
+          "otp": otp,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          "status": "error",
+          "message": jsonDecode(response.body)["detail"] ?? "Verification failed"
+        };
+      }
+    } catch (e) {
+      return {
+        "status": "error",
+        "message": "Unable to connect to server",
+      };
+    }
+  }
 
   //Forgot Password
   static Future<Map<String, dynamic>> forgetPasswordEmail({
@@ -138,13 +157,17 @@ class ApiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/verify-signup-otp'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-        }),
+        Uri.parse('$baseUrl/auth/forgot-password?email=$email'),
       );
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        var body = jsonDecode(response.body);
+        return {
+          "status": "error",
+          "message": body["detail"] ?? body["message"] ?? "Failed to send OTP"
+        };
+      }
     } catch (e) {
       return {
         "status": "error",
@@ -160,7 +183,7 @@ class ApiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login'),
+        Uri.parse('$baseUrl/auth/reset-password'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
@@ -171,13 +194,14 @@ class ApiService {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
+        var body = jsonDecode(response.body);
         return {
           "status": "error",
-          "message": jsonDecode(response.body)["detail"] ?? "Password Failed."
+          "message": body["detail"] ?? body["message"] ?? "Password Reset Failed."
         };
       }
     } catch (e) {
-      print("LOGIN ERROR: $e");
+      print("RESET ERROR: $e");
       return {"status": "error", "message": "Unable to connect to server"};
     }
   }

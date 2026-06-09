@@ -165,7 +165,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
 
                     if (!mounted) return;
 
-                    if (response["status"] == "success") {
+                    if (response["status"] != "error") {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text("Password reset successful")),

@@ -65,7 +65,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   void _onKeyPress(String value) {
-    if (_code.length < 4) {
+    if (_code.length < 6) {
       setState(() {
         _code += value;
       });
@@ -280,10 +280,10 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                     // Code Boxes
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(4, (index) {
+                      children: List.generate(6, (index) {
                         return Container(
-                          width: isPortrait ? 65 : 45,
-                          height: isPortrait ? 65 : 45,
+                          width: isPortrait ? 45 : 35,
+                          height: isPortrait ? 55 : 45,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
@@ -310,12 +310,17 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                       height: isPortrait ? 55 : 45,
                       child: ElevatedButton(
                         onPressed: () async {
-                          final response = await ApiService.verifyOTP(
-                            email: widget.email,
-                            otp: _code,
-                          );
+                          final response = widget.isPasswordReset
+                              ? await ApiService.verifyResetOTP(
+                                  email: widget.email,
+                                  otp: _code,
+                                )
+                              : await ApiService.verifyOTP(
+                                  email: widget.email,
+                                  otp: _code,
+                                );
                           // Show dialog when verify is clicked
-                          if (response["status"] == "success") {
+                          if (response["status"] != "error") {
                             _showSuccessDialog();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

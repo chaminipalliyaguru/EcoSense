@@ -149,9 +149,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           password: _passwordController.text.trim(),
                         );
 
-                        if (response["status"] == "success") {
+                        if (response["status"] != "error") {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Signup successful")),
+                            const SnackBar(content: Text("Signup successful, check your email for OTP")),
                           );
 
                           Navigator.push(
