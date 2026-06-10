@@ -1,32 +1,122 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = "https://api.synro.dev";
-  static const String ocrBaseUrl = "https://ocr.synro.dev";
+  // Toggle to switch between local development and production backends.
+  // When using localhost on Android Emulator, it will map to 10.0.2.2.
+  static const bool _useLocalBackend = false;
+
+  static String get baseUrl {
+    if (_useLocalBackend) {
+      if (!kIsWeb && Platform.isAndroid) {
+        return "http://10.0.2.2:8000";
+      }
+      return "http://localhost:8000";
+    }
+    return "https://api.synro.dev";
+  }
+
+  static String get ocrBaseUrl {
+    if (_useLocalBackend) {
+      if (!kIsWeb && Platform.isAndroid) {
+        return "http://10.0.2.2:8000";
+      }
+      return "http://localhost:8000";
+    }
+    return "https://ocr.synro.dev";
+  }
+
+  // Safe helper to process HTTP response
+  static Map<String, dynamic> _processResponse(http.Response response, String defaultErrorMsg) {
+    try {
+      final body = jsonDecode(response.body);
+      if (body is Map<String, dynamic>) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return body;
+        } else {
+          return {
+            "status": "error",
+            "message": body["detail"] ?? body["message"] ?? "$defaultErrorMsg (${response.statusCode})"
+          };
+        }
+      }
+    } catch (e) {
+      // Body is not JSON (e.g. HTML from 502/404) or failed to parse
+      print("JSON Parsing/Decode Error: $e, Body: ${response.body}");
+    }
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return {
+        "status": "success",
+        "message": "Operation completed successfully"
+      };
+    }
+
+    // Return a status-code based error if not JSON
+    return {
+      "status": "error",
+      "message": "Server error (${response.statusCode}): ${response.reasonPhrase ?? 'Unknown Error'}"
+    };
+  }
+
+  // Generic exception handler to provide precise error details
+  static Map<String, dynamic> _handleError(Object error, String context) {
+    print("$context ERROR: $error");
+    
+    if (error is SocketException) {
+      return {
+        "status": "error",
+        "message": "Network error: Unable to connect to the server. Please check your internet connection."
+      };
+    } else if (error is HttpException) {
+      return {
+        "status": "error",
+        "message": "HTTP error: Unable to reach the server. Please try again later."
+      };
+    } else if (error is FormatException) {
+      return {
+        "status": "error",
+        "message": "Response format error: Received invalid response from the server."
+      };
+    } else {
+      return {
+        "status": "error",
+        "message": "Unexpected error: ${error.toString()}"
+      };
+    }
+  }
 
   static Future<Map<String, dynamic>> uploadReport(File image) async {
-    var request = http.MultipartRequest(
-      "POST",
-      Uri.parse("$ocrBaseUrl/extract"),
-    );
+    try {
+      var request = http.MultipartRequest(
+        "POST",
+        Uri.parse("$ocrBaseUrl/extract"),
+      );
 
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        "file",
-        image.path,
-      ),
-    );
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "file",
+          image.path,
+        ),
+      );
 
-    final response = await request.send();
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
 
-    final responseBody = await response.stream.bytesToString();
+      print("OCR Status: ${response.statusCode}");
+      print("OCR Response: ${response.body}");
 
-    print("OCR Status: ${response.statusCode}");
-    print("OCR Response: $responseBody");
-
-    return jsonDecode(responseBody);
+      final processed = _processResponse(response, "OCR extraction failed");
+      if (processed["status"] == "error") {
+        throw Exception(processed["message"]);
+      }
+      return processed;
+    } catch (e) {
+      print("OCR ERROR: $e");
+      rethrow;
+    }
   }
 
   //Login API
@@ -43,18 +133,9 @@ class ApiService {
           "password": password,
         }),
       );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        return {
-          "status": "error",
-          "message": jsonDecode(response.body)["detail"] ?? "Login failed"
-        };
-      }
+      return _processResponse(response, "Login failed");
     } catch (e) {
-      print("LOGIN ERROR: $e");
-      return {"status": "error", "message": "Unable to connect to server"};
+      return _handleError(e, "LOGIN");
     }
   }
 
@@ -76,20 +157,9 @@ class ApiService {
           "password": password,
         }),
       );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        return {
-          "status": "error",
-          "message": jsonDecode(response.body)["detail"] ?? "Signup failed"
-        };
-      }
+      return _processResponse(response, "Signup failed");
     } catch (e) {
-      return {
-        "status": "error",
-        "message": "Unable to connect to server",
-      };
+      return _handleError(e, "SIGNUP");
     }
   }
 
@@ -106,19 +176,9 @@ class ApiService {
           "otp": otp,
         }),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        return {
-          "status": "error",
-          "message": jsonDecode(response.body)["detail"] ?? "Verification failed"
-        };
-      }
+      return _processResponse(response, "Verification failed");
     } catch (e) {
-      return {
-        "status": "error",
-        "message": "Unable to connect to server",
-      };
+      return _handleError(e, "VERIFY OTP");
     }
   }
 
@@ -135,19 +195,9 @@ class ApiService {
           "otp": otp,
         }),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        return {
-          "status": "error",
-          "message": jsonDecode(response.body)["detail"] ?? "Verification failed"
-        };
-      }
+      return _processResponse(response, "Verification failed");
     } catch (e) {
-      return {
-        "status": "error",
-        "message": "Unable to connect to server",
-      };
+      return _handleError(e, "VERIFY RESET OTP");
     }
   }
 
@@ -159,20 +209,9 @@ class ApiService {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/forgot-password?email=$email'),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        var body = jsonDecode(response.body);
-        return {
-          "status": "error",
-          "message": body["detail"] ?? body["message"] ?? "Failed to send OTP"
-        };
-      }
+      return _processResponse(response, "Failed to send OTP");
     } catch (e) {
-      return {
-        "status": "error",
-        "message": "Unable to connect to server",
-      };
+      return _handleError(e, "FORGOT PASSWORD");
     }
   }
 
@@ -190,19 +229,9 @@ class ApiService {
           "new_password": new_password,
         }),
       );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        var body = jsonDecode(response.body);
-        return {
-          "status": "error",
-          "message": body["detail"] ?? body["message"] ?? "Password Reset Failed."
-        };
-      }
+      return _processResponse(response, "Password Reset Failed");
     } catch (e) {
-      print("RESET ERROR: $e");
-      return {"status": "error", "message": "Unable to connect to server"};
+      return _handleError(e, "RESET");
     }
   }
 }
