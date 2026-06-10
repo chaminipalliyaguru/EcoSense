@@ -162,12 +162,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
 
                       if (response["status"] != "error") {
-                        // Login success
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Login successful")),
+                        // Save session
+                        final user = response["user"];
+                        final username = user != null ? (user["username"] ?? "") : (response["username"] ?? "");
+                        final email = user != null ? (user["email"] ?? "") : (response["email"] ?? _emailController.text.trim());
+                        final fullName = user != null ? (user["name"] ?? user["fullName"] ?? "") : (response["name"] ?? response["fullName"] ?? "");
+                        final contact = user != null ? (user["contact"] ?? "") : (response["contact"] ?? "");
+
+                        await UserSession.saveUser(
+                          username: username.isNotEmpty ? username : email.split('@')[0],
+                          email: email,
+                          fullName: fullName.isNotEmpty ? fullName : (username.isNotEmpty ? username : email.split('@')[0]),
+                          contact: contact,
                         );
 
-                        Navigator.pushReplacementNamed(context, '/login_home');
+                        if (mounted) {
+                          // Login success
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Login successful")),
+                          );
+
+                          Navigator.pushReplacementNamed(context, '/login_home');
+                        }
                       } else {
                         // Login failed
                         ScaffoldMessenger.of(context).showSnackBar(

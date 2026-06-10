@@ -44,16 +44,34 @@ class GreetingHeader extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                userName.isEmpty
-                    ? '${_getGreeting()}!'
-                    : '${_getGreeting()}, $userName!',
-                style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              if (userName.isEmpty) ...[
+                Text(
+                  '${_getGreeting()}!',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
-              ),
+              ] else ...[
+                Text(
+                  '${_getGreeting()},',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                Text(
+                  '$userName!',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+              SizedBox(height: 2.h),
               Text(
                 subtitle,
                 style: TextStyle(

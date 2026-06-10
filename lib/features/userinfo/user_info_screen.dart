@@ -9,6 +9,7 @@ import '../../data/user_session.dart';
 import '../login_and_signup/login_screen.dart';
 import 'widgets/logout_button.dart';
 import '../splash/welcome_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -174,11 +175,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               LogoutButton(
                 onPressed: () async {
                   await UserSession.clear();
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-                    (route) => false,
-                  );
+                  try {
+                    final GoogleSignIn googleSignIn = GoogleSignIn();
+                    if (await googleSignIn.isSignedIn()) {
+                      await googleSignIn.signOut();
+                    }
+                  } catch (e) {
+                    debugPrint("Google SignOut Error: $e");
+                  }
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                      (route) => false,
+                    );
+                  }
                 },
               ),
               SizedBox(height: 20.h),

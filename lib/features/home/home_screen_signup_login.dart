@@ -7,6 +7,7 @@ import 'widgets/home_hero_section.dart';
 import 'widgets/scan_emission_card.dart';
 import 'widgets/feature_grid.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
+import '../../data/user_session.dart';
 
 class HomeScreenSignupLogin extends StatefulWidget {
   const HomeScreenSignupLogin({super.key});
@@ -18,6 +19,20 @@ class HomeScreenSignupLogin extends StatefulWidget {
 class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
   int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF3A7D44);
+  String _displayName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final userData = await UserSession.getUser();
+    setState(() {
+      _displayName = userData['username'] ?? "";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +43,7 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const GreetingHeader(userName: 'Username'),
+            GreetingHeader(userName: _displayName),
             const HomeHeroSection(),
             ScanEmissionCard(primaryGreen: _primaryGreen),
             SizedBox(height: 20.h),
@@ -62,7 +77,9 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
       case 2:
         break;
       case 3:
-        Navigator.pushNamed(context, '/profile');
+        Navigator.pushNamed(context, '/profile').then((_) {
+          _loadUserName();
+        });
         break;
       default:
         break;
