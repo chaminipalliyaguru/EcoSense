@@ -253,12 +253,14 @@ class ContactTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final bool showArrow;
 
   const ContactTile({
     super.key,
     required this.title,
     required this.subtitle,
     required this.icon,
+    this.showArrow = true,
   });
 
   @override
@@ -281,11 +283,13 @@ class ContactTile extends StatelessWidget {
           color: Colors.grey.shade500,
         ),
       ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: primaryGreen,
-        size: 16.sp,
-      ),
+      trailing: showArrow
+          ? Icon(
+              Icons.arrow_forward_ios,
+              color: primaryGreen,
+              size: 16.sp,
+            )
+          : null,
       onTap: () {},
     );
   }

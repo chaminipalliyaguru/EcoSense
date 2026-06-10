@@ -4,6 +4,9 @@ import 'widgets/result_status_indicator.dart';
 import 'widgets/result_info_card.dart';
 import 'widgets/view_details_button.dart';
 import '../EditDetails/edit_details_screen.dart';
+import '../../data/user_session.dart';
+import '../guestuser/guest_user_home_page.dart';
+import '../home/home_screen_signup_login.dart';
 
 class FailReportScreen extends StatefulWidget {
   const FailReportScreen({super.key});
@@ -42,16 +45,26 @@ class _FailReportScreenState extends State<FailReportScreen> {
             ),
             const SizedBox(height: 40),
             ViewDetailsButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditDetailsScreen(
-                      isFromResults: true,
-                      isPass: false,
-                    ),
-                  ),
-                );
+              onPressed: () async {
+                final userData = await UserSession.getUser();
+                final username = userData['username'] ?? '';
+                if (username.isEmpty || username == 'Guest') {
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
+                      (route) => false,
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
+                      (route) => false,
+                    );
+                  }
+                }
               },
               backgroundColor: _primaryGreen,
             ),

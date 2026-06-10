@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../home/widgets/top_app_bar.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
 import 'widgets/tips_header.dart';
-import 'widgets/how_to_do_it.dart';
 import 'widgets/tips_for_better_results.dart';
 import 'widgets/keep_your_vehicle_eco_friendly.dart';
 import '../../widgets/app_bottom_nav.dart';
@@ -48,17 +47,13 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
         primaryGreen: _primaryGreen,
         showBackButton: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Tips Header
             TipsHeader(),
-            SizedBox(height: 30),
-
-            // 2. How To Do It (Step by step)
-            HowToDoIt(),
             SizedBox(height: 30),
 
             // 3. Tips for better results
@@ -69,8 +64,6 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
             KeepYourVehicleEcoFriendly(),
             SizedBox(height: 40),
           ],
-
-
         ),
       ),
 
@@ -79,12 +72,7 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
         isGuest: effectiveIsGuest,
         selectedIndex: _selectedIndex,
         primaryGreen: _primaryGreen,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-          }
-          setState(() => _selectedIndex = index);
-        },
+        onTap: _onNavTap,
       ),
     );
   }

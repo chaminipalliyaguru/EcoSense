@@ -21,14 +21,16 @@ class ContactUsSection extends StatelessWidget {
             children: [
               const ContactTile(
                 title: "Email",
-                subtitle: "Email name",
+                subtitle: "support@ecosense.com",
                 icon: Icons.email,
+                showArrow: false,
               ),
               Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
               const ContactTile(
                 title: "Call Us",
-                subtitle: "Mobile no",
+                subtitle: "+94 77 123 4567",
                 icon: Icons.phone,
+                showArrow: false,
               ),
             ],
           ),
