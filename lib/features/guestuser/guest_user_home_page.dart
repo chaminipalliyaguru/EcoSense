@@ -28,7 +28,7 @@ class _GuestUserHomePageState extends State<GuestUserHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const GreetingHeader(
-              userName: '',
+              name: '',
             ),
             const HomeHeroSection(),
             const SizedBox(height: 12),

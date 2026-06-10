@@ -44,7 +44,7 @@ class ApiService {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         return {
@@ -77,7 +77,7 @@ class ApiService {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         return {
@@ -106,7 +106,7 @@ class ApiService {
           "otp": otp,
         }),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         return {
@@ -135,7 +135,7 @@ class ApiService {
           "otp": otp,
         }),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         return {
@@ -159,7 +159,7 @@ class ApiService {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/forgot-password?email=$email'),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         var body = jsonDecode(response.body);
@@ -191,7 +191,7 @@ class ApiService {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         var body = jsonDecode(response.body);

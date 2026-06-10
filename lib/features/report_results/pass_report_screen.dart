@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../home/widgets/bottom_nav_bar.dart';
+import '../../widgets/app_bottom_nav.dart';
+import '../Scan_upload_Report/scan_report_screen.dart';
+import '../history/history_screen.dart';
 import 'widgets/result_status_indicator.dart';
 import 'widgets/result_info_card.dart';
 import 'widgets/view_details_button.dart';
@@ -18,10 +20,24 @@ class PassReportScreen extends StatefulWidget {
 class _PassReportScreenState extends State<PassReportScreen> {
   int _selectedIndex = 1; 
   final Color _primaryGreen = const Color(0xFF5A805E);
+  bool _isGuest = false;
 
-  void _onNavTap(int index) {
-    setState(() => _selectedIndex = index);
+  @override
+  void initState() {
+    super.initState();
+    _checkGuestStatus();
   }
+
+  Future<void> _checkGuestStatus() async {
+    final userData = await UserSession.getUser();
+    final username = userData['username'] ?? '';
+    if (mounted) {
+      setState(() {
+        _isGuest = username.isEmpty || username == 'Guest';
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +82,9 @@ class _PassReportScreenState extends State<PassReportScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: AppBottomNav(
+        isGuest: _isGuest,
         selectedIndex: _selectedIndex,
-        onTap: _onNavTap,
         primaryGreen: _primaryGreen,
       ),
     );

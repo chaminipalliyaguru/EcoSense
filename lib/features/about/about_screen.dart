@@ -178,12 +178,6 @@ class _AboutScreenState extends State<AboutScreen> {
         isGuest: effectiveIsGuest,
         selectedIndex: _selectedIndex,
         primaryGreen: _primaryGreen,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-          }
-          setState(() => _selectedIndex = index);
-        },
       ),
     );
   }

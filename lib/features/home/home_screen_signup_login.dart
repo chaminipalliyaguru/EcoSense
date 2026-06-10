@@ -30,7 +30,10 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
   Future<void> _loadUserName() async {
     final userData = await UserSession.getUser();
     setState(() {
-      _displayName = userData['username'] ?? "";
+      _displayName = userData['full_name'] ?? "";
+      if (_displayName.isEmpty) {
+        _displayName = userData['username'] ?? "";
+      }
     });
   }
 
@@ -43,7 +46,7 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GreetingHeader(userName: _displayName),
+            GreetingHeader(name: _displayName),
             const HomeHeroSection(),
             ScanEmissionCard(primaryGreen: _primaryGreen),
             SizedBox(height: 20.h),

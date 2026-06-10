@@ -18,22 +18,6 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
   int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
-  void _onNavTap(int index) {
-    if (index == 0) {
-      Navigator.pop(context);
-      return;
-    }
-
-    if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const ScanReportScreen()),
-      );
-      return;
-    }
-
-    setState(() => _selectedIndex = index);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +56,6 @@ class _TipsGuideScreenState extends State<TipsGuideScreen> {
         isGuest: effectiveIsGuest,
         selectedIndex: _selectedIndex,
         primaryGreen: _primaryGreen,
-        onTap: _onNavTap,
       ),
     );
   }

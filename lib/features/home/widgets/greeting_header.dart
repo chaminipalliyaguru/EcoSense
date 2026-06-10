@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GreetingHeader extends StatelessWidget {
-  final String userName;
+  final String name;
   final String subtitle;
 
   const GreetingHeader({
     super.key,
-    required this.userName,
+    required this.name,
     this.subtitle = "Let's keep your vehicle eco-friendly",
   });
 
@@ -23,6 +23,7 @@ class GreetingHeader extends StatelessWidget {
       return 'Good Night';
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class GreetingHeader extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (userName.isEmpty) ...[
+              if (name.isEmpty) ...[
                 Text(
                   '${_getGreeting()}!',
                   style: TextStyle(
@@ -63,7 +64,7 @@ class GreetingHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '$userName!',
+                  name,
                   style: TextStyle(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,

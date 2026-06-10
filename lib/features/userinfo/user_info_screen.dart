@@ -197,6 +197,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: AppBottomNav(
+        isGuest: _username == 'Guest',
+        selectedIndex: 3,
+        primaryGreen: primaryGreen,
+      ),
     );
   }
 }
