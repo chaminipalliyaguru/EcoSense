@@ -30,12 +30,16 @@ class OnboardingScreen5 extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-                    (route) => false,
-                  );
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity != null &&
+                      details.primaryVelocity!.abs() > 100) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomeScreen()),
+                      (route) => false,
+                    );
+                  }
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),

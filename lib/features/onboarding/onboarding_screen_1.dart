@@ -31,11 +31,14 @@ class OnboardingScreen1 extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const OnboardingScreen2()),
-                  );
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity != null &&
+                      details.primaryVelocity!.abs() > 100) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const OnboardingScreen2()),
+                    );
+                  }
                 },
                 child: Center(
                   child: SingleChildScrollView(
