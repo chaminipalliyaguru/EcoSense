@@ -27,21 +27,21 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
       'title': 'Regular',
       'subtitle': 'Maintenance',
       'detail': 'Service your vehicle regularly for better performance',
-      'icon': Icons.build_outlined,
+      'image': 'assets/images/home/Quicktiphome1.png',
     },
     {
       'type': 'tip',
       'title': 'Check',
       'subtitle': 'Emissions',
       'detail': 'Keep your emissions in check for cleaner environment',
-      'icon': Icons.eco_outlined,
+      'image': 'assets/images/home/Quicktiphome2.png',
     },
     {
       'type': 'tip',
       'title': 'Drive',
       'subtitle': 'Smart',
       'detail': 'Avoid idling and drive smoothly to reduce emissions',
-      'icon': Icons.speed_outlined,
+      'image': 'assets/images/home/Quicktiphome3.png',
     },
   ];
 
@@ -121,7 +121,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
                     // Right Side: Image or Icon
                     Expanded(
                       flex: 2,
-                      child: slide['type'] == 'hero'
+                      child: slide['image'] != null
                           ? Image.asset(
                               slide['image'],
                               fit: BoxFit.contain,

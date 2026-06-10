@@ -89,6 +89,9 @@ flutter:
     - assets/images/appBenefits/
     - assets/images/home/
     - assets/images/home/home-your-vehical.png
+    - assets/images/home/Quicktiphome1.png
+    - assets/images/home/Quicktiphome2.png
+    - assets/images/home/Quicktiphome3.png
     - assets/images/tips/
     - assets/onboarding_screen/
 
