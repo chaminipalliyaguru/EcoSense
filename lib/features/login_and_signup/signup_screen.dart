@@ -5,6 +5,7 @@ import '../verify_email/verify_code_screen.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
 import 'utils/google_auth_helper.dart';
+import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -162,11 +163,33 @@ class _SignupScreenState extends State<SignupScreen> {
                                 )),
                           );
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    response["message"] ?? "Signup failed")),
-                          );
+                          final message = response["message"] ?? "Signup failed";
+                          final isAlreadySignedUp = message.toString().toLowerCase().contains("already exists") ||
+                              message.toString().toLowerCase().contains("already registered");
+
+                          if (isAlreadySignedUp) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("$message. Redirecting to Login..."),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              }
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(message)),
+                            );
+                          }
                         }
                       }
                     }),

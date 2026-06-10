@@ -28,135 +28,144 @@ class OnboardingScreen3 extends StatelessWidget {
 
             // Page-specific content area
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-                child: isPortrait
-                    ? Column(
-                        children: [
-                          const Spacer(),
-                          // Screen 3 title: "System Processes Data"
-                          Text.rich(
-                            TextSpan(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const OnboardingScreen4()),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
+                  child: isPortrait
+                      ? Column(
+                          children: [
+                            const Spacer(),
+                            // Screen 3 title: "System Processes Data"
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'System\n',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: titleFontSize,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF343232),
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Processes Data',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: titleFontSize,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF527D5B),
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            SizedBox(height: contentGap),
+
+                            // Screen 3 illustration
+                            Image.asset(
+                              'assets/onboarding_screen/onbod3.png',
+                              height: imageHeight,
+                              fit: BoxFit.contain,
+                            ),
+
+                            SizedBox(height: contentGap),
+
+                            // Screen 3 description
+                            SizedBox(
+                              width: size.width * 0.78,
+                              child: Text(
+                                'The system app scans and extracts the\nrequired information.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontSize: descFontSize,
+                                  color: const Color(0xFF979797),
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.58,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        )
+                      : Center(
+                          child: SingleChildScrollView(
+                            child: Column(
                               children: [
-                                TextSpan(
-                                  text: 'System\n',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: titleFontSize,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF343232),
-                                    height: 1.25,
+                                const SizedBox(height: 12.0),
+                                // Screen 3 title
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'System\n',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: titleFontSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF343232),
+                                          height: 1.25,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'Processes Data',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: titleFontSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF527D5B),
+                                          height: 1.25,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                SizedBox(height: contentGap),
+
+                                // Screen 3 illustration
+                                Image.asset(
+                                  'assets/onboarding_screen/onbod3.png',
+                                  height: imageHeight,
+                                  fit: BoxFit.contain,
+                                ),
+
+                                SizedBox(height: contentGap),
+
+                                // Screen 3 description
+                                SizedBox(
+                                  width: size.width * 0.78,
+                                  child: Text(
+                                    'The system app scans and extracts the\nrequired information.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: descFontSize,
+                                      color: const Color(0xFF979797),
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.58,
+                                    ),
                                   ),
                                 ),
-                                TextSpan(
-                                  text: 'Processes Data',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: titleFontSize,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF527D5B),
-                                    height: 1.25,
-                                  ),
-                                ),
+                                const SizedBox(height: 12.0),
                               ],
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-
-                          SizedBox(height: contentGap),
-
-                          // Screen 3 illustration
-                          Image.asset(
-                            'assets/onboarding_screen/onbod3.png',
-                            height: imageHeight,
-                            fit: BoxFit.contain,
-                          ),
-
-                          SizedBox(height: contentGap),
-
-                          // Screen 3 description
-                          SizedBox(
-                            width: size.width * 0.78,
-                            child: Text(
-                              'The system app scans and extracts the\nrequired information.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: descFontSize,
-                                color: const Color(0xFF979797),
-                                fontWeight: FontWeight.w400,
-                                height: 1.58,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      )
-                    : Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 12.0),
-                              // Screen 3 title
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'System\n',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF343232),
-                                        height: 1.25,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'Processes Data',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF527D5B),
-                                        height: 1.25,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: contentGap),
-
-                              // Screen 3 illustration
-                              Image.asset(
-                                'assets/onboarding_screen/onbod3.png',
-                                height: imageHeight,
-                                fit: BoxFit.contain,
-                              ),
-
-                              SizedBox(height: contentGap),
-
-                              // Screen 3 description
-                              SizedBox(
-                                width: size.width * 0.78,
-                                child: Text(
-                                  'The system app scans and extracts the\nrequired information.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: descFontSize,
-                                    color: const Color(0xFF979797),
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.58,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12.0),
-                            ],
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
 

@@ -29,76 +29,85 @@ class OnboardingScreen1 extends StatelessWidget {
 
             // Page-specific content area
             Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Screen 1 title: "Start Your Emission Check Now"
-                      SizedBox(
-                        width: titleWidth,
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Start Your ',
-                                style: TextStyle(
-                                  color: const Color(0xFF343232),
-                                  fontSize: titleFontSize,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.25,
-                                ),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const OnboardingScreen2()),
+                  );
+                },
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Screen 1 title: "Start Your Emission Check Now"
+                        SizedBox(
+                          width: titleWidth,
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                  TextSpan(
+                                    text: 'Start Your ',
+                                    style: TextStyle(
+                                      color: const Color(0xFF343232),
+                                      fontSize: titleFontSize,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Emission Check ',
+                                    style: TextStyle(
+                                      color: const Color(0xFF527D5B),
+                                      fontSize: titleFontSize,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Now🍃',
+                                    style: TextStyle(
+                                      color: const Color(0xFF343232),
+                                      fontSize: titleFontSize,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              TextSpan(
-                                text: 'Emission Check ',
-                                style: TextStyle(
-                                  color: const Color(0xFF527D5B),
-                                  fontSize: titleFontSize,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.25,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Now🍃',
-                                style: TextStyle(
-                                  color: const Color(0xFF343232),
-                                  fontSize: titleFontSize,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.25,
-                                ),
-                              ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
 
-                      SizedBox(height: titleDescGap),
+                          SizedBox(height: titleDescGap),
 
-                      // Screen 1 description
-                      SizedBox(
-                        width: descWidth,
-                        child: Text(
-                          'Explore the app to quickly upload your emission test report and view basic analysis results without creating an account. You can experience the main features before deciding to register for full access.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: const Color(0xFF979797),
-                            fontSize: descFontSize,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                            height: 1.58,
+                          // Screen 1 description
+                          SizedBox(
+                            width: descWidth,
+                            child: Text(
+                              'Explore the app to quickly upload your emission test report and view basic analysis results without creating an account. You can experience the main features before deciding to register for full access.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: const Color(0xFF979797),
+                                fontSize: descFontSize,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                height: 1.58,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
             // Common Widget: Page indicator dots (page 1 of 5, index 0)
             const PageIndicator(currentPage: 0),

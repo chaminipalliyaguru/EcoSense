@@ -28,135 +28,144 @@ class OnboardingScreen4 extends StatelessWidget {
 
             // Page-specific content area
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-                child: isPortrait
-                    ? Column(
-                        children: [
-                          const Spacer(),
-                          // Screen 4 title: "Emission Analysis"
-                          Text.rich(
-                            TextSpan(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const OnboardingScreen5()),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
+                  child: isPortrait
+                      ? Column(
+                          children: [
+                            const Spacer(),
+                            // Screen 4 title: "Emission Analysis"
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Emission\n',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: titleFontSize,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF343232),
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Analysis',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: titleFontSize,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF527D5B),
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            SizedBox(height: contentGap),
+
+                            // Screen 4 illustration
+                            Image.asset(
+                              'assets/onboarding_screen/onbod4.png',
+                              height: imageHeight,
+                              fit: BoxFit.contain,
+                            ),
+
+                            SizedBox(height: contentGap),
+
+                            // Screen 4 description
+                            SizedBox(
+                              width: size.width * 0.78,
+                              child: Text(
+                                'Our intelligent model analyzes the\ndata and predicts results.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontSize: descFontSize,
+                                  color: const Color(0xFF979797),
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.58,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        )
+                      : Center(
+                          child: SingleChildScrollView(
+                            child: Column(
                               children: [
-                                TextSpan(
-                                  text: 'Emission\n',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: titleFontSize,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF343232),
-                                    height: 1.25,
+                                const SizedBox(height: 12.0),
+                                // Screen 4 title
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Emission\n',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: titleFontSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF343232),
+                                          height: 1.25,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'Analysis',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: titleFontSize,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF527D5B),
+                                          height: 1.25,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                SizedBox(height: contentGap),
+
+                                // Screen 4 illustration
+                                Image.asset(
+                                  'assets/onboarding_screen/onbod4.png',
+                                  height: imageHeight,
+                                  fit: BoxFit.contain,
+                                ),
+
+                                SizedBox(height: contentGap),
+
+                                // Screen 4 description
+                                SizedBox(
+                                  width: size.width * 0.78,
+                                  child: Text(
+                                    'Our intelligent model analyzes the\ndata and predicts results.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: descFontSize,
+                                      color: const Color(0xFF979797),
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.58,
+                                    ),
                                   ),
                                 ),
-                                TextSpan(
-                                  text: 'Analysis',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: titleFontSize,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF527D5B),
-                                    height: 1.25,
-                                  ),
-                                ),
+                                const SizedBox(height: 12.0),
                               ],
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-
-                          SizedBox(height: contentGap),
-
-                          // Screen 4 illustration
-                          Image.asset(
-                            'assets/onboarding_screen/onbod4.png',
-                            height: imageHeight,
-                            fit: BoxFit.contain,
-                          ),
-
-                          SizedBox(height: contentGap),
-
-                          // Screen 4 description
-                          SizedBox(
-                            width: size.width * 0.78,
-                            child: Text(
-                              'Our intelligent model analyzes the\ndata and predicts results.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: descFontSize,
-                                color: const Color(0xFF979797),
-                                fontWeight: FontWeight.w400,
-                                height: 1.58,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      )
-                    : Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 12.0),
-                              // Screen 4 title
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Emission\n',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF343232),
-                                        height: 1.25,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'Analysis',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF527D5B),
-                                        height: 1.25,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: contentGap),
-
-                              // Screen 4 illustration
-                              Image.asset(
-                                'assets/onboarding_screen/onbod4.png',
-                                height: imageHeight,
-                                fit: BoxFit.contain,
-                              ),
-
-                              SizedBox(height: contentGap),
-
-                              // Screen 4 description
-                              SizedBox(
-                                width: size.width * 0.78,
-                                child: Text(
-                                  'Our intelligent model analyzes the\ndata and predicts results.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: descFontSize,
-                                    color: const Color(0xFF979797),
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.58,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12.0),
-                            ],
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
 
