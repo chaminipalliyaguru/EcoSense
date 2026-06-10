@@ -33,6 +33,20 @@ class MyApp extends StatelessWidget {
             colorScheme:
                 ColorScheme.fromSeed(seedColor: const Color(0xFF3A7D44)),
             useMaterial3: true,
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: Colors.white,
+              elevation: 4,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                side: BorderSide(color: Colors.grey.shade200, width: 1),
+              ),
+              contentTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
           home: const SplashScreen(),
           routes: {
