@@ -254,6 +254,7 @@ class ContactTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final bool showArrow;
+  final VoidCallback? onTap;
 
   const ContactTile({
     super.key,
@@ -261,6 +262,7 @@ class ContactTile extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     this.showArrow = true,
+    this.onTap,
   });
 
   @override
@@ -290,7 +292,7 @@ class ContactTile extends StatelessWidget {
               size: 16.sp,
             )
           : null,
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
