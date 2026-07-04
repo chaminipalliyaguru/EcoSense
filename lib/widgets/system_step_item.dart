@@ -27,8 +27,8 @@ class SystemStepItem extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 50.w,
-                height: 50.w,
+                width: 32.w,
+                height: 32.w,
                 decoration: BoxDecoration(
                   color: primaryGreen,
                   shape: BoxShape.circle,
@@ -38,7 +38,7 @@ class SystemStepItem extends StatelessWidget {
                     stepNumber,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
