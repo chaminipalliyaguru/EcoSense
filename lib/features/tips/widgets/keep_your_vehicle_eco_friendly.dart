@@ -17,34 +17,49 @@ class KeepYourVehicleEcoFriendly extends StatelessWidget {
             letterSpacing: 0.2,
           ),
         ),
-        const SizedBox(height: 30),
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 16,
-          childAspectRatio: 1.8,
+        const SizedBox(height: 25),
+        Column(
           children: const [
-            _EcoFriendlyCard(
-              title: "Regular engine servicing",
-              subtitle: "View your past scan\nreport and results",
-              imagePath: "assets/images/tips/EngineServing.png",
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _EcoFriendlyCard(
+                    title: "Regular engine \nservicing",
+                    subtitle: "View your past scan\nreport and results",
+                    imagePath: "assets/images/tips/EngineServing.png",
+                  ),
+                ),
+                SizedBox(width: 30),
+                Expanded(
+                  child: _EcoFriendlyCard(
+                    title: "Check fuel\nquality",
+                    subtitle: "View your past scan\nreport and results",
+                    imagePath: "assets/images/tips/FuelQuality.png",
+                  ),
+                ),
+              ],
             ),
-            _EcoFriendlyCard(
-              title: "Check fuel\nquality",
-              subtitle: "View your past scan\nreport and results",
-              imagePath: "assets/images/tips/FuelQuality.png",
-            ),
-            _EcoFriendlyCard(
-              title: "Maintain tire\npressure",
-              subtitle: "Proper pressure\nsaves fuel and\nincreases safety",
-              imagePath: "assets/images/tips/Pressure.png",
-            ),
-            _EcoFriendlyCard(
-              title: "Replace old\nfilters",
-              subtitle: "Clean filters improve\nair quality and\nengine efficiency",
-              imagePath: "assets/images/tips/OldFilters.png",
+            SizedBox(height: 20),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _EcoFriendlyCard(
+                    title: "Maintain tire\npressure",
+                    subtitle: "Proper pressure\nsaves fuel and\nincreases safety",
+                    imagePath: "assets/images/tips/Pressure.png",
+                  ),
+                ),
+                SizedBox(width: 30),
+                Expanded(
+                  child: _EcoFriendlyCard(
+                    title: "Replace old\nfilters",
+                    subtitle: "Clean filters improve\nair quality and\nengine efficiency",
+                    imagePath: "assets/images/tips/OldFilters.png",
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -66,8 +81,8 @@ class _EcoFriendlyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Image Container
         Container(
@@ -80,32 +95,32 @@ class _EcoFriendlyCard extends StatelessWidget {
           ),
           child: Image.asset(imagePath, fit: BoxFit.contain),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(height: 6),
         // Text Column
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                  height: 1.1,
-                ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+                height: 1.1,
               ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  height: 1.2,
-                ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+                height: 1.2,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
