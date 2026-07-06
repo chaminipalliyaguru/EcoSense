@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserInfoTextField extends StatelessWidget {
@@ -15,8 +16,16 @@ class UserInfoTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isContactField = hint.toLowerCase().contains('contact');
     return TextField(
       controller: controller,
+      keyboardType: isContactField ? TextInputType.phone : TextInputType.text,
+      inputFormatters: isContactField
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ]
+          : null,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14.sp),
