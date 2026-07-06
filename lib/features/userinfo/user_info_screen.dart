@@ -7,6 +7,7 @@ import 'widgets/user_info_text_field.dart';
 import 'widgets/account_setting_tile.dart';
 import '../../data/user_session.dart';
 import '../login_and_signup/login_screen.dart';
+import '../forgot_password/forgot_password_screen.dart';
 import 'widgets/logout_button.dart';
 import '../splash/welcome_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -167,7 +168,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 subtitle: 'Update your account password',
                 primaryGreen: primaryGreen,
                 onTap: () {
-                  Navigator.pushNamed(context, '/verify_email', arguments: true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPasswordScreen(
+                        email: _email,
+                      ),
+                    ),
+                  );
                 },
               ),
               SizedBox(height: 40.h),

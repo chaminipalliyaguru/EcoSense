@@ -5,7 +5,8 @@ import '../verify_email/verify_code_screen.dart';
 import '../login_and_signup/signup_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+  final String? email;
+  const ForgotPasswordScreen({super.key, this.email});
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -21,6 +22,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   void initState() {
     super.initState();
     _signUpRecognizer = TapGestureRecognizer()..onTap = _navigateToSignUp;
+    if (widget.email != null) {
+      _emailController.text = widget.email!;
+    }
   }
 
   void _navigateToSignUp() {
