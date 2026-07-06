@@ -1,6 +1,9 @@
 import 'package:EcoSense/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login_and_signup/login_screen.dart';
+import '../login_and_signup/utils/validators.dart';
+import '../login_and_signup/widgets/password_requirements.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   final String email; // ✅ ADD EMAIL FROM PREVIOUS SCREEN
@@ -24,7 +27,20 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
   final _confirmPasswordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_onPasswordChanged);
+  }
+
+  void _onPasswordChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   void dispose() {
+    _passwordController.removeListener(_onPasswordChanged);
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -68,6 +84,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +133,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   });
                 },
               ),
+              PasswordRequirements(
+                password: _passwordController.text,
+                primaryGreen: _primaryGreen,
+              ),
 
               const SizedBox(height: 20),
 
@@ -146,6 +168,14 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text("Please fill all fields")),
+                      );
+                      return;
+                    }
+
+                    final passwordError = Validators.validatePassword(password);
+                    if (passwordError != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(passwordError)),
                       );
                       return;
                     }
