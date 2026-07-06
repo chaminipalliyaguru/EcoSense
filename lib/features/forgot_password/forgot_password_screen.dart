@@ -185,7 +185,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           Navigator.pop(context);
                         },
                         child: const Text(
-                          "Return to sign in",
+                          "Return to Login",
                           style: TextStyle(
                             color: Color(0xFF555555),
                             fontSize: 14,
