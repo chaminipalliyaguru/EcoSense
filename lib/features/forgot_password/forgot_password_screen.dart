@@ -1,6 +1,8 @@
 import 'package:EcoSense/services/api_service.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../verify_email/verify_code_screen.dart';
+import '../login_and_signup/signup_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -13,10 +15,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
   final _emailController = TextEditingController();
+  late TapGestureRecognizer _signUpRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _signUpRecognizer = TapGestureRecognizer()..onTap = _navigateToSignUp;
+  }
+
+  void _navigateToSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _signUpRecognizer.dispose();
     super.dispose();
   }
 
@@ -177,14 +196,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       const Spacer(),
 
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           text: "Create a ",
                           style:
-                          TextStyle(color: Colors.grey, fontSize: 14),
+                          const TextStyle(color: Colors.grey, fontSize: 14),
                           children: [
                             TextSpan(
                               text: "New account",
-                              style: TextStyle(
+                              recognizer: _signUpRecognizer,
+                              style: const TextStyle(
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.bold,
                               ),
