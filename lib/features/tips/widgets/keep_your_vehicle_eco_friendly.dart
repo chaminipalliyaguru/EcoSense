@@ -11,7 +11,7 @@ class KeepYourVehicleEcoFriendly extends StatelessWidget {
         const Text(
           "Keep your Vehicle Eco-Friendly",
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color(0xFF5A805E),
             letterSpacing: 0.2,
@@ -104,7 +104,7 @@ class _EcoFriendlyCard extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
                 height: 1.1,
@@ -115,7 +115,7 @@ class _EcoFriendlyCard extends StatelessWidget {
               subtitle,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.grey.shade600,
                 height: 1.2,
               ),
