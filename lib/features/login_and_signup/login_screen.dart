@@ -71,10 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Email Field
                 AuthTextField(
-                  hintText: "Email",
+                  hintText: "Email/Username",
                   controller: _emailController,
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email.' : null,
+                  validator: Validators.validateEmail,
                   keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 SizedBox(height: 20.h),
 
@@ -187,7 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       } else {
                         // Login failed
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(response["message"])),
+                          SnackBar(
+                            content: Text(
+                              response["message"] ?? "Login failed. Please check your credentials.",
+                            ),
+                          ),
                         );
                       }
                     }
@@ -217,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Bottom Text
                 AuthBottomText(
                   questionText: "Don't have an account?",
-                  actionText: "Sign Up.",
+                  actionText: "Sign up.",
                   onPressed: () {
                     Navigator.push(
                       context,

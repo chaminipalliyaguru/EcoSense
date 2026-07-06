@@ -137,7 +137,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 20.h),
                 // Sign Up Title
                 Text(
-                  "Sign Up",
+                  "Sign up",
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
@@ -168,6 +168,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _emailController,
                   validator: Validators.validateEmail,
                   keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 SizedBox(height: 20.h),
 
