@@ -38,7 +38,7 @@ class ContactUsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionTitle(title: "Contact US"),
+        const SectionTitle(title: "Contact Us"),
         SizedBox(height: 12.h),
         Container(
           decoration: BoxDecoration(
@@ -56,7 +56,7 @@ class ContactUsSection extends StatelessWidget {
               ),
               Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
               ContactTile(
-                title: "Call Us",
+                title: "Call us",
                 subtitle: "+94 77 123 4567",
                 icon: Icons.phone,
                 showArrow: false,
