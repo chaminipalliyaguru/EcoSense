@@ -12,7 +12,7 @@ class SectionTitle extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 18.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeight.bold,
         color: primaryGreen,
       ),
@@ -132,7 +132,7 @@ class _SeparateExpandableCardState extends State<SeparateExpandableCard> {
                         child: Text(
                           widget.title,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -152,7 +152,7 @@ class _SeparateExpandableCardState extends State<SeparateExpandableCard> {
                     Text(
                       widget.content,
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: 12.sp,
                         color: Colors.grey.shade600,
                         height: 1.5,
                       ),
@@ -213,7 +213,7 @@ class _GroupedExpandableTileState extends State<GroupedExpandableTile> {
                         child: Text(
                           widget.title,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -233,7 +233,7 @@ class _GroupedExpandableTileState extends State<GroupedExpandableTile> {
                     Text(
                       widget.content,
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: 12.sp,
                         color: Colors.grey.shade600,
                         height: 1.5,
                       ),
@@ -273,7 +273,7 @@ class ContactTile extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 15.sp,
+          fontSize: 14.sp,
           fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
@@ -281,7 +281,7 @@ class ContactTile extends StatelessWidget {
       subtitle: Text(
         subtitle,
         style: TextStyle(
-          fontSize: 13.sp,
+          fontSize: 12.sp,
           color: Colors.grey.shade500,
         ),
       ),

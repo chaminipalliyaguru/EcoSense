@@ -30,7 +30,7 @@ class HelpAndSupportScreen extends StatelessWidget {
             Text(
               "Help & Support",
               style: TextStyle(
-                fontSize: 32.sp,
+                fontSize: 26.sp,
                 fontWeight: FontWeight.w900,
                 color: Colors.black,
               ),
@@ -39,7 +39,7 @@ class HelpAndSupportScreen extends StatelessWidget {
             Text(
               "We're here to assist you with anything\nyou need",
               style: TextStyle(
-                fontSize: 15.sp,
+                fontSize: 13.sp,
                 color: Colors.grey.shade600,
                 height: 1.4,
               ),

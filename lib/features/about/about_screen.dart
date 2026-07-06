@@ -31,7 +31,7 @@ class _AboutScreenState extends State<AboutScreen> {
       return Text(
         text,
         style: const TextStyle(
-          fontSize: 28,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: Color(0xFF5A805E),
           letterSpacing: 0.2,
@@ -45,7 +45,7 @@ class _AboutScreenState extends State<AboutScreen> {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             color: Colors.grey.shade600,
             height: 1.4,
           ),
@@ -82,7 +82,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     const Text(
                       "About",
                       style: TextStyle(
-                        fontSize: 34,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -91,7 +91,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     Text(
                       "Learn more about the app and our mission",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         color: Colors.grey.shade600,
                         height: 1.4,
                       ),
@@ -115,7 +115,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     const Text(
                       "Key Features",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF5A805E),
                         letterSpacing: 0.2,
@@ -140,7 +140,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     const Text(
                       "How the System Works",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF5A805E),
                         letterSpacing: 0.2,
@@ -169,7 +169,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     const Text(
                       "Benefits of EcoSense",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF5A805E),
                         letterSpacing: 0.2,

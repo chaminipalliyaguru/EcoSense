@@ -11,7 +11,7 @@ class TipsForBetterResults extends StatelessWidget {
         Text(
           "Tips for better results",
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color(0xFF5A805E),
             letterSpacing: 0.2,
@@ -61,7 +61,7 @@ class _CheckmarkItem extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w500,
             ),
