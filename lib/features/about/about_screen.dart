@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../home/widgets/top_app_bar.dart';
 import '../../widgets/feature_list_item.dart';
 import '../../data/key_features.dart';
-import '../../data/system_steps_data.dart';
-import '../../widgets/system_step_item.dart';
 import '../../data/benefits_ecosense.dart';
 import '../../widgets/benefits_list_item.dart';
 import '../../widgets/app_bottom_nav.dart';
@@ -132,35 +129,6 @@ class _AboutScreenState extends State<AboutScreen> {
                           bgColor: feature.bgColor,
                         );
                       }).toList(),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // How the System Works Section
-                    const Text(
-                      "How the System Works",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5A805E),
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Steps
-                    Column(
-                      children: List.generate(systemSteps.length, (index) {
-                        final step = systemSteps[index];
-
-                        return SystemStepItem(
-                          stepNumber: step.stepNumber,
-                          title: step.title,
-                          description: step.description,
-                          primaryGreen: _primaryGreen,
-                          isLast: index == systemSteps.length - 1,
-                        );
-                      }),
                     ),
 
                     const SizedBox(height: 30),
