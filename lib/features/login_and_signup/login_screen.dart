@@ -71,11 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Email Field
                 AuthTextField(
-                  hintText: "Email/Username",
+                  hintText: "Email",
                   controller: _emailController,
-                  validator: Validators.validateEmail,
+                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email.' : null,
                   keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 SizedBox(height: 20.h),
 
@@ -187,13 +186,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       } else {
                         // Login failed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              response["message"] ?? "Login failed. Please check your credentials.",
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.white,
+                              content: Text(
+                                "Invalid username/email or password. Please try again.",
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       }
                     }
                   }
