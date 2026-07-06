@@ -69,11 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 30.h),
 
-                // Email Field
+                // Email or Username Field
                 AuthTextField(
-                  hintText: "Email",
+                  hintText: "Email or Username",
                   controller: _emailController,
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email.' : null,
+                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username.' : null,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 20.h),
