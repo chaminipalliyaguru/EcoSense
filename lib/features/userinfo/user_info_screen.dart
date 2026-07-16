@@ -22,7 +22,6 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
   final TextEditingController _licenseController = TextEditingController();
 
   String _username = 'Guest';
@@ -43,7 +42,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       _email = userData['email']!;
       _fullNameController.text = userData['full_name']!;
       _emailController.text = _email;
-      _contactController.text = userData['contact']!;
     });
   }
 
@@ -66,7 +64,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileHeader(
-              username: _username,
+              username: _fullNameController.text.isNotEmpty ? _fullNameController.text : _username,
               email: _email,
               onEditPressed: () async {
                 if (_username == 'Guest') {
@@ -145,12 +143,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               UserInfoTextField(
                 hint: 'Email Addresses',
                 controller: _emailController,
-                primaryGreen: primaryGreen,
-              ),
-              SizedBox(height: 15.h),
-              UserInfoTextField(
-                hint: 'Contact',
-                controller: _contactController,
                 primaryGreen: primaryGreen,
               ),
               SizedBox(height: 30.h),

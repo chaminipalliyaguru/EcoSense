@@ -6,12 +6,14 @@ class UserInfoTextField extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final Color primaryGreen;
+  final bool readOnly;
 
   const UserInfoTextField({
     super.key,
     required this.hint,
     required this.controller,
     required this.primaryGreen,
+    this.readOnly = false,
   });
 
   @override
@@ -19,6 +21,7 @@ class UserInfoTextField extends StatelessWidget {
     final bool isContactField = hint.toLowerCase().contains('contact');
     return TextField(
       controller: controller,
+      readOnly: readOnly,
       keyboardType: isContactField ? TextInputType.phone : TextInputType.text,
       inputFormatters: isContactField
           ? [

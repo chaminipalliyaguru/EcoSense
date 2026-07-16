@@ -77,7 +77,7 @@ class AppBottomNav extends StatelessWidget {
 
     if (isGuest) {
       return GuestBottomNavBar(
-        selectedIndex: selectedIndex,
+        selectedIndex: selectedIndex < 2 ? selectedIndex : 0,
         onTap: activeOnTap,
         primaryGreen: primaryGreen,
       );

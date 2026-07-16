@@ -161,12 +161,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         password: _passwordController.text.trim(),
                       );
 
-                      if (response["status"] != "error") {
-                        // Save session
+                      if (response["status"] != "error" && response["access_token"] != null) {
+                        // Save session token first
+                        final token = response["access_token"];
+                        await UserSession.saveUser(
+                          username: "",
+                          token: token,
+                        );
+
+                        // Fetch user details with the token
+                        final userDetails = await ApiService.getUserDetails();
+
                         final user = response["user"];
-                        final username = user != null ? (user["username"] ?? "") : (response["username"] ?? "");
-                        final email = user != null ? (user["email"] ?? "") : (response["email"] ?? _emailController.text.trim());
-                        final fullName = user != null ? (user["name"] ?? user["fullName"] ?? "") : (response["name"] ?? response["fullName"] ?? "");
+                        final username = userDetails["username"] ?? (user != null ? (user["username"] ?? "") : (response["username"] ?? ""));
+                        final email = userDetails["email"] ?? (user != null ? (user["email"] ?? "") : (response["email"] ?? _emailController.text.trim()));
+                        final fullName = userDetails["full_name"] ?? (user != null ? (user["name"] ?? user["fullName"] ?? "") : (response["name"] ?? response["fullName"] ?? ""));
                         final contact = user != null ? (user["contact"] ?? "") : (response["contact"] ?? "");
 
                         await UserSession.saveUser(
@@ -174,6 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           email: email,
                           fullName: fullName.isNotEmpty ? fullName : (username.isNotEmpty ? username : email.split('@')[0]),
                           contact: contact,
+                          token: token,
                         );
 
                         if (mounted) {
