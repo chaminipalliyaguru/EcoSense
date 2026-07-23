@@ -9,7 +9,7 @@ class HomeHeroSection extends StatefulWidget {
   State<HomeHeroSection> createState() => _HomeHeroSectionState();
 }
 
-class _HomeHeroSectionState extends State<HomeHeroSection> {
+class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingObserver {
   late PageController _pageController;
   int _realIndex = 1000; // Start at a large index for "infinite" feel
   Timer? _timer;
@@ -48,6 +48,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Initialize controller at the real index
     _pageController = PageController(initialPage: _realIndex);
     _startTimer();
@@ -55,20 +56,36 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startTimer();
+    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _timer?.cancel();
+    }
+  }
+
   void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_pageController.hasClients) {
-        _realIndex++;
-        _pageController.animateToPage(
-          _realIndex,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
+      if (!mounted) return;
+      if (_pageController.hasClients && TickerMode.valuesOf(context).enabled) {
+        try {
+          _realIndex++;
+          _pageController.animateToPage(
+            _realIndex,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        } catch (_) {
+          // Catch potential animation errors when screen is hidden to keep timer alive
+        }
       }
     });
   }
@@ -97,47 +114,57 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _realIndex = index;
-                });
+            NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollStartNotification) {
+                  _timer?.cancel();
+                } else if (scrollNotification is ScrollEndNotification) {
+                  _startTimer();
+                }
+                return false;
               },
-              // No itemCount for "infinite" scroll
-              itemBuilder: (context, index) {
-                final slide = _slides[index % _slides.length];
-                return Row(
-                  children: [
-                    // Left Side: Text
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildSlideContent(slide, primaryGreen),
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _realIndex = index;
+                  });
+                },
+                // No itemCount for "infinite" scroll
+                itemBuilder: (context, index) {
+                  final slide = _slides[index % _slides.length];
+                  return Row(
+                    children: [
+                      // Left Side: Text
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildSlideContent(slide, primaryGreen),
+                        ),
                       ),
-                    ),
-                    // Right Side: Image or Icon
-                    Expanded(
-                      flex: 2,
-                      child: slide['image'] != null
-                          ? Image.asset(
-                              slide['image'],
-                              fit: BoxFit.contain,
-                            )
-                          : Container(
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                slide['icon'],
-                                size: 80.sp,
-                                color: primaryGreen.withValues(alpha: 0.15),
+                      // Right Side: Image or Icon
+                      Expanded(
+                        flex: 2,
+                        child: slide['image'] != null
+                            ? Image.asset(
+                                slide['image'],
+                                fit: BoxFit.contain,
+                              )
+                            : Container(
+                                alignment: Alignment.centerRight,
+                                child: Icon(
+                                  slide['icon'],
+                                  size: 80.sp,
+                                  color: primaryGreen.withValues(alpha: 0.15),
+                                ),
                               ),
-                            ),
-                    ),
-                  ],
-                );
-              },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             // Indicators
             Padding(
