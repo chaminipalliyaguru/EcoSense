@@ -94,6 +94,7 @@ flutter:
     - assets/images/home/Quicktiphome2.png
     - assets/images/home/Quicktiphome3.png
     - assets/images/tips/
+    - assets/images/avatars/
     - assets/onboarding_screen/
 
 

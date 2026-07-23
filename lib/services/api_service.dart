@@ -11,23 +11,31 @@ class ApiService {
   //static const bool _useLocalBackend = true;
 
   static String get baseUrl {
+    String url;
     if (_useLocalBackend) {
       if (!kIsWeb && Platform.isAndroid) {
-        return "http://10.0.2.2:8000";
+        url = "http://10.0.2.2:8000";
+      } else {
+        url = "http://localhost:8000";
       }
-      return "http://localhost:8000";
+    } else {
+      url = "https://web.synro.dev/api";
     }
-    return "https://api.synro.dev";
+    return url.trim().replaceAll(RegExp(r'/+$'), '');
   }
 
   static String get ocrBaseUrl {
+    String url;
     if (_useLocalBackend) {
       if (!kIsWeb && Platform.isAndroid) {
-        return "http://10.0.2.2:8000";
+        url = "http://10.0.2.2:8000";
+      } else {
+        url = "http://localhost:8000";
       }
-      return "http://localhost:8000";
+    } else {
+      url = "https://ocr.synro.dev";
     }
-    return "https://ocr.synro.dev";
+    return url.trim().replaceAll(RegExp(r'/+$'), '');
   }
 
   // Safe helper to process HTTP response

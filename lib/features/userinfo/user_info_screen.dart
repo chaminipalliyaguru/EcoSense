@@ -5,6 +5,7 @@ import 'widgets/profile_header.dart';
 import 'widgets/info_section_header.dart';
 import 'widgets/user_info_text_field.dart';
 import 'widgets/account_setting_tile.dart';
+import 'widgets/avatar_selector.dart';
 import '../../data/user_session.dart';
 import '../login_and_signup/login_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
@@ -22,10 +23,10 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _licenseController = TextEditingController();
 
   String _username = 'Guest';
   String _email = '';
+  int _avatarIndex = 0;
 
   final Color primaryGreen = const Color(0xFF4A7B59);
 
@@ -42,7 +43,29 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       _email = userData['email']!;
       _fullNameController.text = userData['full_name']!;
       _emailController.text = _email;
+      _avatarIndex = userData['avatar_index'] ?? 0;
     });
+  }
+
+  void _showAvatarSelectionSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AvatarSelectionSheet(
+        currentAvatarIndex: _avatarIndex,
+        onSelectAvatar: (newIndex) async {
+          setState(() {
+            _avatarIndex = newIndex;
+          });
+          await UserSession.saveAvatarIndex(newIndex);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Avatar updated successfully!')),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -66,6 +89,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             ProfileHeader(
               username: _fullNameController.text.isNotEmpty ? _fullNameController.text : _username,
               email: _email,
+              avatarIndex: _avatarIndex,
+              onAvatarPressed: _showAvatarSelectionSheet,
               onEditPressed: () async {
                 if (_username == 'Guest') {
                   Navigator.push(
@@ -152,6 +177,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 icon: Icons.lock_outline,
                 title: 'Account Settings',
                 primaryGreen: primaryGreen,
+              ),
+              SizedBox(height: 15.h),
+              AccountSettingTile(
+                icon: Icons.face_rounded,
+                title: 'Choose Avatar',
+                subtitle: 'Select from 5 profile avatars',
+                primaryGreen: primaryGreen,
+                onTap: _showAvatarSelectionSheet,
               ),
               SizedBox(height: 15.h),
               AccountSettingTile(

@@ -20,6 +20,7 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
   int _selectedIndex = 0;
   final Color _primaryGreen = const Color(0xFF3A7D44);
   String _displayName = "";
+  int _avatarIndex = 0;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
       if (_displayName.isEmpty) {
         _displayName = userData['username'] ?? "";
       }
+      _avatarIndex = userData['avatar_index'] ?? 0;
     });
   }
 
@@ -46,7 +48,10 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GreetingHeader(name: _displayName),
+            GreetingHeader(
+              name: _displayName,
+              avatarIndex: _avatarIndex,
+            ),
             const HomeHeroSection(),
             ScanEmissionCard(primaryGreen: _primaryGreen),
             SizedBox(height: 20.h),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'widgets/user_info_text_field.dart';
+import 'widgets/avatar_selector.dart';
 import '../../data/user_session.dart';
 import '../../services/api_service.dart';
 
@@ -17,6 +18,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _usernameController = TextEditingController();
 
   String _username = 'Guest';
+  int _avatarIndex = 0;
   bool _isLoading = false;
 
   final Color primaryGreen = const Color(0xFF4A7B59);
@@ -35,6 +37,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _usernameController.text = userData['username']!;
         _fullNameController.text = userData['full_name']!;
         _emailController.text = userData['email']!;
+        _avatarIndex = userData['avatar_index'] ?? 0;
       });
     }
 
@@ -56,11 +59,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  String get _initials {
-    String name = _fullNameController.text.trim();
-    if (name.isNotEmpty) return name[0].toUpperCase();
-    if (_username.isNotEmpty && _username != 'Guest') return _username[0].toUpperCase();
-    return 'U';
+  void _showAvatarSelectionSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AvatarSelectionSheet(
+        currentAvatarIndex: _avatarIndex,
+        onSelectAvatar: (newIndex) async {
+          setState(() {
+            _avatarIndex = newIndex;
+          });
+          await UserSession.saveAvatarIndex(newIndex);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Avatar updated successfully!')),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -71,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: primaryGreen,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, true),
         ),
         title: Image.asset(
           'assets/logo.png',
@@ -86,34 +103,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           children: [
             // Profile Image with Edit Icon
             Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50.r,
-                    backgroundColor: Colors.grey.shade200,
-                    child: Text(
-                      _initials,
-                      style: TextStyle(
-                        fontSize: 40.sp,
-                        color: primaryGreen,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Icon(Icons.edit, size: 20.r, color: Colors.grey),
-                    ),
-                  ),
-                ],
+              child: UserAvatar(
+                avatarIndex: _avatarIndex,
+                radius: 50,
+                showEditBadge: true,
+                onTap: _showAvatarSelectionSheet,
               ),
             ),
             SizedBox(height: 15.h),
@@ -177,18 +171,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             email: _emailController.text,
                             fullName: newName,
                           );
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Name updated successfully')),
-                            );
-                            Navigator.pop(context, true);
-                          }
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Name updated successfully')),
+                          );
+                          Navigator.pop(context, true);
                         } else {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(result['message'] ?? 'Update failed')),
-                            );
-                          }
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(result['message'] ?? 'Update failed')),
+                          );
                         }
                       },
                 child: _isLoading
