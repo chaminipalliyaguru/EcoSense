@@ -6,6 +6,7 @@ import 'widgets/certificate_info_card.dart';
 import 'widgets/snap_data_table.dart';
 import 'widgets/smoke_opacity_chart.dart';
 import 'widgets/rpm_variations_chart.dart';
+import '../../services/prediction_service.dart';
 
 class EditDetailsScreen extends StatefulWidget {
   final bool isPass;
@@ -29,6 +30,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
   
   bool _isEditing = false;
   final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
 
   // Data state
   late String _certificateNo;
@@ -47,6 +49,67 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
   late List<double> _originalSmokeDensities;
   late List<int> _originalRpms;
   late List<double> _originalAccelerationTimes;
+
+  Future<void> _predictResult() async {
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+
+      final response = await PredictionService.predict(
+        apiData: widget.apiData!,
+        smoke: _smokeDensities,
+        rpm: _rpms,
+        acc: _accelerationTimes,
+      );
+
+      print(response);
+
+      // Update this path if your response differs.
+      final result = response["results"][0];
+
+      final bool isPass =
+          result["rule"]?["rule_diesel_fail"] == false &&
+          result["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() == 'PASS';
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+          isPass
+              ? PassReportScreen(
+            predictionResult: Map<String, dynamic>.from(result),
+          )
+              : FailReportScreen(
+            predictionResult: Map<String, dynamic>.from(result),
+          ),
+        ),
+      );
+
+    } catch (e) {
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+
+    } finally {
+
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+
+    }
+  }
 
   @override
   void initState() {
@@ -367,20 +430,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
       width: double.infinity,
       height: 52.h,
       child: ElevatedButton(
-        onPressed: () {
-          if (widget.isFromResults) {
-            Navigator.pop(context);
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => widget.isPass 
-                    ? const PassReportScreen() 
-                    : const FailReportScreen(),
-              ),
-            );
-          }
-        },
+        onPressed: _loading ? null : _predictResult,
         style: ElevatedButton.styleFrom(
           backgroundColor: _primaryGreen,
           elevation: 0,
@@ -388,7 +438,16 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
             borderRadius: BorderRadius.circular(26.r),
           ),
         ),
-        child: Text(
+        child: _loading
+            ? const SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Colors.white,
+          ),
+        )
+            : Text(
           'Confirm & Continue',
           style: TextStyle(
             fontSize: 16.sp,
