@@ -10,11 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,32 +31,22 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Flutter Doctor
         run: flutter doctor -v
 
-      - name: Clean Flutter
+      - name: Clean Project
         run: flutter clean
 
-      - name: Remove Gradle Cache
-        run: |
-          rm -rf ~/.gradle/caches
-          rm -rf ~/.gradle/daemon
-          rm -rf ~/.gradle/native
-          rm -rf android/.gradle
-
-      - name: Get Packages
+      - name: Get Dependencies
         run: flutter pub get
 
-      - name: Accept Android Licenses
-        run: yes | flutter doctor --android-licenses || true
-
-      - name: Print Versions
-        run: |
-          java -version
-          flutter --version
-
       - name: Build Release APK
-        run: flutter build apk --release --verbose
+        env:
+          CI: true
+        run: flutter build apk --release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
@@ -63,7 +56,7 @@ jobs:
 
       - name: Create Firebase Credentials
         run: |
-          cat <<EOF > firebase.json
+          cat > firebase.json <<'EOF'
           ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           EOF
 
