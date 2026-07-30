@@ -336,4 +336,17 @@ class ApiService {
       return _handleError(e, "VERIFY NEW EMAIL");
     }
   }
+
+  static Future<Map<String, dynamic>> getHistory({int skip = 0, int limit = 20}) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/history?skip=$skip&limit=$limit'),
+        headers: headers,
+      );
+      return _processResponse(response, "Failed to get history");
+    } catch (e) {
+      return _handleError(e, "GET HISTORY");
+    }
+  }
 }
