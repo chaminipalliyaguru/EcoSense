@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../services/api_service.dart';
 import '../verify_email/verify_code_screen.dart';
 import 'widgets/auth_widgets.dart';
+import 'widgets/password_requirements.dart';
 import 'utils/validators.dart';
 import 'utils/google_auth_helper.dart';
 import 'login_screen.dart';
@@ -28,7 +29,20 @@ class _SignupScreenState extends State<SignupScreen> {
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
   @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_onPasswordChanged);
+  }
+
+  void _onPasswordChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   void dispose() {
+    _passwordController.removeListener(_onPasswordChanged);
     _usernameController.dispose();
     _fullNameController.dispose();
     _emailController.dispose();
@@ -36,6 +50,8 @@ class _SignupScreenState extends State<SignupScreen> {
     _repasswordController.dispose();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 20.h),
                 // Sign Up Title
                 Text(
-                  "Sign Up",
+                  "Sign up",
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
@@ -83,6 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _emailController,
                   validator: Validators.validateEmail,
                   keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 SizedBox(height: 20.h),
 
@@ -105,6 +122,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       });
                     },
                   ),
+                ),
+                PasswordRequirements(
+                  password: _passwordController.text,
+                  primaryGreen: _primaryGreen,
                 ),
                 SizedBox(height: 20.h),
 

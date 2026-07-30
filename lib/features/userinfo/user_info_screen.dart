@@ -5,8 +5,10 @@ import 'widgets/profile_header.dart';
 import 'widgets/info_section_header.dart';
 import 'widgets/user_info_text_field.dart';
 import 'widgets/account_setting_tile.dart';
+import 'widgets/avatar_selector.dart';
 import '../../data/user_session.dart';
 import '../login_and_signup/login_screen.dart';
+import '../forgot_password/forgot_password_screen.dart';
 import 'widgets/logout_button.dart';
 import '../splash/welcome_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,11 +23,10 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _licenseController = TextEditingController();
 
   String _username = 'Guest';
   String _email = '';
+  int _avatarIndex = 0;
 
   final Color primaryGreen = const Color(0xFF4A7B59);
 
@@ -42,8 +43,29 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       _email = userData['email']!;
       _fullNameController.text = userData['full_name']!;
       _emailController.text = _email;
-      _contactController.text = userData['contact']!;
+      _avatarIndex = userData['avatar_index'] ?? 0;
     });
+  }
+
+  void _showAvatarSelectionSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AvatarSelectionSheet(
+        currentAvatarIndex: _avatarIndex,
+        onSelectAvatar: (newIndex) async {
+          setState(() {
+            _avatarIndex = newIndex;
+          });
+          await UserSession.saveAvatarIndex(newIndex);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Avatar updated successfully!')),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -65,8 +87,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileHeader(
-              username: _username,
+              username: _fullNameController.text.isNotEmpty ? _fullNameController.text : _username,
               email: _email,
+              avatarIndex: _avatarIndex,
+              onAvatarPressed: _showAvatarSelectionSheet,
               onEditPressed: () async {
                 if (_username == 'Guest') {
                   Navigator.push(
@@ -146,12 +170,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 controller: _emailController,
                 primaryGreen: primaryGreen,
               ),
-              SizedBox(height: 15.h),
-              UserInfoTextField(
-                hint: 'Contact',
-                controller: _contactController,
-                primaryGreen: primaryGreen,
-              ),
               SizedBox(height: 30.h),
               
               // Account Settings Section
@@ -162,12 +180,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
               SizedBox(height: 15.h),
               AccountSettingTile(
+                icon: Icons.face_rounded,
+                title: 'Choose Avatar',
+                subtitle: 'Select from 5 profile avatars',
+                primaryGreen: primaryGreen,
+                onTap: _showAvatarSelectionSheet,
+              ),
+              SizedBox(height: 15.h),
+              AccountSettingTile(
                 icon: Icons.lock_outline,
                 title: 'Change Password',
                 subtitle: 'Update your account password',
                 primaryGreen: primaryGreen,
                 onTap: () {
-                  Navigator.pushNamed(context, '/verify_email', arguments: true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPasswordScreen(
+                        email: _email,
+                      ),
+                    ),
+                  );
                 },
               ),
               SizedBox(height: 40.h),

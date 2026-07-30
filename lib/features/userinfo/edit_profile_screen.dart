@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'widgets/user_info_text_field.dart';
+import 'widgets/avatar_selector.dart';
 import '../../data/user_session.dart';
+import '../../services/api_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -11,12 +13,13 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   String _username = 'Guest';
+  int _avatarIndex = 0;
+  bool _isLoading = false;
 
   final Color primaryGreen = const Color(0xFF4A7B59);
 
@@ -28,19 +31,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _loadUserData() async {
     final userData = await UserSession.getUser();
-    setState(() {
-      _username = userData['username']!;
-      final fullName = userData['full_name']!;
-      if (fullName.contains(' ')) {
-        final names = fullName.split(' ');
-        _firstNameController.text = names[0];
-        _lastNameController.text = names.sublist(1).join(' ');
-      } else {
-        _firstNameController.text = fullName;
+    if (mounted) {
+      setState(() {
+        _username = userData['username']!;
+        _usernameController.text = userData['username']!;
+        _fullNameController.text = userData['full_name']!;
+        _emailController.text = userData['email']!;
+        _avatarIndex = userData['avatar_index'] ?? 0;
+      });
+    }
+
+    final apiData = await ApiService.getUserDetails();
+    if (apiData['status'] != 'error') {
+      if (mounted) {
+        setState(() {
+          _username = apiData['username'] ?? _username;
+          _usernameController.text = apiData['username'] ?? _usernameController.text;
+          _fullNameController.text = apiData['full_name'] ?? _fullNameController.text;
+          _emailController.text = apiData['email'] ?? _emailController.text;
+        });
       }
-      _emailController.text = userData['email']!;
-      _contactController.text = userData['contact']!;
-    });
+      await UserSession.saveUser(
+        username: _username,
+        email: _emailController.text,
+        fullName: _fullNameController.text,
+      );
+    }
+  }
+
+  void _showAvatarSelectionSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AvatarSelectionSheet(
+        currentAvatarIndex: _avatarIndex,
+        onSelectAvatar: (newIndex) async {
+          setState(() {
+            _avatarIndex = newIndex;
+          });
+          await UserSession.saveAvatarIndex(newIndex);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Avatar updated successfully!')),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -51,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: primaryGreen,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, true),
         ),
         title: Image.asset(
           'assets/logo.png',
@@ -66,32 +103,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           children: [
             // Profile Image with Edit Icon
             Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50.r,
-                    backgroundColor: Colors.grey.shade200,
-                    child: Icon(Icons.person, size: 70.r, color: Colors.grey),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Icon(Icons.edit, size: 20.r, color: Colors.grey),
-                    ),
-                  ),
-                ],
+              child: UserAvatar(
+                avatarIndex: _avatarIndex,
+                radius: 50,
+                showEditBadge: true,
+                onTap: _showAvatarSelectionSheet,
               ),
             ),
             SizedBox(height: 15.h),
             Text(
-              _username,
+              _fullNameController.text.isNotEmpty ? _fullNameController.text : _username,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -100,28 +121,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SizedBox(height: 30.h),
 
             // Form Fields
+            _buildFieldLabel('Full Name'),
             UserInfoTextField(
-              hint: 'First Name',
-              controller: _firstNameController,
+              hint: 'Enter your full name',
+              controller: _fullNameController,
               primaryGreen: primaryGreen,
             ),
             SizedBox(height: 15.h),
+            _buildFieldLabel('Username'),
             UserInfoTextField(
-              hint: 'Last Name',
-              controller: _lastNameController,
+              hint: "Username",
+              controller: _usernameController,
               primaryGreen: primaryGreen,
+              readOnly: true,
             ),
             SizedBox(height: 15.h),
+            _buildFieldLabel('Email Address'),
             UserInfoTextField(
-              hint: "User's mail",
+              hint: "Email address",
               controller: _emailController,
               primaryGreen: primaryGreen,
-            ),
-            SizedBox(height: 15.h),
-            UserInfoTextField(
-              hint: 'Contact',
-              controller: _contactController,
-              primaryGreen: primaryGreen,
+              readOnly: true,
             ),
             SizedBox(height: 40.h),
 
@@ -136,26 +156,63 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                 ),
-                onPressed: () async {
-                  await UserSession.saveUser(
-                    username: _username,
-                    email: _emailController.text,
-                    fullName: '${_firstNameController.text} ${_lastNameController.text}'.trim(),
-                    contact: _contactController.text,
-                  );
-                  Navigator.pop(context, true);
-                },
-                child: Text(
-                  'Save Changes',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                        setState(() => _isLoading = true);
+                        final newName = _fullNameController.text.trim();
+                        final result = await ApiService.changeName(newName);
+
+                        setState(() => _isLoading = false);
+
+                        if (result['status'] == 'success' || result['message'] == 'Name updated') {
+                          await UserSession.saveUser(
+                            username: _username,
+                            email: _emailController.text,
+                            fullName: newName,
+                          );
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Name updated successfully')),
+                          );
+                          Navigator.pop(context, true);
+                        } else {
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(result['message'] ?? 'Update failed')),
+                          );
+                        }
+                      },
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        'Save Changes',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h, left: 4.w),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
     );

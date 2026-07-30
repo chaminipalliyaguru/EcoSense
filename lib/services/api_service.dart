@@ -2,30 +2,40 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../data/user_session.dart';
 
 class ApiService {
   // Toggle to switch between local development and production backends.
   // When using localhost on Android Emulator, it will map to 10.0.2.2.
   static const bool _useLocalBackend = false;
+  //static const bool _useLocalBackend = true;
 
   static String get baseUrl {
+    String url;
     if (_useLocalBackend) {
       if (!kIsWeb && Platform.isAndroid) {
-        return "http://10.0.2.2:8000";
+        url = "http://10.0.2.2:8000";
+      } else {
+        url = "http://localhost:8000";
       }
-      return "http://localhost:8000";
+    } else {
+      url = "https://web.synro.dev/api";
     }
-    return "https://api.synro.dev";
+    return url.trim().replaceAll(RegExp(r'/+$'), '');
   }
 
   static String get ocrBaseUrl {
+    String url;
     if (_useLocalBackend) {
       if (!kIsWeb && Platform.isAndroid) {
-        return "http://10.0.2.2:8000";
+        url = "http://10.0.2.2:8000";
+      } else {
+        url = "http://localhost:8000";
       }
-      return "http://localhost:8000";
+    } else {
+      url = "https://ocr.synro.dev";
     }
-    return "https://ocr.synro.dev";
+    return url.trim().replaceAll(RegExp(r'/+$'), '');
   }
 
   // Safe helper to process HTTP response
@@ -232,6 +242,98 @@ class ApiService {
       return _processResponse(response, "Password Reset Failed");
     } catch (e) {
       return _handleError(e, "RESET");
+    }
+  }
+  // --- User Profile Endpoints ---
+
+  static Future<Map<String, String>> _getAuthHeaders() async {
+    final token = await UserSession.getToken();
+    return {
+      "Content-Type": "application/json",
+      if (token != null) "Authorization": "Bearer $token",
+    };
+  }
+
+  static Future<Map<String, dynamic>> getUserDetails() async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/me'),
+        headers: headers,
+      );
+      return _processResponse(response, "Failed to get user details");
+    } catch (e) {
+      return _handleError(e, "GET USER DETAILS");
+    }
+  }
+
+  static Future<Map<String, dynamic>> changeName(String name) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.put(
+        Uri.parse('$baseUrl/users/name'),
+        headers: headers,
+        body: jsonEncode({"name": name}),
+      );
+      return _processResponse(response, "Failed to change name");
+    } catch (e) {
+      return _handleError(e, "CHANGE NAME");
+    }
+  }
+
+  static Future<Map<String, dynamic>> changeUsername(String username) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.put(
+        Uri.parse('$baseUrl/users/username'),
+        headers: headers,
+        body: jsonEncode({"username": username}),
+      );
+      return _processResponse(response, "Failed to change username");
+    } catch (e) {
+      return _handleError(e, "CHANGE USERNAME");
+    }
+  }
+
+  static Future<Map<String, dynamic>> requestEmailChange(String newEmail) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/users/change-email/request'),
+        headers: headers,
+        body: jsonEncode({"new_email": newEmail}),
+      );
+      return _processResponse(response, "Failed to request email change");
+    } catch (e) {
+      return _handleError(e, "REQUEST EMAIL CHANGE");
+    }
+  }
+
+  static Future<Map<String, dynamic>> verifyOldEmail(String otp) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/users/change-email/verify-old'),
+        headers: headers,
+        body: jsonEncode({"otp": otp}),
+      );
+      return _processResponse(response, "Failed to verify old email");
+    } catch (e) {
+      return _handleError(e, "VERIFY OLD EMAIL");
+    }
+  }
+
+  static Future<Map<String, dynamic>> verifyNewEmail(String otp) async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/users/change-email/verify-new'),
+        headers: headers,
+        body: jsonEncode({"otp": otp}),
+      );
+      return _processResponse(response, "Failed to verify new email");
+    } catch (e) {
+      return _handleError(e, "VERIFY NEW EMAIL");
     }
   }
 }
