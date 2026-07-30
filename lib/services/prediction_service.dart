@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../data/user_session.dart';
 
 class PredictionService {
   static const String _baseUrl = "https://model.synro.dev";
@@ -40,10 +41,12 @@ class PredictionService {
       "include_ai_explanation": true
     };
 
+    final token = await UserSession.getToken();
     final response = await http.post(
       Uri.parse("$_baseUrl/predict"),
       headers: {
         "Content-Type": "application/json",
+        if (token != null) "Authorization": "Bearer $token",
       },
       body: jsonEncode(body),
     );
