@@ -51,199 +51,214 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20.h),
-                // Sign Up Title
-                Text(
-                  "Sign up",
-                  style: TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: _primaryGreen,
-                  ),
-                ),
-                SizedBox(height: 40.h),
-
-                // Full Name Field
-                AuthTextField(
-                  hintText: "Full Name",
-                  controller: _fullNameController,
-                  validator: Validators.validateName,
-                ),
-                SizedBox(height: 20.h),
-
-                // User Name Field
-                AuthTextField(
-                  hintText: "User Name",
-                  controller: _usernameController,
-                  validator: Validators.validateUserName,
-                ),
-                SizedBox(height: 20.h),
-
-                // Email Field
-                AuthTextField(
-                  hintText: "Email",
-                  controller: _emailController,
-                  validator: Validators.validateEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                ),
-                SizedBox(height: 20.h),
-
-                // Password Field
-                AuthTextField(
-                  hintText: "Password",
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  validator: Validators.validatePassword,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: Colors.grey,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: SingleChildScrollView(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20.h),
+                    // Sign Up Title
+                    Text(
+                      "Sign up",
+                      style: TextStyle(
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.bold,
+                        color: _primaryGreen,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-                PasswordRequirements(
-                  password: _passwordController.text,
-                  primaryGreen: _primaryGreen,
-                ),
-                SizedBox(height: 20.h),
+                    SizedBox(height: 40.h),
 
-                // Re-enter Password Field
-                AuthTextField(
-                  hintText: "Re-enter Password",
-                  controller: _repasswordController,
-                  obscureText: _obscureRePassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please re-enter your password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureRePassword
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: Colors.grey,
+                    // Full Name Field
+                    AuthTextField(
+                      hintText: "Full Name",
+                      controller: _fullNameController,
+                      validator: Validators.validateName,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureRePassword = !_obscureRePassword;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 40.h),
+                    SizedBox(height: 20.h),
 
-                // Sign up Button
-                AuthPrimaryButton(
-                    text: "Sign up",
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final response = await ApiService.signup(
-                          name: _fullNameController.text.trim(),
-                          username: _usernameController.text.trim(),
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                        );
+                    // User Name Field
+                    AuthTextField(
+                      hintText: "User Name",
+                      controller: _usernameController,
+                      validator: Validators.validateUserName,
+                    ),
+                    SizedBox(height: 20.h),
 
-                        if (response["status"] != "error") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Signup successful, check your email for OTP")),
-                          );
+                    // Email Field
+                    AuthTextField(
+                      hintText: "Email",
+                      controller: _emailController,
+                      validator: Validators.validateEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                    SizedBox(height: 20.h),
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VerifyCodeScreen(
-                                  email: _emailController.text.trim(),
-                                )),
-                          );
-                        } else {
-                          final message = response["message"] ?? "Signup failed";
-                          final isAlreadySignedUp = message.toString().toLowerCase().contains("already exists") ||
-                              message.toString().toLowerCase().contains("already registered");
+                    // Password Field
+                    AuthTextField(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      validator: Validators.validatePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    PasswordRequirements(
+                      password: _passwordController.text,
+                      primaryGreen: _primaryGreen,
+                    ),
+                    SizedBox(height: 20.h),
 
-                          if (isAlreadySignedUp) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("$message. Redirecting to Login..."),
-                                duration: const Duration(seconds: 2),
-                              ),
+                    // Re-enter Password Field
+                    AuthTextField(
+                      hintText: "Re-enter Password",
+                      controller: _repasswordController,
+                      obscureText: _obscureRePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please re-enter your password';
+                        }
+                        if (value != _passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureRePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureRePassword = !_obscureRePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 40.h),
+
+                    // Sign up Button
+                    AuthPrimaryButton(
+                        text: "Sign up",
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final response = await ApiService.signup(
+                              name: _fullNameController.text.trim(),
+                              username: _usernameController.text.trim(),
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim(),
                             );
 
-                            Future.delayed(const Duration(seconds: 2), () {
-                              if (mounted) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
+                            if (response["status"] != "error") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        "Signup successful, check your email for OTP")),
+                              );
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VerifyCodeScreen(
+                                          email: _emailController.text.trim(),
+                                        )),
+                              );
+                            } else {
+                              final message =
+                                  response["message"] ?? "Signup failed";
+                              final isAlreadySignedUp = message
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains("already exists") ||
+                                  message
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains("already registered");
+
+                              if (isAlreadySignedUp) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        "$message. Redirecting to Login..."),
+                                    duration: const Duration(seconds: 2),
                                   ),
                                 );
+
+                                Future.delayed(const Duration(seconds: 2), () {
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
+                                    );
+                                  }
+                                });
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(message)),
+                                );
                               }
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(message)),
-                            );
+                            }
                           }
-                        }
-                      }
-                    }),
-                SizedBox(height: 16.h),
+                        }),
+                    SizedBox(height: 16.h),
 
-                SizedBox(height: 40.h),
+                    SizedBox(height: 40.h),
 
-                // OR Divider
-                const AuthDivider(),
-                SizedBox(height: 40.h),
+                    // OR Divider
+                    const AuthDivider(),
+                    SizedBox(height: 40.h),
 
-                // Continue with Google Button
-                AuthSocialButton(
-                  text: "Continue with Google",
-                  logo: const GoogleLogoWidget(size: 34),
-                  backgroundColor: Colors.white,
-                  borderColor: Colors.grey.shade300,
-                  textColor: const Color(0xFF1F1F1F),
-                  onPressed: () {
-                    GoogleAuthHelper.performGoogleSignIn(context);
-                  },
+                    // Continue with Google Button
+                    AuthSocialButton(
+                      text: "Continue with Google",
+                      logo: const GoogleLogoWidget(size: 34),
+                      backgroundColor: Colors.white,
+                      borderColor: Colors.grey.shade300,
+                      textColor: const Color(0xFF1F1F1F),
+                      onPressed: () {
+                        GoogleAuthHelper.performGoogleSignIn(context);
+                      },
+                    ),
+                    SizedBox(height: 40.h),
+
+                    // Bottom Text
+                    AuthBottomText(
+                      questionText: "Already have an account?",
+                      actionText: "Login.",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: 40.h),
-
-                // Bottom Text
-                AuthBottomText(
-                  questionText: "Already have an account?",
-                  actionText: "Login.",
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),

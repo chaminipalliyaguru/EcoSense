@@ -302,97 +302,100 @@ class _PassReportScreenState extends State<PassReportScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
-        child: Column(
-          children: [
-            ResultStatusIndicator(status: _isPass ? 'PASS' : 'FAIL', isPass: _isPass),
-            const SizedBox(height: 30),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+            child: Column(
+              children: [
+                ResultStatusIndicator(status: _isPass ? 'PASS' : 'FAIL', isPass: _isPass),
+                const SizedBox(height: 30),
 
-            if (summary != null && summary.isNotEmpty) ...[
-              ResultInfoCard(title: 'Summary', content: summary),
-              const SizedBox(height: 24),
-            ],
+                if (summary != null && summary.isNotEmpty) ...[
+                  ResultInfoCard(title: 'Summary', content: summary),
+                  const SizedBox(height: 24),
+                ],
 
-            if (_diagnosticReasons.isNotEmpty) ...[
-              ResultInfoCard(
-                title: 'Reasons',
-                content: _diagnosticReasons.map((r) => '•  $r').join('\n'),
-              ),
-              const SizedBox(height: 24),
-            ],
+                if (_diagnosticReasons.isNotEmpty) ...[
+                  ResultInfoCard(
+                    title: 'Reasons',
+                    content: _diagnosticReasons.map((r) => '•  $r').join('\n'),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
+                if (_possibleCauses.isNotEmpty) ...[
+                  ResultInfoCard(
+                    title: 'Notes',
+                    content: _possibleCauses.map((r) => '•  $r').join('\n'),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
+                if (_repairSteps.isNotEmpty) ...[
+                  ResultInfoCard(
+                    title: 'Suggested Next Steps',
+                    content: List.generate(
+                      _repairSteps.length,
+                          (i) => '${i + 1}. ${_repairSteps[i]}',
+                    ).join('\n'),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
-            if (_possibleCauses.isNotEmpty) ...[
-              ResultInfoCard(
-                title: 'Notes',
-                content: _possibleCauses.map((r) => '•  $r').join('\n'),
-              ),
-              const SizedBox(height: 24),
-            ],
+                _buildQuickFactsRow(),
+                const SizedBox(height: 24),
 
-            if (_repairSteps.isNotEmpty) ...[
-              ResultInfoCard(
-                title: 'Suggested Next Steps',
-                content: List.generate(
-                  _repairSteps.length,
-                      (i) => '${i + 1}. ${_repairSteps[i]}',
-                ).join('\n'),
-              ),
-              const SizedBox(height: 24),
-            ],
+                if (_aiExplanation['can_drive'] != null) ...[
+                  ResultInfoCard(
+                    title: 'Can I Drive It?',
+                    content: _aiExplanation['can_drive'].toString(),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
-            _buildQuickFactsRow(),
-            const SizedBox(height: 24),
+                if (_prevention.isNotEmpty) ...[
+                  ResultInfoCard(
+                    title: 'Keep It Passing',
+                    content: _prevention.map((r) => '•  $r').join('\n'),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
-            if (_aiExplanation['can_drive'] != null) ...[
-              ResultInfoCard(
-                title: 'Can I Drive It?',
-                content: _aiExplanation['can_drive'].toString(),
-              ),
-              const SizedBox(height: 24),
-            ],
+                if (_videos.isNotEmpty) ...[
+                  _buildVideosCard(),
+                  const SizedBox(height: 24),
+                ],
 
-            if (_prevention.isNotEmpty) ...[
-              ResultInfoCard(
-                title: 'Keep It Passing',
-                content: _prevention.map((r) => '•  $r').join('\n'),
-              ),
-              const SizedBox(height: 24),
-            ],
-
-            if (_videos.isNotEmpty) ...[
-              _buildVideosCard(),
-              const SizedBox(height: 24),
-            ],
-
-            const SizedBox(height: 16),
-            ViewDetailsButton(
-              onPressed: () async {
-                final userData = await UserSession.getUser();
-                final username = userData['username'] ?? '';
-                if (username.isEmpty || username == 'Guest') {
-                  if (context.mounted) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
-                          (route) => false,
-                    );
-                  }
-                } else {
-                  if (context.mounted) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
-                          (route) => false,
-                    );
-                  }
-                }
-              },
-              backgroundColor: _primaryGreen,
+                const SizedBox(height: 16),
+                ViewDetailsButton(
+                  onPressed: () async {
+                    final userData = await UserSession.getUser();
+                    final username = userData['username'] ?? '';
+                    if (username.isEmpty || username == 'Guest') {
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
+                              (route) => false,
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
+                              (route) => false,
+                        );
+                      }
+                    }
+                  },
+                  backgroundColor: _primaryGreen,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: AppBottomNav(

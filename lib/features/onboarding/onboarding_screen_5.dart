@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../splash/welcome_screen.dart';
+import '../../data/user_session.dart';
 
 // Reusable common widgets
 import 'widgets/skip_button.dart';
@@ -30,15 +31,18 @@ class OnboardingScreen5 extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onVerticalDragEnd: (details) {
+                onVerticalDragEnd: (details) async {
                   if (details.primaryVelocity != null &&
                       details.primaryVelocity!.abs() > 100) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const WelcomeScreen()),
-                      (route) => false,
-                    );
+                    await UserSession.setSeenOnboarding();
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomeScreen()),
+                        (route) => false,
+                      );
+                    }
                   }
                 },
                 child: Padding(
@@ -105,23 +109,22 @@ class OnboardingScreen5 extends StatelessWidget {
                             const Spacer(),
                           ],
                         )
-                      : Center(
-                          child: SingleChildScrollView(
+                      : SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: Column(
                               children: [
-                                const SizedBox(height: 12.0),
                                 // Screen 5 title
                                 Text.rich(
                                   TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: 'View Results &\n',
+                                        text: 'View Results & ',
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontSize: titleFontSize,
                                           fontWeight: FontWeight.w700,
                                           color: const Color(0xFF343232),
-                                          height: 1.25,
                                         ),
                                       ),
                                       TextSpan(
@@ -131,7 +134,6 @@ class OnboardingScreen5 extends StatelessWidget {
                                           fontSize: titleFontSize,
                                           fontWeight: FontWeight.w700,
                                           color: const Color(0xFF527D5B),
-                                          height: 1.25,
                                         ),
                                       ),
                                     ],
@@ -180,12 +182,15 @@ class OnboardingScreen5 extends StatelessWidget {
             // Common Widget: Action button → "Get Started" (last page)
             OnboardingButton(
               label: 'Get Started',
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-                  (route) => false,
-                );
+              onPressed: () async {
+                await UserSession.setSeenOnboarding();
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                    (route) => false,
+                  );
+                }
               },
             ),
           ],

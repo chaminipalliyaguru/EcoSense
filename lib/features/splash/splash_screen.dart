@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../data/user_session.dart';
+import '../home/home_screen_signup_login.dart';
 import '../onboarding/onboarding_screen_1.dart';
+import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,12 +17,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    _checkAppSession();
+  }
+
+  Future<void> _checkAppSession() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    final token = await UserSession.getToken();
+    final hasSeenOnboarding = await UserSession.hasSeenOnboarding();
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreenSignupLogin()),
+      );
+    } else if (hasSeenOnboarding) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+      );
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const OnboardingScreen1()),
       );
-    });
+    }
   }
 
   @override

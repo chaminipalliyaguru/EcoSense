@@ -7,6 +7,7 @@ import 'widgets/home_hero_section.dart';
 import 'widgets/scan_emission_card.dart';
 import 'widgets/feature_grid.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
+import '../history/history_screen.dart';
 import '../../data/user_session.dart';
 
 class HomeScreenSignupLogin extends StatefulWidget {
@@ -44,20 +45,25 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: TopAppBar(primaryGreen: _primaryGreen),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GreetingHeader(
-              name: _displayName,
-              avatarIndex: _avatarIndex,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GreetingHeader(
+                  name: _displayName,
+                  avatarIndex: _avatarIndex,
+                ),
+                const HomeHeroSection(),
+                ScanEmissionCard(primaryGreen: _primaryGreen),
+                SizedBox(height: 20.h),
+                const FeatureGrid(),
+                SizedBox(height: 32.h),
+              ],
             ),
-            const HomeHeroSection(),
-            ScanEmissionCard(primaryGreen: _primaryGreen),
-            SizedBox(height: 20.h),
-            const FeatureGrid(),
-            SizedBox(height: 32.h),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavBar(
@@ -77,20 +83,25 @@ class _HomeScreenSignupLoginState extends State<HomeScreenSignupLogin> {
       return;
     }
 
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const HistoryScreen(isGuest: false)),
+      ).then((_) {
+        _loadUserName();
+      });
+      return;
+    }
+
+    if (index == 3) {
+      Navigator.pushNamed(context, '/profile').then((_) {
+        _loadUserName();
+      });
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
-
-    switch (index) {
-      case 2:
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/profile').then((_) {
-          _loadUserName();
-        });
-        break;
-      default:
-        break;
-    }
   }
 }
