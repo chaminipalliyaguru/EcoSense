@@ -195,8 +195,8 @@ class _PassReportScreenState extends State<PassReportScreen> {
 
       return data
           .whereType<Map>()
-          .map((e)=>
-      Map<String,dynamic>.from(e))
+          .map((e) => Map<String, dynamic>.from(e))
+          .take(3)
           .toList();
 
     }
@@ -345,9 +345,12 @@ class _PassReportScreenState extends State<PassReportScreen> {
                   const SizedBox(height: 24),
                 ],
 
+                /*
                 _buildQuickFactsRow(),
                 const SizedBox(height: 24),
+                */
 
+                /*
                 if (_aiExplanation['can_drive'] != null) ...[
                   ResultInfoCard(
                     title: 'Can I Drive It?',
@@ -355,6 +358,7 @@ class _PassReportScreenState extends State<PassReportScreen> {
                   ),
                   const SizedBox(height: 24),
                 ],
+                */
 
                 if (_prevention.isNotEmpty) ...[
                   ResultInfoCard(

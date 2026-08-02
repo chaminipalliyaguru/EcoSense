@@ -280,6 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }),
                     SizedBox(height: 16.h),
 
+                    /*
                     SizedBox(height: 40.h),
 
                     // OR Divider
@@ -297,6 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         GoogleAuthHelper.performGoogleSignIn(context);
                       },
                     ),
+                    */
                     SizedBox(height: 40.h),
 
                     // Bottom Text
