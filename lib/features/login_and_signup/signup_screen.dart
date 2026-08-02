@@ -6,7 +6,6 @@ import 'widgets/auth_widgets.dart';
 import 'widgets/password_requirements.dart';
 import 'utils/validators.dart';
 import 'utils/google_auth_helper.dart';
-import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -25,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _obscurePassword = true;
   bool _obscureRePassword = true;
+  bool _isLoading = false;
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -162,16 +162,22 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(height: 40.h),
 
                     // Sign up Button
-                    AuthPrimaryButton(
-                        text: "Sign up",
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final response = await ApiService.signup(
-                              name: _fullNameController.text.trim(),
-                              username: _usernameController.text.trim(),
-                              email: _emailController.text.trim(),
-                              password: _passwordController.text.trim(),
-                            );
+                // Sign up Button
+                AuthPrimaryButton(
+                    text: "Sign up",
+                    isLoading: _isLoading,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() => _isLoading = true);
+                        try {
+                          final response = await ApiService.signup(
+                            name: _fullNameController.text.trim(),
+                            username: _usernameController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+
+                            if (!mounted) return;
 
                             if (response["status"] != "error") {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -180,13 +186,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                         "Signup successful, check your email for OTP")),
                               );
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VerifyCodeScreen(
-                                          email: _emailController.text.trim(),
-                                        )),
-                              );
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VerifyCodeScreen(
+                                            email:
+                                                _emailController.text.trim(),
+                                          )),
+                                );
+                              }
                             } else {
                               final message =
                                   response["message"] ?? "Signup failed";
@@ -203,30 +212,35 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        "$message. Redirecting to Login..."),
+                                        "$message. Redirecting to Verification..."),
                                     duration: const Duration(seconds: 2),
                                   ),
                                 );
 
                                 Future.delayed(const Duration(seconds: 2), () {
                                   if (mounted) {
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen(),
+                                        builder: (context) => VerifyCodeScreen(
+                                          email: _emailController.text
+                                              .trim(),
+                                        ),
                                       ),
                                     );
                                   }
                                 });
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(message)),
+                                  SnackBar(content: Text(message.toString())),
                                 );
                               }
                             }
-                          }
-                        }),
+                        } finally {
+                          if (mounted) setState(() => _isLoading = false);
+                        }
+                      }
+                    }),
                     SizedBox(height: 16.h),
 
                     SizedBox(height: 40.h),

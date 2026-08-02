@@ -188,6 +188,19 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/google'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"token": idToken}),
+      );
+      return _processResponse(response, "Google Login failed");
+    } catch (e) {
+      return _handleError(e, "GOOGLE_LOGIN");
+    }
+  }
+
   static Future<Map<String, dynamic>> verifyOTP({
     required String otp,
     required String email,

@@ -64,11 +64,13 @@ class AuthTextField extends StatelessWidget {
 class AuthPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const AuthPrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -77,7 +79,7 @@ class AuthPrimaryButton extends StatelessWidget {
       width: double.infinity,
       height: 50.h,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryGreen,
           shape: RoundedRectangleBorder(
@@ -85,14 +87,23 @@ class AuthPrimaryButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: isLoading
+            ? SizedBox(
+                height: 20.h,
+                width: 20.h,
+                child: const CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }
