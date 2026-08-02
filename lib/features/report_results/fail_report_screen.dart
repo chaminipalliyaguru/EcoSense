@@ -64,8 +64,9 @@ class _FailReportScreenState extends State<FailReportScreen> {
   List<Map<String, dynamic>> get _videos =>
       (_aiExplanation['youtube_videos'] as List?)
           ?.map((e) => (e as Map).cast<String, dynamic>())
+          .take(3)
           .toList() ??
-          [];
+      [];
 
   String _prettify(String raw) => raw
       .split('_')
@@ -166,9 +167,12 @@ class _FailReportScreenState extends State<FailReportScreen> {
                   const SizedBox(height: 24),
                 ],
 
+                /*
                 _buildQuickFactsRow(),
                 const SizedBox(height: 24),
+                */
 
+                /*
                 if (_aiExplanation['can_drive'] != null) ...[
                   ResultInfoCard(
                     title: 'Can I Drive It?',
@@ -176,12 +180,18 @@ class _FailReportScreenState extends State<FailReportScreen> {
                   ),
                   const SizedBox(height: 24),
                 ],
+                */
 
                 if (_prevention.isNotEmpty) ...[
                   ResultInfoCard(
                     title: 'Prevention',
                     content: _prevention.map((r) => '•  $r').join('\n'),
                   ),
+                  const SizedBox(height: 24),
+                ],
+
+                if (_videos.isNotEmpty) ...[
+                  _buildVideosCard(),
                   const SizedBox(height: 24),
                 ],
 

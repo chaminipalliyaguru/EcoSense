@@ -208,6 +208,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               LogoutButton(
                 onPressed: () async {
                   await UserSession.clear();
+                  /*
                   try {
                     final GoogleSignIn googleSignIn = GoogleSignIn();
                     if (await googleSignIn.isSignedIn()) {
@@ -216,6 +217,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   } catch (e) {
                     debugPrint("Google SignOut Error: $e");
                   }
+                  */
                   if (context.mounted) {
                     Navigator.pushAndRemoveUntil(
                       context,
