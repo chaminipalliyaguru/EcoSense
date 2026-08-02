@@ -46,9 +46,24 @@ class ApiService {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return body;
         } else {
+          dynamic rawError = body["detail"] ?? body["message"];
+          String errorMsg;
+          if (rawError is List) {
+            errorMsg = rawError.map((e) {
+              if (e is Map && e.containsKey("msg")) {
+                return e["msg"].toString();
+              }
+              return e.toString();
+            }).join(", ");
+          } else if (rawError != null) {
+            errorMsg = rawError.toString();
+          } else {
+            errorMsg = "$defaultErrorMsg (${response.statusCode})";
+          }
+
           return {
             "status": "error",
-            "message": body["detail"] ?? body["message"] ?? "$defaultErrorMsg (${response.statusCode})"
+            "message": errorMsg,
           };
         }
       }
@@ -211,13 +226,41 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> resendOTP({
+    required String email,
+    required String purpose,
+  }) async {
+    try {
+      final cleanEmail = email.trim();
+      final encodedEmail = Uri.encodeComponent(cleanEmail);
+      final encodedPurpose = Uri.encodeComponent(purpose);
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/resend-otp?email=$encodedEmail&purpose=$encodedPurpose'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": cleanEmail,
+          "purpose": purpose,
+        }),
+      );
+      return _processResponse(response, "Resend OTP failed");
+    } catch (e) {
+      return _handleError(e, "RESEND OTP");
+    }
+  }
+
   //Forgot Password
   static Future<Map<String, dynamic>> forgetPasswordEmail({
     required String email,
   }) async {
     try {
+      final cleanEmail = email.trim();
+      final encodedEmail = Uri.encodeComponent(cleanEmail);
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/forgot-password?email=$email'),
+        Uri.parse('$baseUrl/auth/forgot-password?email=$encodedEmail'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": cleanEmail,
+        }),
       );
       return _processResponse(response, "Failed to send OTP");
     } catch (e) {

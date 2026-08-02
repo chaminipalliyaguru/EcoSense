@@ -211,7 +211,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            response["message"] ?? "Reset failed",
+                            response["message"]?.toString() ?? "Reset failed",
                           ),
                         ),
                       );
