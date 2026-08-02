@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../data/user_session.dart';
+import '../../../services/api_service.dart';
 import '../widgets/auth_widgets.dart';
 
 class GoogleAuthHelper {
-  static final GoogleSignIn _googleSignIn = GoogleSignIn();
+  static final GoogleSignIn _googleSignIn = GoogleSignIn(
+    serverClientId:
+        '425105073862-26c3u02977evqohntkvveeqri630kvrm.apps.googleusercontent.com',
+  );
 
   static Future<void> performGoogleSignIn(BuildContext context) async {
     try {
@@ -14,7 +18,15 @@ class GoogleAuthHelper {
       // If the user cancelled or closed the picker, stop the flow.
       if (account == null) return;
 
-      // Show loading dialog while saving session
+      // Get authentication details
+      final GoogleSignInAuthentication googleAuth = await account.authentication;
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        throw Exception("Failed to get Google ID token");
+      }
+
+      // Show loading dialog while verifying with backend
       if (context.mounted) {
         showDialog(
           context: context,
@@ -27,18 +39,20 @@ class GoogleAuthHelper {
                   borderRadius: BorderRadius.all(Radius.circular(16)),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GoogleLogoWidget(size: 32),
                       SizedBox(height: 32),
                       CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4A7B59)),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF4A7B59)),
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Connecting to Google...",
+                        "Signing in with Google...",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -54,33 +68,55 @@ class GoogleAuthHelper {
         );
       }
 
-      // Simulate a small delay for session writing
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Verify token with backend
+      final response = await ApiService.loginWithGoogle(idToken);
 
-      // Save session using selected account details
-      await UserSession.saveUser(
-        username: account.displayName ?? 'Google User',
-        email: account.email,
-        fullName: account.displayName ?? 'Google User',
-      );
+      if (!context.mounted) return;
 
       // Close loading dialog
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+      Navigator.pop(context);
 
-      // Show success snackbar
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Successfully signed in as ${account.displayName ?? account.email}!'),
-            backgroundColor: const Color(0xFF4A7B59),
-            behavior: SnackBarBehavior.floating,
-          ),
+      if (response["status"] != "error" && response["access_token"] != null) {
+        final token = response["access_token"];
+        final user = response["user"];
+
+        final rawEmail = user != null ? (user["email"] ?? "") : (response["email"] ?? "");
+        final resolvedEmail = (rawEmail is String && rawEmail.isNotEmpty) ? rawEmail : account.email;
+
+        final rawUsername = user != null ? (user["username"] ?? "") : (response["username"] ?? "");
+        final resolvedUsername = (rawUsername is String && rawUsername.isNotEmpty)
+            ? rawUsername
+            : resolvedEmail.split('@')[0];
+
+        final rawName = user != null ? (user["name"] ?? user["fullName"] ?? "") : (response["name"] ?? response["fullName"] ?? "");
+        final resolvedFullName = (rawName is String && rawName.isNotEmpty)
+            ? rawName
+            : (account.displayName ?? resolvedUsername);
+
+        // Save real session data from backend
+        await UserSession.saveUser(
+          username: resolvedUsername,
+          email: resolvedEmail,
+          fullName: resolvedFullName,
+          token: token,
         );
 
-        // Navigate to home screen
-        Navigator.pushReplacementNamed(context, '/login_home');
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'Successfully signed in as ${resolvedFullName.isNotEmpty ? resolvedFullName : resolvedEmail}!'),
+              backgroundColor: const Color(0xFF4A7B59),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+
+          // Navigate to home screen
+          Navigator.pushReplacementNamed(context, '/login_home');
+        }
+      } else {
+        // Backend verification failed
+        throw Exception(response["message"] ?? "Backend verification failed");
       }
     } catch (error) {
       final errorStr = error.toString();

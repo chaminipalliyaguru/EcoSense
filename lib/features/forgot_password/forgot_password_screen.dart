@@ -17,6 +17,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   final _emailController = TextEditingController();
   late TapGestureRecognizer _signUpRecognizer;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -126,59 +127,79 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
                             elevation: 0,
                           ),
+                          onPressed: _isLoading
+                              ? null
+                              : () async {
+                                  final email = _emailController.text.trim();
 
-                          onPressed: () async {
-                            final email = _emailController.text.trim();
+                                  if (email.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text("Please enter email")),
+                                    );
+                                    return;
+                                  }
 
-                            if (email.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Please enter email")),
-                              );
-                              return;
-                            }
+                                  setState(() => _isLoading = true);
+                                  try {
+                                    final response =
+                                        await ApiService.forgetPasswordEmail(
+                                            email: email);
 
-                            final response =
-                            await ApiService.forgetPasswordEmail(
-                                email: email);
+                                    if (!mounted) return;
 
-                            if (!mounted) return;
+                                    if (response["status"] != "error") {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text("OTP sent successfully")),
+                                      );
 
-                            if (response["status"] != "error") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                    Text("OTP sent successfully")),
-                              );
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VerifyCodeScreen(
-                                    email: email,
-                                    isPasswordReset: true,
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              VerifyCodeScreen(
+                                            email: email,
+                                            isPasswordReset: true,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            response["message"]?.toString() ??
+                                                "Request failed",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } finally {
+                                    if (mounted) {
+                                      setState(() => _isLoading = false);
+                                    }
+                                  }
+                                },
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  "Continue",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    response["message"]?.toString() ??
-                                        "Request failed",
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Text(
-                            "Continue",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
                         ),
                       ),
 

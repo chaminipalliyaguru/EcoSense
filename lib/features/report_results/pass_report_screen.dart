@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'services/pdf_report_service.dart';
 import '../../widgets/app_bottom_nav.dart';
 import 'widgets/result_status_indicator.dart';
 import 'widgets/result_info_card.dart';
@@ -595,7 +596,20 @@ class _PassReportScreenState extends State<PassReportScreen> {
       actions: [
         IconButton(
           icon: const Icon(Icons.share, color: Colors.white),
-          onPressed: () {},
+          onPressed: () async {
+            final summary = _aiExplanation['summary'] as String? ?? '';
+            final canDrive = _aiExplanation['can_drive']?.toString();
+            await PdfReportService.generateAndSharePdf(
+              predictionResult: widget.predictionResult,
+              isPass: _isPass,
+              summary: summary,
+              diagnosticReasons: _diagnosticReasons,
+              possibleCauses: _possibleCauses,
+              repairSteps: _repairSteps,
+              canDrive: canDrive,
+              prevention: _prevention,
+            );
+          },
         ),
       ],
     );
