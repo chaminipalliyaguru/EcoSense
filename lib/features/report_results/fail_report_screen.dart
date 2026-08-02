@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'services/pdf_report_service.dart';
 import '../../widgets/app_bottom_nav.dart';
 import '../Scan_upload_Report/scan_report_screen.dart';
 import '../history/history_screen.dart';
@@ -63,8 +64,9 @@ class _FailReportScreenState extends State<FailReportScreen> {
   List<Map<String, dynamic>> get _videos =>
       (_aiExplanation['youtube_videos'] as List?)
           ?.map((e) => (e as Map).cast<String, dynamic>())
+          .take(3)
           .toList() ??
-          [];
+      [];
 
   String _prettify(String raw) => raw
       .split('_')
@@ -165,9 +167,12 @@ class _FailReportScreenState extends State<FailReportScreen> {
                   const SizedBox(height: 24),
                 ],
 
+                /*
                 _buildQuickFactsRow(),
                 const SizedBox(height: 24),
+                */
 
+                /*
                 if (_aiExplanation['can_drive'] != null) ...[
                   ResultInfoCard(
                     title: 'Can I Drive It?',
@@ -175,12 +180,18 @@ class _FailReportScreenState extends State<FailReportScreen> {
                   ),
                   const SizedBox(height: 24),
                 ],
+                */
 
                 if (_prevention.isNotEmpty) ...[
                   ResultInfoCard(
                     title: 'Prevention',
                     content: _prevention.map((r) => '•  $r').join('\n'),
                   ),
+                  const SizedBox(height: 24),
+                ],
+
+                if (_videos.isNotEmpty) ...[
+                  _buildVideosCard(),
                   const SizedBox(height: 24),
                 ],
 
@@ -411,7 +422,21 @@ class _FailReportScreenState extends State<FailReportScreen> {
       actions: [
         IconButton(
           icon: const Icon(Icons.share, color: Colors.white),
-          onPressed: () {},
+          onPressed: () async {
+            final summary = _aiExplanation['summary'] as String? ?? '';
+            final canDrive = _aiExplanation['can_drive']?.toString();
+            await PdfReportService.generateAndSharePdf(
+              predictionResult: widget.predictionResult,
+              isPass: _isPass,
+              summary: summary,
+              diagnosticReasons: _diagnosticReasons,
+              recommendations: _recommendations,
+              possibleCauses: _possibleCauses,
+              repairSteps: _repairSteps,
+              canDrive: canDrive,
+              prevention: _prevention,
+            );
+          },
         ),
       ],
     );

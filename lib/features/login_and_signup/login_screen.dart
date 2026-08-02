@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'signup_screen.dart';
 import '../forgot_password/forgot_password_screen.dart';
+import '../verify_email/verify_code_screen.dart';
 import '../../data/user_session.dart';
 import 'widgets/auth_widgets.dart';
 import 'utils/validators.dart';
@@ -22,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _rememberMe = true;
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
@@ -159,85 +161,126 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Login Button
                     AuthPrimaryButton(
                         text: "Login",
+                        isLoading: _isLoading,
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            final response = await ApiService.login(
-                              identifier: _emailController.text.trim(),
-                              password: _passwordController.text.trim(),
-                            );
-
-                            if (response["status"] != "error" &&
-                                response["access_token"] != null) {
-                              // Save session token first
-                              final token = response["access_token"];
-                              await UserSession.saveUser(
-                                username: "",
-                                token: token,
+                            setState(() => _isLoading = true);
+                            try {
+                              final response = await ApiService.login(
+                                identifier: _emailController.text.trim(),
+                                password: _passwordController.text.trim(),
                               );
 
-                              // Fetch user details with the token
-                              final userDetails = await ApiService.getUserDetails();
+                              if (!mounted) return;
 
-                              final user = response["user"];
-                              final username = userDetails["username"] ??
-                                  (user != null
-                                      ? (user["username"] ?? "")
-                                      : (response["username"] ?? ""));
-                              final email = userDetails["email"] ??
-                                  (user != null
-                                      ? (user["email"] ?? "")
-                                      : (response["email"] ??
-                                          _emailController.text.trim()));
-                              final fullName = userDetails["full_name"] ??
-                                  (user != null
-                                      ? (user["name"] ?? user["fullName"] ?? "")
-                                      : (response["name"] ??
-                                          response["fullName"] ??
-                                          ""));
-                              final contact = user != null
-                                  ? (user["contact"] ?? "")
-                                  : (response["contact"] ?? "");
-
-                              await UserSession.saveUser(
-                                username: username.isNotEmpty
-                                    ? username
-                                    : email.split('@')[0],
-                                email: email,
-                                fullName: fullName.isNotEmpty
-                                    ? fullName
-                                    : (username.isNotEmpty
-                                        ? username
-                                        : email.split('@')[0]),
-                                contact: contact,
-                                token: token,
-                              );
-
-                              if (mounted) {
-                                // Login success
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Login successful")),
+                              if (response["status"] != "error" &&
+                                  response["access_token"] != null) {
+                                // Save session token first
+                                final token = response["access_token"];
+                                await UserSession.saveUser(
+                                  username: "",
+                                  token: token,
                                 );
 
-                                Navigator.pushReplacementNamed(context, '/login_home');
-                              }
-                            } else {
-                              // Login failed
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.white,
-                                    content: Text(
-                                      "Invalid username/email or password. Please try again.",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
+                                // Fetch user details with the token
+                                final userDetails =
+                                    await ApiService.getUserDetails();
+
+                                final user = response["user"];
+                                final username = userDetails["username"] ??
+                                    (user != null
+                                        ? (user["username"] ?? "")
+                                        : (response["username"] ?? ""));
+                                final email = userDetails["email"] ??
+                                    (user != null
+                                        ? (user["email"] ?? "")
+                                        : (response["email"] ??
+                                            _emailController.text.trim()));
+                                final fullName = userDetails["full_name"] ??
+                                    (user != null
+                                        ? (user["name"] ??
+                                            user["fullName"] ??
+                                            "")
+                                        : (response["name"] ??
+                                            response["fullName"] ??
+                                            ""));
+                                final contact = user != null
+                                    ? (user["contact"] ?? "")
+                                    : (response["contact"] ?? "");
+
+                                await UserSession.saveUser(
+                                  username: username.isNotEmpty
+                                      ? username
+                                      : email.split('@')[0],
+                                  email: email,
+                                  fullName: fullName.isNotEmpty
+                                      ? fullName
+                                      : (username.isNotEmpty
+                                          ? username
+                                          : email.split('@')[0]),
+                                  contact: contact,
+                                  token: token,
                                 );
+
+                                if (mounted) {
+                                  // Login success
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Login successful")),
+                                  );
+
+                                  Navigator.pushReplacementNamed(
+                                      context, '/login_home');
+                                }
+                              } else {
+                                // Login failed
+                                if (mounted) {
+                                  final message =
+                                      response["message"]?.toString() ?? "";
+                                  final isNotVerified = message
+                                      .toLowerCase()
+                                      .contains("not verified");
+
+                                  if (isNotVerified) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "Email not verified. Redirecting..."),
+                                      ),
+                                    );
+                                    if (mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              VerifyCodeScreen(
+                                            email: _emailController.text
+                                                .trim(),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        backgroundColor: Colors.white,
+                                        content: Text(
+                                          "Invalid username/email or password. Please try again.",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
                               }
+                            } finally {
+                              if (mounted) setState(() => _isLoading = false);
                             }
                           }
                         }),
                     SizedBox(height: 16.h),
 
+                    /*
                     SizedBox(height: 40.h),
 
                     // OR Divider
@@ -255,6 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         GoogleAuthHelper.performGoogleSignIn(context);
                       },
                     ),
+                    */
                     SizedBox(height: 40.h),
 
                     // Bottom Text
