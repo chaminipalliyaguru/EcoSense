@@ -37,215 +37,242 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20.h),
-                // Login Title
-                Center(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      fontSize: 32.sp,
-                      fontWeight: FontWeight.bold,
-                      color: _primaryGreen,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 40.h),
-
-                // Subtitle
-                Text(
-                  "Please Sign in to continue.",
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: _primaryGreen,
-                  ),
-                ),
-                SizedBox(height: 30.h),
-
-                // Email or Username Field
-                AuthTextField(
-                  hintText: "Email or Username",
-                  controller: _emailController,
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter Email or Username.' : null,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(height: 20.h),
-
-                // Password Field
-                AuthTextField(
-                  hintText: "Password",
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  validator: Validators.validatePassword,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 16.h),
-
-                // Remember Me & Forgot Password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 40.0.h),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 20.h),
+                    // Login Title
+                    Center(
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          color: _primaryGreen,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40.h),
+
+                    // Subtitle
+                    Text(
+                      "Please Sign in to continue.",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: _primaryGreen,
+                      ),
+                    ),
+                    SizedBox(height: 30.h),
+
+                    // Email or Username Field
+                    AuthTextField(
+                      hintText: "Email or Username",
+                      controller: _emailController,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter Email or Username.'
+                          : null,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(height: 20.h),
+
+                    // Password Field
+                    AuthTextField(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      validator: Validators.validatePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+
+                    // Remember Me & Forgot Password
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: 24.w,
-                          height: 24.w,
-                          child: Checkbox(
-                            value: _rememberMe,
-                            activeColor: _primaryGreen,
-                            onChanged: (value) {
-                              setState(() {
-                                _rememberMe = value ?? true;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.r),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 24.w,
+                              height: 24.w,
+                              child: Checkbox(
+                                value: _rememberMe,
+                                activeColor: _primaryGreen,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? true;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              "Remember Me",
+                              style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: _primaryGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          "Remember Me",
-                          style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-                        ),
                       ],
                     ),
-                    TextButton(
+                    SizedBox(height: 40.h),
+
+                    // Login Button
+                    AuthPrimaryButton(
+                        text: "Login",
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final response = await ApiService.login(
+                              identifier: _emailController.text.trim(),
+                              password: _passwordController.text.trim(),
+                            );
+
+                            if (response["status"] != "error" &&
+                                response["access_token"] != null) {
+                              // Save session token first
+                              final token = response["access_token"];
+                              await UserSession.saveUser(
+                                username: "",
+                                token: token,
+                              );
+
+                              // Fetch user details with the token
+                              final userDetails = await ApiService.getUserDetails();
+
+                              final user = response["user"];
+                              final username = userDetails["username"] ??
+                                  (user != null
+                                      ? (user["username"] ?? "")
+                                      : (response["username"] ?? ""));
+                              final email = userDetails["email"] ??
+                                  (user != null
+                                      ? (user["email"] ?? "")
+                                      : (response["email"] ??
+                                          _emailController.text.trim()));
+                              final fullName = userDetails["full_name"] ??
+                                  (user != null
+                                      ? (user["name"] ?? user["fullName"] ?? "")
+                                      : (response["name"] ??
+                                          response["fullName"] ??
+                                          ""));
+                              final contact = user != null
+                                  ? (user["contact"] ?? "")
+                                  : (response["contact"] ?? "");
+
+                              await UserSession.saveUser(
+                                username: username.isNotEmpty
+                                    ? username
+                                    : email.split('@')[0],
+                                email: email,
+                                fullName: fullName.isNotEmpty
+                                    ? fullName
+                                    : (username.isNotEmpty
+                                        ? username
+                                        : email.split('@')[0]),
+                                contact: contact,
+                                token: token,
+                              );
+
+                              if (mounted) {
+                                // Login success
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Login successful")),
+                                );
+
+                                Navigator.pushReplacementNamed(context, '/login_home');
+                              }
+                            } else {
+                              // Login failed
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: Colors.white,
+                                    content: Text(
+                                      "Invalid username/email or password. Please try again.",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                        }),
+                    SizedBox(height: 16.h),
+
+                    SizedBox(height: 40.h),
+
+                    // OR Divider
+                    const AuthDivider(),
+                    SizedBox(height: 40.h),
+
+                    // Continue with Google Button
+                    AuthSocialButton(
+                      text: "Continue with Google",
+                      logo: const GoogleLogoWidget(size: 34),
+                      backgroundColor: Colors.white,
+                      borderColor: Colors.grey.shade300,
+                      textColor: const Color(0xFF1F1F1F),
+                      onPressed: () {
+                        GoogleAuthHelper.performGoogleSignIn(context);
+                      },
+                    ),
+                    SizedBox(height: 40.h),
+
+                    // Bottom Text
+                    AuthBottomText(
+                      questionText: "Don't have an account?",
+                      actionText: "Sign up.",
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ForgotPasswordScreen(),
+                            builder: (context) => const SignupScreen(),
                           ),
                         );
                       },
-                      child: Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: _primaryGreen,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
-                        ),
-                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 40.h),
-
-                // Login Button
-                AuthPrimaryButton(
-                  text: "Login",
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final response = await ApiService.login(
-                        identifier: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-
-                      if (response["status"] != "error" && response["access_token"] != null) {
-                        // Save session token first
-                        final token = response["access_token"];
-                        await UserSession.saveUser(
-                          username: "",
-                          token: token,
-                        );
-
-                        // Fetch user details with the token
-                        final userDetails = await ApiService.getUserDetails();
-
-                        final user = response["user"];
-                        final username = userDetails["username"] ?? (user != null ? (user["username"] ?? "") : (response["username"] ?? ""));
-                        final email = userDetails["email"] ?? (user != null ? (user["email"] ?? "") : (response["email"] ?? _emailController.text.trim()));
-                        final fullName = userDetails["full_name"] ?? (user != null ? (user["name"] ?? user["fullName"] ?? "") : (response["name"] ?? response["fullName"] ?? ""));
-                        final contact = user != null ? (user["contact"] ?? "") : (response["contact"] ?? "");
-
-                        await UserSession.saveUser(
-                          username: username.isNotEmpty ? username : email.split('@')[0],
-                          email: email,
-                          fullName: fullName.isNotEmpty ? fullName : (username.isNotEmpty ? username : email.split('@')[0]),
-                          contact: contact,
-                          token: token,
-                        );
-
-                        if (mounted) {
-                          // Login success
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Login successful")),
-                          );
-
-                          Navigator.pushReplacementNamed(context, '/login_home');
-                        }
-                      } else {
-                        // Login failed
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.white,
-                              content: Text(
-                                "Invalid username/email or password. Please try again.",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    }
-                  }
-                ),
-                SizedBox(height: 16.h),
-
-                SizedBox(height: 40.h),
-
-                // OR Divider
-                const AuthDivider(),
-                SizedBox(height: 40.h),
-
-                // Continue with Google Button
-                AuthSocialButton(
-                  text: "Continue with Google",
-                  logo: const GoogleLogoWidget(size: 34),
-                  backgroundColor: Colors.white,
-                  borderColor: Colors.grey.shade300,
-                  textColor: const Color(0xFF1F1F1F),
-                  onPressed: () {
-                    GoogleAuthHelper.performGoogleSignIn(context);
-                  },
-                ),
-                SizedBox(height: 40.h),
-
-                // Bottom Text
-                AuthBottomText(
-                  questionText: "Don't have an account?",
-                  actionText: "Sign up.",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),

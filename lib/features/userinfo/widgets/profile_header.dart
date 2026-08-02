@@ -54,13 +54,10 @@ class ProfileHeader extends StatelessWidget {
             ],
           ),
         ),
-        TextButton.icon(
+        IconButton(
           onPressed: onEditPressed,
-          icon: Icon(Icons.edit_outlined, size: 18.sp, color: Colors.grey),
-          label: Text(
-            'Edit profile',
-            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-          ),
+          icon: Icon(Icons.edit_outlined, size: 22.sp, color: Colors.grey.shade700),
+          tooltip: 'Edit Profile',
         ),
       ],
     );

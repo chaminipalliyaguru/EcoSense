@@ -326,7 +326,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  response["message"] ?? "Invalid OTP",
+                                  response["message"]?.toString() ?? "Invalid OTP",
                                 ),
                               ),
                             );
@@ -364,9 +364,24 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         const SizedBox(height: 4),
                         GestureDetector(
                           onTap: _start == 0
-                              ? () {
+                              ? () async {
                                   startTimer();
-                                  // TODO: Add resend API call
+                                  final response = await ApiService.resendOTP(
+                                    email: widget.email,
+                                    purpose: widget.isPasswordReset
+                                        ? 'password_reset'
+                                        : 'signup',
+                                  );
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          response["message"]?.toString() ??
+                                              "OTP sent",
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 }
                               : null,
                           child: Text(

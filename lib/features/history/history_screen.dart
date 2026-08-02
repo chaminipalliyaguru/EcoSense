@@ -17,7 +17,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   int selectedTab = 0;
 
   // ADD THESE
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   bool get effectiveIsGuest => widget.isGuest;
 
@@ -85,117 +85,115 @@ class _HistoryScreenState extends State<HistoryScreen> {
         showBackButton: true,
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
 
-                    const Text(
-                      "History",
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const Text(
+                    "History",
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
 
-                    const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                    // Filter Tabs
-                    Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAEAEA),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Row(
-                        children: [
-                          buildTab("All", 0),
-                          buildTab("Passed", 1),
-                          buildTab("Failed", 2),
-                        ],
-                      ),
+                  // Filter Tabs
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEAEAEA),
+                      borderRadius: BorderRadius.circular(25),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    const Text(
-                      "Recent Scans",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.normal,
-                      ),
+                    child: Row(
+                      children: [
+                        buildTab("All", 0),
+                        buildTab("Passed", 1),
+                        buildTab("Failed", 2),
+                      ],
                     ),
+                  ),
 
-                    const SizedBox(height: 10),
+                  const SizedBox(height: 24),
 
-                    Expanded(
-                      child: _isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : _error != null
-                              ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
-                              : _filteredHistory.isEmpty
-                                  ? const Center(child: Text("No history found", style: const TextStyle(fontSize: 16, color: Colors.grey)))
-                                  : ListView.builder(
-                                      itemCount: _filteredHistory.length,
-                                      itemBuilder: (context, index) {
-                                        final item = _filteredHistory[index];
-                                        
-                                        final vehRegNos = item["veh_reg_nos"] as List<dynamic>? ?? [];
-                                        final plate = vehRegNos.isNotEmpty ? vehRegNos.first.toString() : "Unknown";
-                                        
-                                        final createdAt = item["created_at"]?.toString() ?? "";
-                                        String dateStr = createdAt;
-                                        String timeStr = "";
-                                        try {
-                                          final utcString = createdAt.endsWith('Z') ? createdAt : '${createdAt}Z';
-                                          final utcDate = DateTime.parse(utcString);
-                                          final slDate = utcDate.add(const Duration(hours: 5, minutes: 30));
-                                          dateStr = DateFormat('dd MMMM yyyy').format(slDate);
-                                          timeStr = DateFormat('hh:mm a').format(slDate);
-                                        } catch (_) {}
-                                        
-                                        final results = item["results"] as List<dynamic>? ?? [];
-                                        String label = "UNKNOWN";
-                                        if (results.isNotEmpty) {
-                                          final first = results.first as Map<String, dynamic>?;
-                                          label = first?["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() ?? "UNKNOWN";
-                                        }
-                                        final isPass = label != "FAIL";
-                                        
-                                        return Padding(
-                                          padding: const EdgeInsets.only(bottom: 12),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => HistoryDetailsScreen(item: item),
-                                                ),
-                                              );
-                                            },
-                                            child: ScanCard(
-                                              plate: plate,
-                                              date: dateStr,
-                                              time: timeStr,
-                                              status: isPass ? "Passed" : "Failed",
-                                              color: isPass ? Colors.green : Colors.red,
-                                            ),
+                  const Text(
+                    "Recent Scans",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Expanded(
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _error != null
+                            ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
+                            : _filteredHistory.isEmpty
+                                ? const Center(child: Text("No history found", style: const TextStyle(fontSize: 16, color: Colors.grey)))
+                                : ListView.builder(
+                                    itemCount: _filteredHistory.length,
+                                    itemBuilder: (context, index) {
+                                      final item = _filteredHistory[index];
+                                      
+                                      final vehRegNos = item["veh_reg_nos"] as List<dynamic>? ?? [];
+                                      final plate = vehRegNos.isNotEmpty ? vehRegNos.first.toString() : "Unknown";
+                                      
+                                      final createdAt = item["created_at"]?.toString() ?? "";
+                                      String dateStr = createdAt;
+                                      String timeStr = "";
+                                      try {
+                                        final utcString = createdAt.endsWith('Z') ? createdAt : '${createdAt}Z';
+                                        final utcDate = DateTime.parse(utcString);
+                                        final slDate = utcDate.add(const Duration(hours: 5, minutes: 30));
+                                        dateStr = DateFormat('dd MMMM yyyy').format(slDate);
+                                        timeStr = DateFormat('hh:mm a').format(slDate);
+                                      } catch (_) {}
+                                      
+                                      final results = item["results"] as List<dynamic>? ?? [];
+                                      String label = "UNKNOWN";
+                                      if (results.isNotEmpty) {
+                                        final first = results.first as Map<String, dynamic>?;
+                                        label = first?["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() ?? "UNKNOWN";
+                                      }
+                                      final isPass = label != "FAIL";
+                                      
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => HistoryDetailsScreen(item: item),
+                                              ),
+                                            );
+                                          },
+                                          child: ScanCard(
+                                            plate: plate,
+                                            date: dateStr,
+                                            time: timeStr,
+                                            status: isPass ? "Passed" : "Failed",
+                                            color: isPass ? Colors.green : Colors.red,
                                           ),
-                                        );
-                                      },
-                                    ),
-                    ),
-                  ],
-                ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
 

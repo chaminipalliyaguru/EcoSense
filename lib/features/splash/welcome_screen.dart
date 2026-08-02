@@ -72,7 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Welcome to\nEcoSense",
+                                  "Welcome to\nEcosense",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 50.sp, // Adjusted

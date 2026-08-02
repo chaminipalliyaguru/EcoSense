@@ -23,24 +23,24 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
       'image': 'assets/images/home/home-your-vehical.png',
     },
     {
-      'type': 'tip',
-      'title': 'Regular',
-      'subtitle': 'Maintenance',
-      'detail': 'Service your vehicle regularly for better performance',
+      'type': 'hero',
+      'line1': 'Regular',
+      'line2': 'Maintenance,',
+      'line3': 'Better Performance.',
       'image': 'assets/images/home/Quicktiphome1.png',
     },
     {
-      'type': 'tip',
-      'title': 'Check',
-      'subtitle': 'Emissions',
-      'detail': 'Keep your emissions in check for cleaner environment',
+      'type': 'hero',
+      'line1': 'Check',
+      'line2': 'Emissions,',
+      'line3': 'Cleaner Environment.',
       'image': 'assets/images/home/Quicktiphome2.png',
     },
     {
-      'type': 'tip',
-      'title': 'Drive',
-      'subtitle': 'Smart',
-      'detail': 'Avoid idling and drive smoothly to reduce emissions',
+      'type': 'hero',
+      'line1': 'Drive',
+      'line2': 'Smart,',
+      'line3': 'Reduce Emissions.',
       'image': 'assets/images/home/Quicktiphome3.png',
     },
   ];
@@ -97,7 +97,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Container(
-        height: 160.h, // Fixed height for consistent layout
+        height: 175.h, // Increased height for larger text layout
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -138,10 +138,14 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
                       // Left Side: Text
                       Expanded(
                         flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: _buildSlideContent(slide, primaryGreen),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: _buildSlideContent(slide, primaryGreen),
+                          ),
                         ),
                       ),
                       // Right Side: Image or Icon
@@ -199,7 +203,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['line1'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -208,7 +212,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['line2'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: primaryGreen,
             letterSpacing: 0.2,
@@ -217,7 +221,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['line3'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -229,7 +233,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['title'],
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -238,7 +242,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['subtitle'],
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: primaryGreen,
             letterSpacing: 0.2,
@@ -248,8 +252,9 @@ class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingOb
         Text(
           slide['detail'],
           style: TextStyle(
-            fontSize: 14.sp,
-            color: Colors.grey.shade600,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade700,
             height: 1.2,
           ),
         ),

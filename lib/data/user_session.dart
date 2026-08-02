@@ -7,6 +7,7 @@ class UserSession {
   static const String _keyContact = 'contact';
   static const String _keyToken = 'token';
   static const String _keyAvatarIndex = 'avatar_index';
+  static const String _keySeenOnboarding = 'seen_onboarding';
 
   static Future<void> saveUser({
     required String username,
@@ -23,6 +24,17 @@ class UserSession {
     if (contact != null) await prefs.setString(_keyContact, contact);
     if (token != null) await prefs.setString(_keyToken, token);
     if (avatarIndex != null) await prefs.setInt(_keyAvatarIndex, avatarIndex);
+    await prefs.setBool(_keySeenOnboarding, true);
+  }
+
+  static Future<void> setSeenOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keySeenOnboarding, true);
+  }
+
+  static Future<bool> hasSeenOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keySeenOnboarding) ?? false;
   }
 
   static Future<void> saveAvatarIndex(int avatarIndex) async {
@@ -49,11 +61,17 @@ class UserSession {
 
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyToken);
+    final token = prefs.getString(_keyToken);
+    if (token != null && token.isNotEmpty) {
+      return token;
+    }
+    return null;
   }
 
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
+    final seen = prefs.getBool(_keySeenOnboarding) ?? true;
     await prefs.clear();
+    await prefs.setBool(_keySeenOnboarding, seen);
   }
 }

@@ -135,7 +135,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
                     // Benefits
                     const Text(
-                      "Benefits of EcoSense",
+                      "Benefits of Ecosense",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

@@ -254,7 +254,7 @@ class _AvatarSelectionSheetState extends State<AvatarSelectionSheet> {
           ),
           SizedBox(height: 6.h),
           Text(
-            'Select from 6 local profile character avatars',
+            'Select your profile avatar',
             style: TextStyle(
               fontSize: 13.sp,
               color: Colors.grey.shade600,
@@ -275,76 +275,55 @@ class _AvatarSelectionSheetState extends State<AvatarSelectionSheet> {
                     _selectedIndex = avatar.id;
                   });
                 },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: Stack(
                   children: [
-                    Stack(
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: EdgeInsets.all(3.w),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected ? _primaryGreen : Colors.transparent,
-                              width: 3.w,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              avatar.assetPath,
-                              width: 64.r,
-                              height: 64.r,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return CircleAvatar(
-                                  radius: 32.r,
-                                  backgroundColor: avatar.bgColor,
-                                  child: Icon(
-                                    avatar.fallbackIcon,
-                                    size: 34.r,
-                                    color: Colors.white,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: EdgeInsets.all(3.w),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected ? _primaryGreen : Colors.transparent,
+                          width: 3.w,
                         ),
-                        if (isSelected)
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(3.w),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1E6D2F),
-                                shape: BoxShape.circle,
-                              ),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          avatar.assetPath,
+                          width: 64.r,
+                          height: 64.r,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return CircleAvatar(
+                              radius: 32.r,
+                              backgroundColor: avatar.bgColor,
                               child: Icon(
-                                Icons.check,
-                                size: 14.r,
+                                avatar.fallbackIcon,
+                                size: 34.r,
                                 color: Colors.white,
                               ),
-                            ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    if (isSelected)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(3.w),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF1E6D2F),
+                            shape: BoxShape.circle,
                           ),
-                      ],
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      avatar.name,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                        color: isSelected ? _primaryGreen : Colors.black87,
+                          child: Icon(
+                            Icons.check,
+                            size: 14.r,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      avatar.title,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
                   ],
                 ),
               );

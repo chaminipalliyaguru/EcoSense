@@ -11,7 +11,7 @@ class ContactUsSection extends StatelessWidget {
       scheme: 'mailto',
       path: 'support@ecosense.com',
       queryParameters: {
-        'subject': 'EcoSense Help & Support Inquiry',
+        'subject': 'Ecosense Help & Support Inquiry',
       },
     );
     try {

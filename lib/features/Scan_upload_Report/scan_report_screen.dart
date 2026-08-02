@@ -24,7 +24,7 @@ class ScanReportScreen extends StatefulWidget {
 }
 
 class _ScanReportScreenState extends State<ScanReportScreen>
-    with SingleTickerProviderStateMixin, RouteAware {
+    with SingleTickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   final Color _primaryGreen = const Color(0xFF3A7D44);
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -45,6 +45,7 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -52,6 +53,25 @@ class _ScanReportScreenState extends State<ScanReportScreen>
     _setupSystemUI();
     _initAnimations();
     _initCamera();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = _cameraController;
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      _cameraController?.dispose();
+      if (mounted) {
+        setState(() {
+          _isCameraReady = false;
+        });
+      }
+    } else if (state == AppLifecycleState.resumed && _cameras.isNotEmpty) {
+      _startCamera(_cameras[_currentCameraIndex]);
+    }
   }
 
   void _setupSystemUI() {
@@ -104,7 +124,6 @@ class _ScanReportScreenState extends State<ScanReportScreen>
       camera,
       ResolutionPreset.high,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     try {
@@ -314,6 +333,7 @@ class _ScanReportScreenState extends State<ScanReportScreen>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     routeObserver.unsubscribe(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -404,16 +424,30 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   }
 
   Widget _buildContentLayer() {
-    if (_isCameraReady && _cameraController != null) {
-      return SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _cameraController!.value.previewSize!.height,
-            height: _cameraController!.value.previewSize!.width,
-            child: CameraPreview(_cameraController!),
-          ),
-        ),
+    if (_isCameraReady &&
+        _cameraController != null &&
+        _cameraController!.value.isInitialized) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          var cameraAspectRatio = _cameraController!.value.aspectRatio;
+          if (constraints.maxHeight > constraints.maxWidth &&
+              cameraAspectRatio > 1) {
+            cameraAspectRatio = 1 / cameraAspectRatio;
+          }
+          return ClipRect(
+            child: OverflowBox(
+              alignment: Alignment.center,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth / cameraAspectRatio,
+                  child: CameraPreview(_cameraController!),
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
 
