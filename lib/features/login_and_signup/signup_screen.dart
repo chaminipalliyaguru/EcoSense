@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../services/api_service.dart';
 import '../verify_email/verify_code_screen.dart';
+import 'login_screen.dart';
 import 'widgets/auth_widgets.dart';
 import 'widgets/password_requirements.dart';
 import 'utils/validators.dart';
@@ -212,20 +213,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        "$message. Redirecting to Verification..."),
+                                        "$message. Redirecting to Login..."),
                                     duration: const Duration(seconds: 2),
                                   ),
                                 );
 
                                 Future.delayed(const Duration(seconds: 2), () {
                                   if (mounted) {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => VerifyCodeScreen(
-                                          email: _emailController.text
-                                              .trim(),
-                                        ),
+                                        builder: (context) =>
+                                            const LoginScreen(),
                                       ),
                                     );
                                   }

@@ -74,6 +74,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: primaryGreen,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+          },
+        ),
         title: Image.asset(
           'assets/logo.png',
           height: 35.h,
