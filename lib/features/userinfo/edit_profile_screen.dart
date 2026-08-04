@@ -87,7 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         backgroundColor: primaryGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context, true),
         ),
         title: Image.asset(
