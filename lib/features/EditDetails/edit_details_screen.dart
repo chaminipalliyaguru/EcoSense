@@ -1,0 +1,461 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../report_results/pass_report_screen.dart';
+import '../report_results/fail_report_screen.dart';
+import 'widgets/certificate_info_card.dart';
+import 'widgets/snap_data_table.dart';
+import 'widgets/smoke_opacity_chart.dart';
+import 'widgets/rpm_variations_chart.dart';
+import '../../services/prediction_service.dart';
+
+class EditDetailsScreen extends StatefulWidget {
+  final bool isPass;
+  final bool isFromResults;
+  final Map<String, dynamic>? apiData;
+
+  const EditDetailsScreen({
+    super.key,
+    this.isPass = true,
+    this.isFromResults = false,
+    this.apiData,
+  });
+
+  @override
+  State<EditDetailsScreen> createState() => _EditDetailsScreenState();
+}
+
+class _EditDetailsScreenState extends State<EditDetailsScreen> {
+  final Color _primaryGreen = const Color(0xFF3A7D44);
+  final Color _backgroundColor = const Color(0xFFF1F5F9);
+  
+  bool _isEditing = false;
+  final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
+
+  // Data state
+  late String _certificateNo;
+  late String _dateOfIssue;
+
+  late List<double> _smokeDensities;
+  late List<int> _rpms;
+  late List<double> _accelerationTimes;
+
+  // Controllers for editing
+  late List<TextEditingController> _smokeControllers;
+  late List<TextEditingController> _rpmControllers;
+  late List<TextEditingController> _accControllers;
+
+  // Backup state for cancellation
+  late List<double> _originalSmokeDensities;
+  late List<int> _originalRpms;
+  late List<double> _originalAccelerationTimes;
+
+  Future<void> _predictResult() async {
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+
+      final response = await PredictionService.predict(
+        apiData: widget.apiData!,
+        smoke: _smokeDensities,
+        rpm: _rpms,
+        acc: _accelerationTimes,
+      );
+
+      print(response);
+
+      // Update this path if your response differs.
+      final result = response["results"][0];
+
+      final bool isPass =
+          result["rule"]?["rule_diesel_fail"] == false &&
+          result["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() == 'PASS';
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+          isPass
+              ? PassReportScreen(
+            predictionResult: Map<String, dynamic>.from(result),
+          )
+              : FailReportScreen(
+            predictionResult: Map<String, dynamic>.from(result),
+          ),
+        ),
+      );
+
+    } catch (e) {
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+
+    } finally {
+
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _certificateNo = widget.apiData?["reg_no"] ?? "N/A";
+    _dateOfIssue = widget.apiData?["date_of_issue"] ?? "N/A";
+
+    final snap = widget.apiData?["snap_data"] as List<dynamic>? ?? [];
+
+    _smokeDensities = List.generate(3, (i) {
+      if (i < snap.length) {
+        return double.tryParse(snap[i]["smoke_density"]?.toString() ?? "0") ?? 0.0;
+      }
+      return 0.0;
+    });
+
+    _rpms = List.generate(3, (i) {
+      if (i < snap.length) {
+        return int.tryParse(snap[i]["measured_rpm"]?.toString() ?? "0") ?? 0;
+      }
+      return 0;
+    });
+
+    _accelerationTimes = List.generate(3, (i) {
+      if (i < snap.length) {
+        return double.tryParse(snap[i]["acceleration_time"]?.toString() ?? "0") ?? 0.0;
+      }
+      return 0.0;
+    });
+
+    _initControllers();
+  }
+
+  void _initControllers() {
+    _smokeControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _smokeDensities[i].toStringAsFixed(2));
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _smokeDensities[i] = double.tryParse(c.text) ?? _smokeDensities[i];
+          });
+        }
+      });
+      return c;
+    });
+
+    _rpmControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _rpms[i].toString());
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _rpms[i] = int.tryParse(c.text) ?? _rpms[i];
+          });
+        }
+      });
+      return c;
+    });
+
+    _accControllers = List.generate(3, (i) {
+      final c = TextEditingController(text: _accelerationTimes[i].toStringAsFixed(2));
+      c.addListener(() {
+        if (_isEditing) {
+          setState(() {
+            _accelerationTimes[i] = double.tryParse(c.text) ?? _accelerationTimes[i];
+          });
+        }
+      });
+      return c;
+    });
+  }
+
+  @override
+  void dispose() {
+    for (var c in _smokeControllers) {
+      c.dispose();
+    }
+    for (var c in _rpmControllers) {
+      c.dispose();
+    }
+    for (var c in _accControllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  double get _avgSmokeDensity {
+    return _smokeDensities.reduce((a, b) => a + b) / _smokeDensities.length;
+  }
+
+  double get _avgRpm {
+    return _rpms.reduce((a, b) => a + b) / _rpms.length;
+  }
+
+  double get _avgAccelerationTime {
+    return _accelerationTimes.reduce((a, b) => a + b) / _accelerationTimes.length;
+  }
+
+  void _saveChanges() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        for (int i = 0; i < 3; i++) {
+          _smokeDensities[i] = double.tryParse(_smokeControllers[i].text) ?? _smokeDensities[i];
+          _rpms[i] = int.tryParse(_rpmControllers[i].text) ?? _rpms[i];
+          _accelerationTimes[i] = double.tryParse(_accControllers[i].text) ?? _accelerationTimes[i];
+        }
+        _isEditing = false;
+      });
+    }
+  }
+
+  void _cancelChanges() {
+    setState(() {
+      _smokeDensities = List.from(_originalSmokeDensities);
+      _rpms = List.from(_originalRpms);
+      _accelerationTimes = List.from(_originalAccelerationTimes);
+      _initControllers();
+      _isEditing = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _backgroundColor,
+      appBar: AppBar(
+        backgroundColor: _primaryGreen,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 20.sp),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Emission Report Details',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Certificate Card
+                CertificateInfoCard(
+                  certificateNo: _certificateNo,
+                  dateOfIssue: _dateOfIssue,
+                ),
+                
+                SizedBox(height: 20.h),
+                
+                // Snap Data Header
+                _buildSectionHeader(
+                  title: 'Snap Data',
+                  leading: _buildSnapDataIcon(),
+                ),
+                
+                SizedBox(height: 10.h),
+                
+                // Snap Data Table
+                SnapDataTable(
+                  isEditing: _isEditing,
+                  smokeControllers: _smokeControllers,
+                  rpmControllers: _rpmControllers,
+                  accControllers: _accControllers,
+                  smokeDensities: _smokeDensities,
+                  rpms: _rpms,
+                  accelerationTimes: _accelerationTimes,
+                  avgSmokeDensity: _avgSmokeDensity,
+                  avgRpm: _avgRpm,
+                  avgAccelerationTime: _avgAccelerationTime,
+                  onEditToggle: () {
+                    setState(() {
+                      if (_isEditing) {
+                        _cancelChanges();
+                      } else {
+                        _originalSmokeDensities = List.from(_smokeDensities);
+                        _originalRpms = List.from(_rpms);
+                        _originalAccelerationTimes = List.from(_accelerationTimes);
+                        _isEditing = true;
+                      }
+                    });
+                  },
+                  primaryGreen: _primaryGreen,
+                ),
+                
+                SizedBox(height: 20.h),
+                
+                // Emission Analysis Header
+                _buildSectionHeader(title: 'Emission Analysis'),
+                
+                SizedBox(height: 10.h),
+                
+                // Smoke Opacity Chart
+                SmokeOpacityChart(
+                  smokeDensities: _smokeDensities,
+                  avgSmokeDensity: _avgSmokeDensity,
+                  primaryGreen: _primaryGreen,
+                ),
+                
+                SizedBox(height: 14.h),
+                
+                // RPM Variations Chart
+                RpmVariationsChart(
+                  rpms: _rpms,
+                ),
+                
+                SizedBox(height: 24.h),
+                
+                // Confirm & Continue Button / Edit actions
+                _buildBottomButtons(),
+                
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader({required String title, Widget? leading}) {
+    return Row(
+      children: [
+        if (leading != null) ...[
+          leading,
+          SizedBox(width: 8.w),
+        ],
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSnapDataIcon() {
+    return Container(
+      width: 24.w,
+      height: 24.w,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1.w),
+        borderRadius: BorderRadius.circular(4.r),
+        color: Colors.white,
+      ),
+      child: CustomPaint(
+        painter: TinyChartIconPainter(),
+      ),
+    );
+  }
+
+  Widget _buildBottomButtons() {
+    if (_isEditing) {
+      return Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 52.h,
+              child: OutlinedButton(
+                onPressed: _cancelChanges,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.grey.shade300),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26.r),
+                  ),
+                ),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: SizedBox(
+              height: 52.h,
+              child: ElevatedButton(
+                onPressed: _saveChanges,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _primaryGreen,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26.r),
+                  ),
+                ),
+                child: Text(
+                  'Save Details',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      height: 52.h,
+      child: ElevatedButton(
+        onPressed: _loading ? null : _predictResult,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _primaryGreen,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26.r),
+          ),
+        ),
+        child: _loading
+            ? const SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Colors.white,
+          ),
+        )
+            : Text(
+          'Confirm & Continue',
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}

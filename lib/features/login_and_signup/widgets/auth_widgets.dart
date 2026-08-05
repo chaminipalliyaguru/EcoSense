@@ -10,6 +10,7 @@ class AuthTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final AutovalidateMode? autovalidateMode;
 
   const AuthTextField({
     super.key,
@@ -19,6 +20,7 @@ class AuthTextField extends StatelessWidget {
     this.controller,
     this.validator,
     this.keyboardType,
+    this.autovalidateMode,
   });
 
   @override
@@ -28,6 +30,7 @@ class AuthTextField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       keyboardType: keyboardType,
+      autovalidateMode: autovalidateMode,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
@@ -61,11 +64,13 @@ class AuthTextField extends StatelessWidget {
 class AuthPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const AuthPrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -74,7 +79,7 @@ class AuthPrimaryButton extends StatelessWidget {
       width: double.infinity,
       height: 50.h,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryGreen,
           shape: RoundedRectangleBorder(
@@ -82,14 +87,23 @@ class AuthPrimaryButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: isLoading
+            ? SizedBox(
+                height: 20.h,
+                width: 20.h,
+                child: const CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }
@@ -135,14 +149,22 @@ class AuthSecondaryButton extends StatelessWidget {
 
 class AuthSocialButton extends StatelessWidget {
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final Widget? logo;
   final VoidCallback onPressed;
+  final Color? textColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
 
   const AuthSocialButton({
     super.key,
     required this.text,
-    required this.icon,
+    this.icon,
+    this.logo,
     required this.onPressed,
+    this.textColor,
+    this.backgroundColor,
+    this.borderColor,
   });
 
   @override
@@ -150,30 +172,57 @@ class AuthSocialButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 50.h,
-      child: OutlinedButton.icon(
+      child: OutlinedButton(
         onPressed: onPressed,
-        icon: Icon(
-          icon,
-          color: primaryGreen,
-          size: 30.sp,
-        ),
-        label: Text(
-          text,
-          style: TextStyle(
-            color: primaryGreen,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
         style: OutlinedButton.styleFrom(
-          backgroundColor: const Color(0xFFF2F2F2),
-          side: BorderSide(color: Colors.grey.shade300, width: 1),
+          backgroundColor: backgroundColor ?? const Color(0xFFF2F2F2),
+          side: BorderSide(color: borderColor ?? Colors.grey.shade300, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),
           elevation: 0,
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (logo != null) ...[
+              logo!,
+              SizedBox(width: 12.w),
+            ] else if (icon != null) ...[
+              Icon(
+                icon,
+                color: textColor ?? primaryGreen,
+                size: 30.sp,
+              ),
+              SizedBox(width: 12.w),
+            ],
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor ?? primaryGreen,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class GoogleLogoWidget extends StatelessWidget {
+  final double size;
+
+  const GoogleLogoWidget({super.key, this.size = 24.0});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/google.jpg',
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
     );
   }
 }

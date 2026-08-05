@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../about/about_screen.dart';
 import '../../history/history_screen.dart';
+import '../../help_and_support/help_and_support_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});
@@ -82,7 +83,12 @@ class FeatureGrid extends StatelessWidget {
                     subtitle:
                         'Need help? Contact\nour support team',
                     onTap: () {
-                      // TODO: Navigate to Support
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HelpAndSupportScreen(),
+                        ),
+                      );
                     },
                   ),
                 ),

@@ -1,8 +1,17 @@
+import 'package:EcoSense/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login_and_signup/login_screen.dart';
+import '../login_and_signup/utils/validators.dart';
+import '../login_and_signup/widgets/password_requirements.dart';
 
 class NewPasswordScreen extends StatefulWidget {
-  const NewPasswordScreen({super.key});
+  final String email; // ✅ ADD EMAIL FROM PREVIOUS SCREEN
+
+  const NewPasswordScreen({
+    super.key,
+    required this.email,
+  });
 
   @override
   State<NewPasswordScreen> createState() => _NewPasswordScreenState();
@@ -10,20 +19,47 @@ class NewPasswordScreen extends StatefulWidget {
 
 class _NewPasswordScreenState extends State<NewPasswordScreen> {
   final Color _primaryGreen = const Color(0xFF4A7B59);
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_onPasswordChanged);
+  }
+
+  void _onPasswordChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _passwordController.removeListener(_onPasswordChanged);
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   Widget _buildTextField({
     required String hintText,
+    required TextEditingController controller,
     required bool obscureText,
     required VoidCallback onToggleVisibility,
   }) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Colors.grey, width: 1),
@@ -38,7 +74,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
         ),
         suffixIcon: IconButton(
           icon: Icon(
-            obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+            obscureText
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
             color: Colors.grey,
           ),
           onPressed: onToggleVisibility,
@@ -46,6 +84,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +98,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 60),
-              
-              // Title
+
               Text(
                 "Create New Password",
                 style: TextStyle(
@@ -68,24 +107,25 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   color: _primaryGreen,
                 ),
               ),
+
               const SizedBox(height: 30),
 
-              // Subtitle
               const Text(
                 "Your new password must be unique from those previously used.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w400,
                   color: Colors.grey,
                   height: 1.5,
                 ),
               ),
+
               const SizedBox(height: 40),
 
               // New Password
               _buildTextField(
                 hintText: "New Password",
+                controller: _passwordController,
                 obscureText: _obscurePassword,
                 onToggleVisibility: () {
                   setState(() {
@@ -93,11 +133,17 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   });
                 },
               ),
+              PasswordRequirements(
+                password: _passwordController.text,
+                primaryGreen: _primaryGreen,
+              ),
+
               const SizedBox(height: 20),
 
               // Confirm Password
               _buildTextField(
                 hintText: "Confirm Password",
+                controller: _confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
                 onToggleVisibility: () {
                   setState(() {
@@ -105,20 +151,71 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   });
                 },
               ),
+
               const SizedBox(height: 40),
 
-              // Save Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Save and go to login
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      (route) => false,
+                  onPressed: () async {
+                    final password = _passwordController.text.trim();
+                    final confirmPassword =
+                    _confirmPasswordController.text.trim();
+
+                    // ✅ Validation
+                    if (password.isEmpty || confirmPassword.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Please fill all fields")),
+                      );
+                      return;
+                    }
+
+                    final passwordError = Validators.validatePassword(password);
+                    if (passwordError != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(passwordError)),
+                      );
+                      return;
+                    }
+
+                    if (password != confirmPassword) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Passwords do not match")),
+                      );
+                      return;
+                    }
+
+                    final response = await ApiService.resetPassword(
+                      email: widget.email, // ✅ FIXED
+                      new_password: password, // ✅ FIXED
                     );
+
+                    if (!mounted) return;
+
+                    if (response["status"] != "error") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Password reset successful")),
+                      );
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                            (route) => false,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            response["message"]?.toString() ?? "Reset failed",
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryGreen,

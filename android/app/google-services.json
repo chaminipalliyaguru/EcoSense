@@ -12,7 +12,20 @@
           "package_name": "com.example.eco_sense"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "425105073862-5heta5g72962sp5cejsj5obbb4led2fn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eco_sense",
+            "certificate_hash": "44663e5bb03498568b2d4b8109b3912f391a87c9"
+          }
+        },
+        {
+          "client_id": "425105073862-26c3u02977evqohntkvveeqri630kvrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAU6L8P-oOsME4O8up6pTx5WSAPOU0NA9o"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425105073862-26c3u02977evqohntkvveeqri630kvrm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "425105073862-038larcki4lp1eltfcubg8vmgkuv74vb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ecoSense"
+              }
+            }
+          ]
         }
       }
     }

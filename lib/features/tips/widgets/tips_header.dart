@@ -15,7 +15,7 @@ class TipsHeader extends StatelessWidget {
               const Text(
                 "Tips & Guide",
                 style: TextStyle(
-                  fontSize: 34,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -24,7 +24,7 @@ class TipsHeader extends StatelessWidget {
               Text(
                 "Follow these simple tips and steps to get things done easily",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   color: Colors.grey.shade600,
                   height: 1.4,
                 ),

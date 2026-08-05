@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import '../data_verification/data_verification_screen.dart';
+import '../../services/report_validator.dart';
 
 // Extracted Widgets
 import 'widgets/scan_app_bar.dart';
@@ -14,6 +14,7 @@ import 'widgets/scan_bottom_bar.dart';
 import 'widgets/scan_overlay.dart';
 import 'widgets/image_preview_overlay.dart';
 import '../Report_Analyzing/report_analyzing_screen.dart';
+import '../../main.dart';
 
 class ScanReportScreen extends StatefulWidget {
   const ScanReportScreen({super.key});
@@ -23,7 +24,7 @@ class ScanReportScreen extends StatefulWidget {
 }
 
 class _ScanReportScreenState extends State<ScanReportScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware, WidgetsBindingObserver {
   final Color _primaryGreen = const Color(0xFF3A7D44);
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -44,9 +45,33 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     _setupSystemUI();
     _initAnimations();
     _initCamera();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = _cameraController;
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      _cameraController?.dispose();
+      if (mounted) {
+        setState(() {
+          _isCameraReady = false;
+        });
+      }
+    } else if (state == AppLifecycleState.resumed && _cameras.isNotEmpty) {
+      _startCamera(_cameras[_currentCameraIndex]);
+    }
   }
 
   void _setupSystemUI() {
@@ -99,7 +124,6 @@ class _ScanReportScreenState extends State<ScanReportScreen>
       camera,
       ResolutionPreset.high,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     try {
@@ -184,8 +208,139 @@ class _ScanReportScreenState extends State<ScanReportScreen>
     }
   }
 
+  Future<void> _validateAndContinue() async {
+    if (_selectedImage == null) return;
+
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // Validate using your backend logic
+    final result = await ReportValidator.validate(_selectedImage!);
+
+    if (!mounted) return;
+
+    Navigator.pop(context); // close loading dialog
+
+    // If NOT valid → show error dialog
+    if (!result.isValid) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Invalid Report",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "The image you captured does not appear to be a valid emission report. "
+                      "Please retake the photo clearly.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _selectedImage = null;
+                      });
+                    },
+                    child: const Text(
+                      "Retake Photo",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      return; // IMPORTANT: stop here
+    }
+
+    // If valid → go to analyzing screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ReportAnalyzingScreen(
+          imageFile: _selectedImage!,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    routeObserver.unsubscribe(this);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _scanLineController.dispose();
     _cameraController?.dispose();
     super.dispose();
@@ -240,24 +395,28 @@ class _ScanReportScreenState extends State<ScanReportScreen>
                 showScanLine: false,
               ),
             ),
-            // if (_selectedImage != null)
-            //   DataVerificationScreen(
-            //     imageFile: _selectedImage,
-            //     onRetake: () {
-            //       if (!mounted) return;
-            //       setState(() {
-            //         _selectedImage = null;
-            //       });
-            //     },
-            //     onConfirm: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => const ReportAnalyzingScreen(),
-            //         ),
-            //       );
-            //     },
-            //   ),
+            if (_selectedImage != null)
+              ImagePreviewOverlay(
+                imageFile: _selectedImage!,
+                scanAnimation: _scanLineAnimation,
+                primaryColor: _primaryGreen,
+                onRetake: () {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+                onConfirm: () async {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
+                  ]);
+
+                  await _validateAndContinue();
+                },
+              ),
           ],
         );
       },
@@ -265,16 +424,30 @@ class _ScanReportScreenState extends State<ScanReportScreen>
   }
 
   Widget _buildContentLayer() {
-    if (_isCameraReady && _cameraController != null) {
-      return SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _cameraController!.value.previewSize!.height,
-            height: _cameraController!.value.previewSize!.width,
-            child: CameraPreview(_cameraController!),
-          ),
-        ),
+    if (_isCameraReady &&
+        _cameraController != null &&
+        _cameraController!.value.isInitialized) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          var cameraAspectRatio = _cameraController!.value.aspectRatio;
+          if (constraints.maxHeight > constraints.maxWidth &&
+              cameraAspectRatio > 1) {
+            cameraAspectRatio = 1 / cameraAspectRatio;
+          }
+          return ClipRect(
+            child: OverflowBox(
+              alignment: Alignment.center,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth / cameraAspectRatio,
+                  child: CameraPreview(_cameraController!),
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
 

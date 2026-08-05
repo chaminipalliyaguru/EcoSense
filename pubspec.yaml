@@ -35,13 +35,20 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.3
   camera: ^0.10.5+9
   permission_handler: ^11.3.1
-  image_picker: ^1.1.2
+  image_picker: ^1.2.2
   firebase_core: ^4.9.0
   #firebase_app_distribution: ^1.2.5
   flutter_screenutil: ^5.9.3
+  google_sign_in: ^6.2.1
+  http: ^1.2.0
+  google_mlkit_text_recognition: ^0.15.0
+  url_launcher: ^6.3.2
+  intl: ^0.19.0
+  pdf: ^3.11.1
+  printing: ^5.13.0
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +61,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  flutter_native_splash: ^2.4.0
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -75,11 +88,16 @@ flutter:
   assets:
     - assets/images/
     - assets/logo.png
+    - assets/google.jpg
     - assets/images/appDetailed/
     - assets/images/appBenefits/
     - assets/images/home/
     - assets/images/home/home-your-vehical.png
+    - assets/images/home/Quicktiphome1.png
+    - assets/images/home/Quicktiphome2.png
+    - assets/images/home/Quicktiphome3.png
     - assets/images/tips/
+    - assets/images/avatars/
     - assets/onboarding_screen/
 
 

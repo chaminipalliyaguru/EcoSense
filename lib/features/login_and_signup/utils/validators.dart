@@ -17,17 +17,14 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    }
-    if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter';
-    }
-    if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Password must contain at least one number';
-    }
-    if (!value.contains(RegExp(r'[!@#\$&*~]'))) {
-      return 'Password must contain at least one special character (!@#\$&*~)';
+
+    final hasMinLength = value.length >= 8;
+    final hasUppercase = value.contains(RegExp(r'[A-Z]'));
+    final hasNumber = value.contains(RegExp(r'[0-9]'));
+    final hasSpecialChar = value.contains(RegExp(r'[!@#\$&*~]'));
+
+    if (!hasMinLength || !hasUppercase || !hasNumber || !hasSpecialChar) {
+      return 'Password must be at least 8 characters long,\nand include uppercase, number, and special character (!@#\$&*~)';
     }
     return null;
   }

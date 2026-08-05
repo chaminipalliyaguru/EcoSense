@@ -12,57 +12,54 @@ class ResultStatusIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isPass) {
-      return Center(
-        child: Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFF8BC34A).withOpacity(0.6),
-              width: 10,
+    final color = isPass ? const Color(0xFF4CAF50) : const Color(0xFFF44336);
+    final bgColor = isPass ? const Color(0xFFE8F5E9) : const Color(0xFFFFEBEE);
+    final icon = isPass ? Icons.check_circle_rounded : Icons.cancel_rounded;
+    final title = isPass ? 'Emission Test Passed' : 'Emission Test Failed';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 64,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            status,
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              color: color,
+              letterSpacing: 2,
             ),
           ),
-          child: Center(
-            child: Text(
-              status,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w900,
-                color: Color(0xFF388E3C),
-                letterSpacing: 2,
-              ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: color.withOpacity(0.8),
             ),
           ),
-        ),
-      );
-    } else {
-      return Center(
-        child: Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFDADA),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFFF8B6B6),
-              width: 2,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              status,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w900,
-                color: Color(0xFF8B0000),
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+        ],
+      ),
+    );
   }
 }

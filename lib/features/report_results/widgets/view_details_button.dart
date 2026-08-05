@@ -25,7 +25,7 @@ class ViewDetailsButton extends StatelessWidget {
           elevation: 0,
         ),
         child: const Text(
-          'View Details',
+          'Go to Home',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

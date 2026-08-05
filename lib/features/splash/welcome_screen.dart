@@ -49,136 +49,150 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
           // Content
           SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top section with Welcome text
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 200.0.h,
-                    left: 15.0.w,
-                    right: 20.0.w,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome to\nEcoSense",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 50.sp, // Adjusted
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
-                        ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Top section with Welcome text
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: isPortrait ? 200.0.h : 30.0.h,
+                              left: 15.0.w,
+                              right: 20.0.w,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Welcome to\nEcosense",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 50.sp, // Adjusted
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Spacer(),
+
+                          // Buttons section
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.0.w,
+                              vertical: isPortrait ? 40.0.h : 20.0.h,
+                            ),
+                            child: Column(
+                              children: [
+                                // Get Started Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50.h,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF2E7D32),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25.r),
+                                      ),
+                                      elevation: 3,
+                                    ),
+                                    child: Text(
+                                      "Explore as Guest",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 16.h),
+
+                                // Sign up Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50.h,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const SignupScreen()),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF2E7D32),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25.r),
+                                      ),
+                                      elevation: 3,
+                                    ),
+                                    child: Text(
+                                      "Sign up",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 16.h),
+
+                                // Login Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50.h,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF2E7D32),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25.r),
+                                      ),
+                                      elevation: 3,
+                                    ),
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-
-                const Spacer(),
-
-                // Buttons section
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.0.w,
-                    vertical: 40.0.h,
-                  ),
-                  child: Column(
-                    children: [
-                      // Get Started Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50.h,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2E7D32),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.r),
-                            ),
-                            elevation: 3,
-                          ),
-                          child: Text(
-                            "Explore as Guest",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 16.h),
-
-                      // Sign up Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50.h,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const SignupScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2E7D32),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.r),
-                            ),
-                            elevation: 3,
-                          ),
-                          child: Text(
-                            "Sign up",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 16.h),
-
-                      // Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50.h,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const LoginScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2E7D32),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.r),
-                            ),
-                            elevation: 3,
-                          ),
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],

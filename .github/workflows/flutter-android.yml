@@ -1,0 +1,75 @@
+name: Build & Firebase Distribution
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.1"
+          channel: stable
+          cache: true
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Clean Project
+        run: flutter clean
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build Release APK
+        env:
+          CI: true
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EcoSense-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create Firebase Credentials
+        run: |
+          cat > firebase.json <<'EOF'
+          ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          EOF
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFile: firebase.json
+          groups: dev-team
+          file: build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: |
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+
+            ${{ github.event.head_commit.message }}

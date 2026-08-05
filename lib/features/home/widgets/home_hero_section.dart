@@ -9,7 +9,7 @@ class HomeHeroSection extends StatefulWidget {
   State<HomeHeroSection> createState() => _HomeHeroSectionState();
 }
 
-class _HomeHeroSectionState extends State<HomeHeroSection> {
+class _HomeHeroSectionState extends State<HomeHeroSection> with WidgetsBindingObserver {
   late PageController _pageController;
   int _realIndex = 1000; // Start at a large index for "infinite" feel
   Timer? _timer;
@@ -23,31 +23,32 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
       'image': 'assets/images/home/home-your-vehical.png',
     },
     {
-      'type': 'tip',
-      'title': 'Regular',
-      'subtitle': 'Maintenance',
-      'detail': 'Service your vehicle regularly for better performance',
-      'icon': Icons.build_outlined,
+      'type': 'hero',
+      'line1': 'Regular',
+      'line2': 'Maintenance,',
+      'line3': 'Better Performance.',
+      'image': 'assets/images/home/Quicktiphome1.png',
     },
     {
-      'type': 'tip',
-      'title': 'Check',
-      'subtitle': 'Emissions',
-      'detail': 'Keep your emissions in check for cleaner environment',
-      'icon': Icons.eco_outlined,
+      'type': 'hero',
+      'line1': 'Check',
+      'line2': 'Emissions,',
+      'line3': 'Cleaner Environment.',
+      'image': 'assets/images/home/Quicktiphome2.png',
     },
     {
-      'type': 'tip',
-      'title': 'Drive',
-      'subtitle': 'Smart',
-      'detail': 'Avoid idling and drive smoothly to reduce emissions',
-      'icon': Icons.speed_outlined,
+      'type': 'hero',
+      'line1': 'Drive',
+      'line2': 'Smart,',
+      'line3': 'Reduce Emissions.',
+      'image': 'assets/images/home/Quicktiphome3.png',
     },
   ];
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Initialize controller at the real index
     _pageController = PageController(initialPage: _realIndex);
     _startTimer();
@@ -55,20 +56,36 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startTimer();
+    } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _timer?.cancel();
+    }
+  }
+
   void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_pageController.hasClients) {
-        _realIndex++;
-        _pageController.animateToPage(
-          _realIndex,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
+      if (!mounted) return;
+      if (_pageController.hasClients && TickerMode.valuesOf(context).enabled) {
+        try {
+          _realIndex++;
+          _pageController.animateToPage(
+            _realIndex,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        } catch (_) {
+          // Catch potential animation errors when screen is hidden to keep timer alive
+        }
       }
     });
   }
@@ -80,7 +97,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Container(
-        height: 160.h, // Fixed height for consistent layout
+        height: 175.h, // Increased height for larger text layout
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -97,47 +114,61 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _realIndex = index;
-                });
+            NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollStartNotification) {
+                  _timer?.cancel();
+                } else if (scrollNotification is ScrollEndNotification) {
+                  _startTimer();
+                }
+                return false;
               },
-              // No itemCount for "infinite" scroll
-              itemBuilder: (context, index) {
-                final slide = _slides[index % _slides.length];
-                return Row(
-                  children: [
-                    // Left Side: Text
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildSlideContent(slide, primaryGreen),
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _realIndex = index;
+                  });
+                },
+                // No itemCount for "infinite" scroll
+                itemBuilder: (context, index) {
+                  final slide = _slides[index % _slides.length];
+                  return Row(
+                    children: [
+                      // Left Side: Text
+                      Expanded(
+                        flex: 3,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: _buildSlideContent(slide, primaryGreen),
+                          ),
+                        ),
                       ),
-                    ),
-                    // Right Side: Image or Icon
-                    Expanded(
-                      flex: 2,
-                      child: slide['type'] == 'hero'
-                          ? Image.asset(
-                              slide['image'],
-                              fit: BoxFit.contain,
-                            )
-                          : Container(
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                slide['icon'],
-                                size: 80.sp,
-                                color: primaryGreen.withValues(alpha: 0.15),
+                      // Right Side: Image or Icon
+                      Expanded(
+                        flex: 2,
+                        child: slide['image'] != null
+                            ? Image.asset(
+                                slide['image'],
+                                fit: BoxFit.contain,
+                              )
+                            : Container(
+                                alignment: Alignment.centerRight,
+                                child: Icon(
+                                  slide['icon'],
+                                  size: 80.sp,
+                                  color: primaryGreen.withValues(alpha: 0.15),
+                                ),
                               ),
-                            ),
-                    ),
-                  ],
-                );
-              },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             // Indicators
             Padding(
@@ -172,7 +203,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['line1'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -181,7 +212,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['line2'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: primaryGreen,
             letterSpacing: 0.2,
@@ -190,7 +221,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['line3'],
           style: TextStyle(
-            fontSize: 22.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -202,7 +233,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['title'],
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: Colors.black,
             letterSpacing: 0.2,
@@ -211,7 +242,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['subtitle'],
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w900,
             color: primaryGreen,
             letterSpacing: 0.2,
@@ -221,8 +252,9 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         Text(
           slide['detail'],
           style: TextStyle(
-            fontSize: 14.sp,
-            color: Colors.grey.shade600,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade700,
             height: 1.2,
           ),
         ),

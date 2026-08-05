@@ -23,19 +23,24 @@ class _GuestUserHomePageState extends State<GuestUserHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: TopAppBar(primaryGreen: _primaryGreen),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const GreetingHeader(
-              userName: '',
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const GreetingHeader(
+                  name: '',
+                ),
+                const HomeHeroSection(),
+                const SizedBox(height: 12),
+                ScanEmissionCard(primaryGreen: _primaryGreen),
+                const SizedBox(height: 24),
+                const GuestFeatureList(),
+              ],
             ),
-            const HomeHeroSection(),
-            const SizedBox(height: 12),
-            ScanEmissionCard(primaryGreen: _primaryGreen),
-            const SizedBox(height: 24),
-            const GuestFeatureList(),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: GuestBottomNavBar(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../home/widgets/top_app_bar.dart';
 import '../../widgets/app_bottom_nav.dart';
+import '../../services/api_service.dart';
+import 'package:intl/intl.dart';
+import 'history_details_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   final bool isGuest;
@@ -14,28 +17,65 @@ class _HistoryScreenState extends State<HistoryScreen> {
   int selectedTab = 0;
 
   // ADD THESE
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   bool get effectiveIsGuest => widget.isGuest;
 
   final Color _primaryGreen = const Color(0xFF4A7B59);
 
-  final List<Map<String, dynamic>> scans = [
-    {
-      "plate": "CAO 3478",
-      "date": "15 February 2026",
-      "time": "10.30 AM",
-      "status": "Passed",
-      "color": Colors.green,
-    },
-    {
-      "plate": "CAX 4748",
-      "date": "25 December 2025",
-      "time": "11.30 AM",
-      "status": "Failed",
-      "color": Colors.red,
-    },
-  ];
+  List<Map<String, dynamic>> _allHistory = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchHistory();
+  }
+
+  Future<void> _fetchHistory() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final response = await ApiService.getHistory();
+      if (response["status"] != "error" && response["items"] != null) {
+        setState(() {
+          _allHistory = List<Map<String, dynamic>>.from(response["items"]);
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = response["message"] ?? "Failed to load history";
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = "An error occurred";
+        _isLoading = false;
+      });
+    }
+  }
+
+  List<Map<String, dynamic>> get _filteredHistory {
+    if (selectedTab == 0) return _allHistory;
+    
+    return _allHistory.where((item) {
+      final results = item["results"] as List<dynamic>? ?? [];
+      String label = "UNKNOWN";
+      if (results.isNotEmpty) {
+        final first = results.first as Map<String, dynamic>?;
+        label = first?["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() ?? "UNKNOWN";
+      }
+      
+      if (selectedTab == 1) return label != "FAIL";
+      if (selectedTab == 2) return label == "FAIL";
+      return true;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,79 +85,115 @@ class _HistoryScreenState extends State<HistoryScreen> {
         showBackButton: true,
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
 
-                    const Text(
-                      "History",
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const Text(
+                    "History",
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
 
-                    const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                    // Filter Tabs
-                    Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAEAEA),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Row(
-                        children: [
-                          buildTab("All", 0),
-                          buildTab("Passed", 1),
-                          buildTab("Failed", 2),
-                        ],
-                      ),
+                  // Filter Tabs
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEAEAEA),
+                      borderRadius: BorderRadius.circular(25),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    const Text(
-                      "Recent Scans",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.normal,
-                      ),
+                    child: Row(
+                      children: [
+                        buildTab("All", 0),
+                        buildTab("Passed", 1),
+                        buildTab("Failed", 2),
+                      ],
                     ),
+                  ),
 
-                    const SizedBox(height: 10),
+                  const SizedBox(height: 24),
 
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: scans.length,
-                        itemBuilder: (context, index) {
-                          final item = scans[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: ScanCard(
-                              plate: item["plate"],
-                              date: item["date"],
-                              time: item["time"],
-                              status: item["status"],
-                              color: item["color"],
-                            ),
-                          );
-                        },
-                      ),
+                  const Text(
+                    "Recent Scans",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.normal,
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Expanded(
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _error != null
+                            ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
+                            : _filteredHistory.isEmpty
+                                ? const Center(child: Text("No history found", style: const TextStyle(fontSize: 16, color: Colors.grey)))
+                                : ListView.builder(
+                                    itemCount: _filteredHistory.length,
+                                    itemBuilder: (context, index) {
+                                      final item = _filteredHistory[index];
+                                      
+                                      final vehRegNos = item["veh_reg_nos"] as List<dynamic>? ?? [];
+                                      final plate = vehRegNos.isNotEmpty ? vehRegNos.first.toString() : "Unknown";
+                                      
+                                      final createdAt = item["created_at"]?.toString() ?? "";
+                                      String dateStr = createdAt;
+                                      String timeStr = "";
+                                      try {
+                                        final utcString = createdAt.endsWith('Z') ? createdAt : '${createdAt}Z';
+                                        final utcDate = DateTime.parse(utcString);
+                                        final slDate = utcDate.add(const Duration(hours: 5, minutes: 30));
+                                        dateStr = DateFormat('dd MMMM yyyy').format(slDate);
+                                        timeStr = DateFormat('hh:mm a').format(slDate);
+                                      } catch (_) {}
+                                      
+                                      final results = item["results"] as List<dynamic>? ?? [];
+                                      String label = "UNKNOWN";
+                                      if (results.isNotEmpty) {
+                                        final first = results.first as Map<String, dynamic>?;
+                                        label = first?["layer1"]?["lightgbm"]?["predicted_label"]?.toString().toUpperCase() ?? "UNKNOWN";
+                                      }
+                                      final isPass = label != "FAIL";
+                                      
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => HistoryDetailsScreen(item: item),
+                                              ),
+                                            );
+                                          },
+                                          child: ScanCard(
+                                            plate: plate,
+                                            date: dateStr,
+                                            time: timeStr,
+                                            status: isPass ? "Passed" : "Failed",
+                                            color: isPass ? Colors.green : Colors.red,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
 
@@ -126,12 +202,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         isGuest: effectiveIsGuest,
         selectedIndex: _selectedIndex,
         primaryGreen: _primaryGreen,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-          }
-          setState(() => _selectedIndex = index);
-        },
       ),
     );
   }

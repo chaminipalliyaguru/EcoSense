@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../splash/welcome_screen.dart';
+import '../../../data/user_session.dart';
 
 /// A green pill-shaped "Skip" button used at the top-right of onboarding screens.
 /// Allows the user to skip the entire onboarding flow.
@@ -28,11 +29,15 @@ class SkipButton extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(top: topPad, right: rightPad),
         child: GestureDetector(
-          onTap: onTap ?? () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-            );
+          onTap: onTap ?? () async {
+            await UserSession.setSeenOnboarding();
+            if (context.mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                (route) => false,
+              );
+            }
           },
           child: Container(
             padding: EdgeInsets.symmetric(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../about/about_screen.dart';
+import '../help_and_support/help_and_support_screen.dart';
 
 class GuestFeatureList extends StatelessWidget {
   const GuestFeatureList({super.key});
@@ -49,7 +50,12 @@ class GuestFeatureList extends StatelessWidget {
             title: 'Help and Support',
             subtitle: 'Need help? Contact our support team',
             onTap: () {
-              // TODO: Navigate to Support
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HelpAndSupportScreen(),
+                ),
+              );
             },
           ),
         ],
