@@ -65,6 +65,8 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#FFFFFF"
+  image: "assets/logov2.png"
+  background_image: "assets/splash screen/Splash Screen.png"
   android: true
   ios: true
 
@@ -88,6 +90,8 @@ flutter:
   assets:
     - assets/images/
     - assets/logo.png
+    - assets/logov2.png
+    - assets/splash screen/
     - assets/google.jpg
     - assets/images/appDetailed/
     - assets/images/appBenefits/
@@ -99,6 +103,8 @@ flutter:
     - assets/images/tips/
     - assets/images/avatars/
     - assets/onboarding_screen/
+    - assets/logov2.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

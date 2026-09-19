@@ -48,23 +48,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              width: 180.w,
-              height: 180.h,
-              fit: BoxFit.contain,
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/splash screen/Splash Screen.png',
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 30.h),
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3A7D44)),
+          ),
+          // Content on top of background
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/logov2.png',
+                    width: 200.w,
+                    height: 200.h,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 30.h),
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3A7D44)),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
