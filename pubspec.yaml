@@ -104,6 +104,9 @@ flutter:
     - assets/images/avatars/
     - assets/onboarding_screen/
     - assets/logov2.png
+    - assets/onboarding_screen/Onboarding-Screen2v2.png
+    - assets/onboarding_screen/Onboarding-Screen3v2.png
+    - assets/images/welcomeBgv2.png
 
 
 

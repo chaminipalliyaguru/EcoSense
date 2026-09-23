@@ -1,191 +1,169 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'onboarding_screen_4.dart';
-
-// Reusable common widgets
-import 'widgets/skip_button.dart';
-import 'widgets/page_indicator.dart';
-import 'widgets/onboarding_button.dart';
+import '../splash/welcome_screen.dart';
+import '../../data/user_session.dart';
 
 class OnboardingScreen3 extends StatelessWidget {
   const OnboardingScreen3({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final titleFontSize = (isPortrait ? size.width * 0.09 : size.height * 0.09).clamp(24.0, 38.0);
-    final descFontSize = (isPortrait ? size.width * 0.04 : size.height * 0.04).clamp(13.0, 18.0);
-    final imageHeight = isPortrait ? size.height * 0.23 : 70.0;
-    final contentGap = isPortrait ? size.height * 0.10 : 16.0;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFBFB),
+      backgroundColor: const Color(0xFFF7FBF8),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Common Widget: Skip button (top-right green pill)
-            const SkipButton(),
-
-            // Page-specific content area
-            Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onVerticalDragEnd: (details) {
-                  if (details.primaryVelocity != null &&
-                      details.primaryVelocity!.abs() > 100) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const OnboardingScreen4()),
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-                  child: isPortrait
-                      ? Column(
-                          children: [
-                            const Spacer(),
-                            // Screen 3 title: "System Processes Data"
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'System\n',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: titleFontSize,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF343232),
-                                      height: 1.25,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Processes Data',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: titleFontSize,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF527D5B),
-                                      height: 1.25,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-
-                            SizedBox(height: contentGap),
-
-                            // Screen 3 illustration
-                            Image.asset(
-                              'assets/onboarding_screen/onbod3.png',
-                              height: imageHeight,
-                              fit: BoxFit.contain,
-                            ),
-
-                            SizedBox(height: contentGap),
-
-                            // Screen 3 description
-                            SizedBox(
-                              width: size.width * 0.78,
-                              child: Text(
-                                'The system app scans and extracts the\nrequired information.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: descFontSize,
-                                  color: const Color(0xFF979797),
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.58,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        )
-                      : Center(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 12.0),
-                                // Screen 3 title
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'System\n',
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize: titleFontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: const Color(0xFF343232),
-                                          height: 1.25,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: 'Processes Data',
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize: titleFontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: const Color(0xFF527D5B),
-                                          height: 1.25,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-
-                                SizedBox(height: contentGap),
-
-                                // Screen 3 illustration
-                                Image.asset(
-                                  'assets/onboarding_screen/onbod3.png',
-                                  height: imageHeight,
-                                  fit: BoxFit.contain,
-                                ),
-
-                                SizedBox(height: contentGap),
-
-                                // Screen 3 description
-                                SizedBox(
-                                  width: size.width * 0.78,
-                                  child: Text(
-                                    'The system app scans and extracts the\nrequired information.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: descFontSize,
-                                      color: const Color(0xFF979797),
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.58,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12.0),
-                              ],
-                            ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onVerticalDragEnd: (details) {
+            if (details.primaryVelocity != null &&
+                details.primaryVelocity!.abs() > 100) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const OnboardingScreen4(),
+                ),
+              );
+            }
+          },
+          child: Column(
+            children: [
+              // Top Row with Skip button
+              Padding(
+                padding: EdgeInsets.only(top: 48.h, right: 39.w),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await UserSession.setSeenOnboarding();
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const WelcomeScreen(),
                           ),
-                        ),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF527D5B),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
 
-            // Common Widget: Page indicator dots (page 3 of 5, index 2)
-            const PageIndicator(currentPage: 2),
+              const Spacer(flex: 2),
 
-            // Common Widget: Action button → navigates to Screen 4
-            OnboardingButton(
-              label: 'Next',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const OnboardingScreen4()),
-                );
-              },
-            ),
-          ],
+              // Central Illustration
+              Center(
+                child: Image.asset(
+                  'assets/onboarding_screen/Onboarding-Screen3v2.png',
+                  height: 298.h,
+                  width: 298.w,
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+              const Spacer(flex: 2),
+
+              // Title & Subtitle Section
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 91.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Detailed Analysis',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF000000),
+                        height: 1.25,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'Get instant insights on your\nemission levels with clear\nresults and recomondations.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFF555555),
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(flex: 3),
+
+              // Bottom Action Area (Back on left, Circular Next Arrow on right)
+              Padding(
+                padding: EdgeInsets.only(left: 36.w, right: 30.w, bottom: 30.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Back button
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Back',
+                        style: TextStyle(
+                          fontFamily: 'DMSans',
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF527D5B),
+                        ),
+                      ),
+                    ),
+
+                    // Next button
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const OnboardingScreen4(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 82.84.w,
+                        height: 82.84.w,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF237340),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                          size: 32.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
