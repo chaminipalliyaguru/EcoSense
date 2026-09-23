@@ -18,181 +18,176 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Stack(
         children: [
           // Background image
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/wellcome-screen.png"),
-                fit: BoxFit.cover,
-              ),
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/welcomeBgv2.png',
+              fit: BoxFit.cover,
             ),
           ),
 
-          // Gradient overlay
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.0, 0.4, 1.0],
-                colors: [
-                  Color(0x88289C3B),
-                  Color(0x66289C3B),
-                  Color(0x00FFFFFF),
-                ],
-              ),
-            ),
-          ),
-
-          // Content
+          // Content Layer
           SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Top section with Welcome text
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: isPortrait ? 200.0.h : 30.0.h,
-                              left: 15.0.w,
-                              right: 20.0.w,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Welcome to\nEcosense",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 50.sp, // Adjusted
-                                    fontWeight: FontWeight.bold,
-                                    height: 1.2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 28.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.h),
 
-                          const Spacer(),
+                  // Top EcoSense Logo
+                  Image.asset(
+                    'assets/logov2.png',
+                    width: 78.w,
+                    height: 58.h,
+                    fit: BoxFit.contain,
+                  ),
 
-                          // Buttons section
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20.0.w,
-                              vertical: isPortrait ? 40.0.h : 20.0.h,
-                            ),
-                            child: Column(
-                              children: [
-                                // Get Started Button
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50.h,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const GuestUserHomePage()),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF2E7D32),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.r),
-                                      ),
-                                      elevation: 3,
-                                    ),
-                                    child: Text(
-                                      "Explore as Guest",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                  SizedBox(height: 36.h),
 
-                                SizedBox(height: 16.h),
-
-                                // Sign up Button
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50.h,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const SignupScreen()),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF2E7D32),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.r),
-                                      ),
-                                      elevation: 3,
-                                    ),
-                                    child: Text(
-                                      "Sign up",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 16.h),
-
-                                // Login Button
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50.h,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF2E7D32),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.r),
-                                      ),
-                                      elevation: 3,
-                                    ),
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                  // Welcome Heading
+                  Text(
+                    'Welcome to',
+                    style: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 23.sp,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF000000),
+                      height: 1.2,
                     ),
                   ),
-                );
-              },
+                  Text(
+                    'EcoSense',
+                    style: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 42.sp,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF000000),
+                      height: 1.1,
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  // Bottom Action Buttons Section
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 35.h),
+                    child: Column(
+                      children: [
+                        // Explore as Guest Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const GuestUserHomePage(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF237340),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(46.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Explore as Guest',
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 14.h),
+
+                        // Sign up Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupScreen(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white.withOpacity(0.85),
+                              elevation: 0,
+                              side: const BorderSide(
+                                color: Color(0xFF237340),
+                                width: 1.2,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(46.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Sign up',
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF000000),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 14.h),
+
+                        // Log in Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color(0xFFCBDDCB).withOpacity(0.85),
+                              elevation: 0,
+                              side: BorderSide(
+                                color:
+                                    const Color(0xFF527D5B).withOpacity(0.3),
+                                width: 1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(46.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Log in',
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF000000),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
